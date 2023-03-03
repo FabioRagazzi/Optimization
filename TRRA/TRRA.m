@@ -102,7 +102,6 @@ cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
 addpath('Functions\')
 addpath('data\objective_for_TRRA\')
 
-global P Jobjective time
 load('standard_parameters.mat');
 
 % ex -> the parameter is an exponent 
@@ -114,8 +113,79 @@ lb = [-15,   19,  0.9,   -1,   -1,   -3,   17];
 ub = [-13,   21,  1.1,    0,    0,   -2,   19];
 x0 = [-15,   19,  1.1,    0,    0,   -3,   19];
 
-options = optimoptions('lsqnonlin', 'Display','off');
-[xv,~,~,~,output] = lsqnonlin(@(p) objective_function(p), x0, lb, ub, options); 
+options = optimoptions('lsqnonlin', 'Display','iter');
+tic
+[xv,~,~,~,output] = lsqnonlin(@(p) objective_function(p,Jobjective,time,P), x0, lb, ub, options); 
+toc
 
 cd(current_path)
 clear current_path
+
+%% COMPARE RESULTS
+xv = [-13.7234, 19.9050, 0.9562, -0.1778, -0.0014, -2.5003, 17.4705];
+P.L = 4e-4;
+P.num_points = 100;
+P.T = 298.15;
+P.eps_r = 2;
+P.Phi_W = 0;
+P.Phi_E = 4e3;
+
+% Parameters fitted 
+P.mu_h = 10^xv(1);
+P.mu_e = 10^xv(1);
+P.nh0t = 10^xv(2);
+P.ne0t = 10^xv(2);
+P.phih = xv(3);
+P.phie = xv(3);
+P.Bh = 10^xv(4);
+P.Be = 10^xv(4);
+P.Dh = 10^xv(5);
+P.De = 10^xv(5);
+P.S0 = 10^xv(6);
+P.S1 = 10^xv(6);
+P.S2 = 10^xv(6);
+P.S3 = 10^xv(6);
+P.n_start = [10^xv(7), 10^xv(7), 0, 0];
+
+% Physics constants
+P.a = 7.5005e12;
+P.e = 1.6022e-19;
+P.kB = 1.381e-23;
+P.eps0 = 8.854e-12;
+
+% Derived parameters
+P.Delta = P.L / P.num_points;
+P.kBT = P.kB * P.T;
+P.eps = P.eps_r * P.eps0;
+P.beta = 6.08e-24 / sqrt(P.eps_r);
+P.coeff =  8 * P.eps / (3 * P.Delta^2);
+P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
+P.D_h = P.mu_h * P.T * P.kB/ P.e;
+P.D_e = P.mu_e * P.T * P.kB/ P.e;
+P.S0 = P.S0 * P.e;
+P.S1 = P.S1 * P.e;
+P.S2 = P.S2 * P.e;
+P.S3 = P.S3 * P.e;
+P.Kelet = Kelectrostatic(P.num_points, P.Delta, P.eps);
+
+% Setting initial condition for the number density
+n_stato_0 = ones(P.num_points, 4) .* P.n_start;
+n_stato_0 = reshape(n_stato_0, [P.num_points*4, 1]);
+
+% Solving with ODE
+options = odeset('Stats','off');
+[tout, nout] = ode23tb(@(t,n_stato)odefunc_Drift_Diffusion(t, n_stato, P), time, n_stato_0, options);
+
+% Post Processing
+[x, x_interfacce, x_interni] = create_x_domain(P.L, P.num_points);
+[nh, ne, nht, net, rho, phi, E, J_fitted] = post_processing(nout, tout, P);
+
+% Confronting real result with fitted one
+loglog(time,Jobjective,'r-','LineWidth',2,'DisplayName','Objective')
+hold on
+loglog(time,J_fitted,'b--','LineWidth',2,'DisplayName','Fit')
+grid on
+legend
+xlabel('time (s)')
+ylabel('J (A/m^2)')
+set(gca,'FontSize',15)

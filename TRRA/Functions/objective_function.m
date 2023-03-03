@@ -1,6 +1,4 @@
-function [error_vector] = objective_function(parametri)
-
-global P Jobjective time
+function [error_vector] = objective_function(parametri,Jobjective,time,P)
 
 P.mu_h = 10^parametri(1);
 P.mu_e = 10^parametri(1);
@@ -26,4 +24,4 @@ n_stato_0(P.num_points+1:2*P.num_points) = 10^parametri(7);
 [tout, nout] = ode23tb(@(t,n_stato)odefunc_Drift_Diffusion(t, n_stato, P), time, n_stato_0);
 [~, ~, ~, ~, ~, ~, ~, J] = post_processing(nout, tout, P);
 
-error_vector = Jobjective - J;
+error_vector = (Jobjective - J)./Jobjective;
