@@ -96,13 +96,12 @@ cd(current_path)
 clear current_path
 
 %% FITTING STANDARD PARAMETERS WITH TRRA
-clc, clear variables
+clc, clearvars
 current_path = pwd();
 cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
 addpath('Functions\')
-addpath('data\objective_for_TRRA\')
 
-load('standard_parameters.mat');
+load('data\objective_for_TRRA\standard_parameters.mat');
 
 % ex -> the parameter is an exponent 
 % li -> the parameter is a linear parameter
@@ -111,9 +110,15 @@ load('standard_parameters.mat');
     %[-13.3010, 20.7782, 1, -0.6990, -1, -2.3979, 18]
 lb = [-15,   19,  0.9,   -1,   -1,   -3,   17];
 ub = [-13,   21,  1.1,    0,    0,   -2,   19];
-x0 = [-15,   19,  1.1,    0,    0,   -3,   19];
+x0 = [-14,   19,  1.1,    0,    0,   -3,   19];
 
-options = optimoptions('lsqnonlin', 'Display','iter');
+solver = 'lsqnonlin';
+options = optimoptions(solver);
+options.Displey = 'iter';
+options.OptimalityTolerance = 1e-8; % 1e-6
+options.FunctionTolerance = 1e-10; % 1e-6
+options.UseParallel = false;
+
 tic
 [xv,~,~,~,output] = lsqnonlin(@(p) objective_function(p,Jobjective,time,P), x0, lb, ub, options); 
 toc
@@ -121,8 +126,38 @@ toc
 cd(current_path)
 clear current_path
 
+%% FITTING STANDARD PARAMETERS WITH PARTICLE SWARM
+clc, clearvars
+current_path = pwd();
+cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
+addpath('Functions\')
+
+load('data\objective_for_TRRA\standard_parameters.mat');
+
+% ex -> the parameter is an exponent 
+% li -> the parameter is a linear parameter
+      %ex   %ex   %li   %ex   %ex   %ex   %ex
+      %mu   %n0t  %phi  %B    %D    %S    %n0
+    %[-13.3010, 20.7782, 1, -0.6990, -1, -2.3979, 18]
+lb = [-15,   19,  0.9,   -1,   -1,   -3,   17];
+ub = [-13,   21,  1.1,    0,    0,   -2,   19];
+
+solver = 'particleswarm';
+options = optimoptions(solver);
+options.UseParallel = false; %false
+options.FunctionTolerance = 1e-3; %1e-6
+options.MaxIterations = 1e5; %200*nvars
+options.MaxStallIterations = 20; %20
+options.Display = 'final'; %final
+tic
+[xv,~,~,output] = particleswarm(@(parametri)objective_function(parametri,Jobjective,time,P,solver), length(ub), lb, ub, options);
+toc
+
+cd(current_path)
+clear current_path
+
 %% COMPARE RESULTS
-xv = [-13.7234, 19.9050, 0.9562, -0.1778, -0.0014, -2.5003, 17.4705];
+% xv = [-13.7234, 19.9050, 0.9562, -0.1778, -0.0014, -2.5003, 17.4705];
 P.L = 4e-4;
 P.num_points = 100;
 P.T = 298.15;
