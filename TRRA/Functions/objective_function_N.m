@@ -8,6 +8,7 @@ P.nh0t = 10^parametri(2);
 P.ne0t = 10^parametri(2);
 P.phih = parametri(3);
 P.phie = parametri(3);
+P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
 P.Bh = 10^parametri(4);
 P.Be = 10^parametri(4);
 P.Dh = 10^parametri(5);

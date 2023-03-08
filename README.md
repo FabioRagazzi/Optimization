@@ -81,6 +81,127 @@ e poi metto a zero quando viene **NaN** (perchè vuol dire che ho fatto $0 / 0$)
 |--     |--   |-- |-- |-- |--  |
 |-13.4015| 18.2590| 0.9938 |0.7860| -2.3746 |18.0529|
 
-![](figs/2023_03_07/phi_0_5.png)
+Wall Clock Time = 3404 s
 
+![](figs/2023_03_08/phi_0_5.png)
+
+&nbsp; 
+
+&nbsp;
+
+* $\varphi = 0.75$ 
+
+| $\mu$ | n0t | B | D | S | n0 |
+|--     |--   |-- |-- |-- |--  |
+|-13.3011| 20.8562| -0.6990 | -0.9999| -2.3979 |18.0000|
+
+Wall Clock Time = 7569 s
+
+![](figs/2023_03_08/phi_0_75.png)
+
+&nbsp; 
+
+&nbsp;
+
+* $\varphi = 1$ 
+
+| $\mu$ | n0t | B | D | S | n0 |
+|--     |--   |-- |-- |-- |--  |
+|-13.3010| 20.7787| -0.6990 | -1.0000| -2.3979 |18.0000|
+
+Wall Clock Time = 14696 s
+
+![](figs/2023_03_08/phi_1.png)
+
+&nbsp; 
+
+&nbsp;
+
+* $\varphi = 1.25$ 
+
+| $\mu$ | n0t | B | D | S | n0 |
+|--     |--   |-- |-- |-- |--  |
+|-13.3011| 20.8543| -0.6990 | -0.9999| -2.3979 |18.0000|
+
+Wall Clock Time = 8963 s
+
+![](figs/2023_03_08/phi_1_25.png)
+
+&nbsp; 
+
+&nbsp;
+
+* $\varphi = 1.5$ 
+
+| $\mu$ | n0t | B | D | S | n0 |
+|--     |--   |-- |-- |-- |--  |
+|-13.3011| 20.8703| -0.6991 | -1.0000| -2.3979 |18.0000|
+
+Wall Clock Time = 10781 s
+
+![](figs/2023_03_08/phi_1_5.png)
+
+&nbsp; 
+
+&nbsp;
+
+Mi accorgo che avevo scritto la funzione obiettivo in una maniera tale per cui il valore di $\varphi$ era sempre fissato al valore giusto e i tentativi di modifica del PS(particle swarm) erano inefficaci. Correggo tale aspetto e lancio una nuova simulazione
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 |
+|-- |--     |--   |--         |-- |-- |-- |--  |
+| lower bound  |-16| 18| 0.5| -2| -2| -4| 16 |
+| exact  |**-13.3010**| **20.7782**| **1**| **-0.6990**| **-1**| **-2.3979**| **18** |
+| upper bound  |-12| 22| 1.5| 1| 1| 1| 20 |
+| guessed  |-13.3013| 21.9969| 1.0000| -0.6991| -0.9997| -2.3968| 18.0003 |
+
+| FunctionTolerance | MaxStallIterations | WallClockTime(s) |
+|--                 |--                  |--             |
+| 1e-6              | 50                 | 16080 = 4h e 28m        |
+
+![](figs/2023_03_08/good_fit.png)
+
+Si vede che il particle swarm è stato molto bravo a fare il fit. L'unico valore che è diverso da quelli esatti è il valore della densità iniziale di trappole. Controllo e verifico che effettivamente il valore di tale parametro influenza poco il fitting
+
+Vedo a parità di problema che cosa ottengo utilizzando il **TRRA** (correggo anche qui l'errore relativo alla non rilevanza del valore di $\varphi$)
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 |
+|-- |--     |--   |--         |-- |-- |-- |--  |
+| lower bound  |-16| 18| 0.5| -2| -2| -4| 16 |
+| exact  |**-13.3010**| **20.7782**| **1**| **-0.6990**| **-1**| **-2.3979**| **18** |
+| upper bound  |-12| 22| 1.5| 1| 1| 1| 20 |
+| initial guess | -14 | 19 | 1.1 | 0 | 0 | -3 | 19 |
+| guessed  |-13.4805| 19.0891| 1.0453| -0.0209| -0.0252| -3.2900| 18.0640 |
+
+| FunctionTolerance | OptimalityTolerance | WallClockTime(s) |
+|--                 |--                  |--             |
+| 1e-6              | 1e-6                 | 132 = 2m 12s    |
+
+![](figs/2023_03_08/godd_fit_with_TRRA.png)
+
+Il risultato con il TRRA non è altrettanto bello, ma ha il vantaggio che ci mette 2 minuti contro 4 ore e mezza. Lo svantaggio è che occorre dargli un punto di partenza. Ora provo a fargli fare uno swipe di punti di partenza e vedere se trova delle belle soluzioni con tutti quanti. Prendo 11 punti nell'intervallo di ricerca tra "lower bound" e "upper bound", il primo corrisponde ai valori di "lower bound" e l'undicesimo corrisponde ai valori di "upper bound". Nella tabella sotto riporto i valori dei parametri trovati per ogni punto di partenza e il corrispondente tempo di simulazione
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 | WallClockTime(s) |
+|-- |--     |--   |--         |-- |-- |-- |--  |--                |
+| #1  |-15.0521| 21.9994| 1.3488| -2.0000| 0.9927| -1.6929| 19.8905 | 110 |
+| #2  |-13.7688| 19.6215| 0.9803| -1.7340| -0.7647| -1.9544| 18.1863 | 206 |
+| #3  |-14.3044| 18.6844| 1.3037| -1.5070| -1.2044| -1.1258| 17.5855 | 54 |
+| #4  |-13.5613| 18.4901| 0.9680| -1.1268| -1.0439| -1.3199| 18.1837 | 63 |
+| #5  |-13.6049| 19.9784| 0.9997| -0.9889| -0.7097| -2.5412| 18.0487 | 65 |
+| #6  |-13.5188| 19.8481| 1.0058| -0.5853| -0.5179| -2.4820| 18.0743 | 58 |
+| #7  |-13.5023| 21.0258| 1.0189| -0.2705| -0.2111| -2.2225| 18.0881 | 56 |
+| #8  |-13.1998| 20.8002| 1.1999| 0.1005| 0.1001| -1.9003| 18.8000 | 52 |
+| #9  |-12.7999| 21.2002| 1.3000| 0.4000| 0.4000| -1.6000| 19.2000 | 38 |
+| **#10**  |||||||||
+| **#11**  |||||||||
  
+ Stranamente la simulazione #10 con il TRRA sembra bloccarsi (pare che non converga). Per quanto riguarda la 11 ricevo un messaggio di errore (non si possono usare lower o upper bound come punto di partenza, eppure la simulzione #1 era andata). Rinuncio ad effettuare queste ultime due simulazioni dato che le altre nove sono sufficienti
+
+![](figs/2023_03_08/span_TRRA.png)
+
+Quello che si vede da questo grafico è che la bontà del fit è molto dipendente dal punto di partenza che si da all'algoritmo.
+
+Lancio una nuova simulazione con il particle swarm, questa volta essendo meno stringente con le MaxStallIterations e la FunctionTolerance, per verificare se riesco ad ottenere comunque una buona accuratezza in un tempo inferiore
+
+| FunctionTolerance | MaxStallIterations | WallClockTime(s) |
+|--                 |--                  |--                |
+| 1e-3              | 20                 |                  |

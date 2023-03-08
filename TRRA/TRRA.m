@@ -13,15 +13,49 @@ options = optimoptions('lsqnonlin', 'Display','iter');
 cd(current_path)
 clear current_path
 
-%% SET OF STANDARD PARAMETERS
+%% PLOT CURRENT SERI
+clearvars, clc, close all
+load('data\G1B166C-T60_30_kV-mm.mat')
+J_seri = savemat.curr/savemat.A;
+t_seri = savemat.time;
+% Si buttano via i primi 5 punti della corrente e 6 del tempo
+J_seri = J_seri(6:end);
+t_seri = t_seri(7:end);
+ax1 = gca;
+loglog(t_seri, J_seri)
+grid on
+xlabel('time (s)')
+ylabel('current density (A/m^2)')
+set(gca,'FontSize',15)
+t_interp = logspace(log10(t_seri(1)),log10(t_seri(end)),100);
+J_interp = interp1(t_seri,J_seri,t_interp); 
+J_interp_mean = smoothdata(J_interp);
+figure
+loglog(t_interp,J_interp_mean)
+xlim(get(ax1,'Xlim'))
+ylim(get(ax1,'Ylim'))
+grid on
+t_smooth = t_interp;
+J_smooth = J_interp_mean;
+
+%% SET OF [STANDARD, SERI] PARAMETERS
 clc, clear variables
 current_path = pwd();
 cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
 addpath('Functions\')
+
+%SERI
+P.L = 3.5e-4;
+P.num_points = 100;
+P.T = 60;
+P.eps_r = 2;
+P.Phi_W = 0;
+P.Phi_E = 1.05e4;
+
 % Parameters of the simulation
 P.L = 4e-4;
 P.num_points = 100;
-P.T = 298.15;
+P.T = 25;
 P.eps_r = 2;
 P.Phi_W = 0;
 P.Phi_E = 4e3;
@@ -46,11 +80,13 @@ P.a = 7.5005e12;
 P.e = 1.6022e-19;
 P.kB = 1.381e-23;
 P.eps0 = 8.854e-12;
+P.abs0 = 273.15;
 
 % Derived parameters
 P.Delta = P.L / P.num_points;
 P.kBT = P.kB * P.T;
 P.eps = P.eps_r * P.eps0;
+P.T = P.T + P.abs0;
 P.beta = 6.08e-24 / sqrt(P.eps_r);
 P.coeff =  8 * P.eps / (3 * P.Delta^2);
 P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
@@ -149,29 +185,43 @@ lb = [-15,   19,  0.9,   -1,   -1,   -3,   17];
 ub = [-13,   21,  1.1,    0,    0,   -2,   19];
 
 solver = 'particleswarm';
-fit_what = "J";
+fit_what = "N";
 options = optimoptions(solver);
-options.UseParallel = false; %false
+options.UseParallel = true; %false
 options.FunctionTolerance = 1e-3; %1e-6
 options.MaxIterations = 1e5; %200*nvars
 options.MaxStallIterations = 20; %20
 options.Display = 'final'; %final
 
 tic
-if fit_what == "J"
+if fit_what == "N"
     [xv,~,~,output] = particleswarm(@(parametri)objective_function_N(parametri,Nobjective,time,P,solver), length(ub), lb, ub, options);
-elseif fit_what == "N"
+elseif fit_what == "J"
     [xv,~,~,output] = particleswarm(@(parametri)objective_function_J(parametri,Jobjective,time,P,solver), length(ub), lb, ub, options);
 end
 toc
 
-save(solver + "_" + fit_what,'xv')
+save("data\" + solver + "_" + fit_what,'xv')
 
 cd(current_path)
 clear current_path
 
 %% COMPARE RESULTS (J)
-xv = [-13.4015 18.2590 1 0.9938 0.7860 -2.3746 18.0529];
+current_path = pwd();
+cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
+addpath('Functions\')
+load('data\objective_for_TRRA\standard_parameters.mat');
+xv = [  -15.0521, 21.9994, 1.3488, -2.0000,  0.9927, -1.6929, 19.8905;
+        -13.7688, 19.6215, 0.9803, -1.7340, -0.7647, -1.9544, 18.1863;
+        -14.3044, 18.6844, 1.3037, -1.5070, -1.2044, -1.1258, 17.5855;
+        -13.5613, 18.4901, 0.9680, -1.1268, -1.0439, -1.3199, 18.1837;
+        -13.6049, 19.9784, 0.9997, -0.9889, -0.7097, -2.5412, 18.0487;
+        -13.5188, 19.8481, 1.0058, -0.5853, -0.5179, -2.4820, 18.0743;
+        -13.5023, 21.0258, 1.0189, -0.2705, -0.2111, -2.2225, 18.0881;
+        -13.1998, 20.8002, 1.1999,  0.1005,  0.1001, -1.9003, 18.8000;
+        -12.7999, 21.2002, 1.3000,  0.4000,  0.4000, -1.6000, 19.2000 ];
+%         -12.7999| 21.2002| 1.3000|  0.4000|  0.4000| -1.6000| 19.2000;
+%         -12.7999| 21.2002| 1.3000|  0.4000|  0.4000| -1.6000| 19.2000   ];
 P.L = 4e-4;
 P.num_points = 100;
 P.T = 298.15;
@@ -179,65 +229,73 @@ P.eps_r = 2;
 P.Phi_W = 0;
 P.Phi_E = 4e3;
 
-% Parameters fitted 
-P.mu_h = 10^xv(1);
-P.mu_e = 10^xv(1);
-P.nh0t = 10^xv(2);
-P.ne0t = 10^xv(2);
-P.phih = xv(3);
-P.phie = xv(3);
-P.Bh = 10^xv(4);
-P.Be = 10^xv(4);
-P.Dh = 10^xv(5);
-P.De = 10^xv(5);
-P.S0 = 10^xv(6);
-P.S1 = 10^xv(6);
-P.S2 = 10^xv(6);
-P.S3 = 10^xv(6);
-P.n_start = [10^xv(7), 10^xv(7), 0, 0];
+for i = 1:size(xv,1)
 
-% Physics constants
-P.a = 7.5005e12;
-P.e = 1.6022e-19;
-P.kB = 1.381e-23;
-P.eps0 = 8.854e-12;
-
-% Derived parameters
-P.Delta = P.L / P.num_points;
-P.kBT = P.kB * P.T;
-P.eps = P.eps_r * P.eps0;
-P.beta = 6.08e-24 / sqrt(P.eps_r);
-P.coeff =  8 * P.eps / (3 * P.Delta^2);
-P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
-P.D_h = P.mu_h * P.T * P.kB/ P.e;
-P.D_e = P.mu_e * P.T * P.kB/ P.e;
-P.S0 = P.S0 * P.e;
-P.S1 = P.S1 * P.e;
-P.S2 = P.S2 * P.e;
-P.S3 = P.S3 * P.e;
-P.Kelet = Kelectrostatic(P.num_points, P.Delta, P.eps);
-
-% Setting initial condition for the number density
-n_stato_0 = ones(P.num_points, 4) .* P.n_start;
-n_stato_0 = reshape(n_stato_0, [P.num_points*4, 1]);
-
-% Solving with ODE
-options = odeset('Stats','off');
-[tout, nout] = ode23tb(@(t,n_stato)odefunc_Drift_Diffusion(t, n_stato, P), time, n_stato_0, options);
-
-% Post Processing
-[x, x_interfacce, x_interni] = create_x_domain(P.L, P.num_points);
-[nh, ne, nht, net, rho, phi, E, J_fitted] = post_processing(nout, tout, P);
-
-% Confronting real result with fitted one
-loglog(time,Jobjective,'r-','LineWidth',2,'DisplayName','Objective')
-hold on
-loglog(time,J_fitted,'b--','LineWidth',2,'DisplayName','Fit')
+    % Parameters fitted 
+    P.mu_h = 10^xv(i,1);
+    P.mu_e = 10^xv(i,1);
+    P.nh0t = 10^xv(i,2);
+    P.ne0t = 10^xv(i,2);
+    P.phih = xv(i,3);
+    P.phie = xv(i,3);
+    P.Bh = 10^xv(i,4);
+    P.Be = 10^xv(i,4);
+    P.Dh = 10^xv(i,5);
+    P.De = 10^xv(i,5);
+    P.S0 = 10^xv(i,6);
+    P.S1 = 10^xv(i,6);
+    P.S2 = 10^xv(i,6);
+    P.S3 = 10^xv(i,6);
+    P.n_start = [10^xv(i,7), 10^xv(i,7), 0, 0];
+    
+    % Physics constants
+    P.a = 7.5005e12;
+    P.e = 1.6022e-19;
+    P.kB = 1.381e-23;
+    P.eps0 = 8.854e-12;
+    
+    % Derived parameters
+    P.Delta = P.L / P.num_points;
+    P.kBT = P.kB * P.T;
+    P.eps = P.eps_r * P.eps0;
+    P.beta = 6.08e-24 / sqrt(P.eps_r);
+    P.coeff =  8 * P.eps / (3 * P.Delta^2);
+    P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
+    P.D_h = P.mu_h * P.T * P.kB/ P.e;
+    P.D_e = P.mu_e * P.T * P.kB/ P.e;
+    P.S0 = P.S0 * P.e;
+    P.S1 = P.S1 * P.e;
+    P.S2 = P.S2 * P.e;
+    P.S3 = P.S3 * P.e;
+    P.Kelet = Kelectrostatic(P.num_points, P.Delta, P.eps);
+    
+    % Setting initial condition for the number density
+    n_stato_0 = ones(P.num_points, 4) .* P.n_start;
+    n_stato_0 = reshape(n_stato_0, [P.num_points*4, 1]);
+    
+    % Solving with ODE
+    options = odeset('Stats','off');
+    [tout, nout] = ode23tb(@(t,n_stato)odefunc_Drift_Diffusion(t, n_stato, P), time, n_stato_0, options);
+    
+    % Post Processing
+    [x, x_interfacce, x_interni] = create_x_domain(P.L, P.num_points);
+    [nh, ne, nht, net, rho, phi, E, J_fitted] = post_processing(nout, tout, P);
+    
+    % Confronting real result with fitted one
+    if i == 1
+        loglog(time,Jobjective,'k-','LineWidth',3,'DisplayName','Objective')
+        hold on
+    end
+    loglog(time,J_fitted,'-','LineWidth',1,'DisplayName',"Fit_" + num2str(i))
+end
 grid on
 legend
 xlabel('time (s)')
 ylabel('J (A/m^2)')
 set(gca,'FontSize',15)
+
+cd(current_path)
+clear current_path
 
 %% COMPARE RESULTS (N)
 xv = [-13.5409   19.0552    1.1000   -0.0599   -0.0081   -2.9521   17.8963];
