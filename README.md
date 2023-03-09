@@ -198,10 +198,52 @@ Il risultato con il TRRA non è altrettanto bello, ma ha il vantaggio che ci met
 
 ![](figs/2023_03_08/span_TRRA.png)
 
-Quello che si vede da questo grafico è che la bontà del fit è molto dipendente dal punto di partenza che si da all'algoritmo.
+Quello che si vede da questo grafico è che la bontà del fit è molto dipendente dal punto di partenza che si da all'algoritmo TRRA.
 
 Lancio una nuova simulazione con il particle swarm, questa volta essendo meno stringente con le MaxStallIterations e la FunctionTolerance, per verificare se riesco ad ottenere comunque una buona accuratezza in un tempo inferiore
 
 | FunctionTolerance | MaxStallIterations | WallClockTime(s) |
 |--                 |--                  |--                |
-| 1e-3              | 20                 |                  |
+| 1e-3              | 20                 |  4525 = 1h 15m   |
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 |
+|-- |--     |--   |--         |-- |-- |-- |--  |
+| lower bound  |-16| 18| 0.5| -2| -2| -4| 16 |
+| exact  |**-13.3010**| **20.7782**| **1**| **-0.6990**| **-1**| **-2.3979**| **18** |
+| upper bound  |-12| 22| 1.5| 1| 1| 1| 20 |
+| guessed | -13.3252 | 21.6320 | 0.9976 | -0.7015 | -0.9720 | -2.3212 | 18.0181 |
+
+![](figs/2023_03_09/PS_blando.png)
+
+Si riesce ad ottenere una buona accuratezza anche in un tempo inferiore (poco più di un ora) usando il PS.
+
+&nbsp;
+
+&nbsp;
+
+A questo punto provo a fare il fitting della famosa corrente di polarizzazione di Paolo Seri utilizzando il particle swarm. 
+
+| FunctionTolerance | MaxStallIterations | WallClockTime(s) |
+|--                 |--                  |--                |
+| 1e-3              | 20                 |  5097 = 1h 23m   |
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 |
+|-- |--     |--   |--         |-- |-- |-- |--  |
+| lower bound  |-16| 19| 0.5| -4| -4| -4| 16 |
+| upper bound  |-12| 25| 1.5| 2| 2| 2| 20 |
+| guessed | -13.7661 | 19.0018 | 0.50000 | -4.0000 | 0.2812 | -4.0000 | 20.0000 |
+
+![](figs/2023_03_09/fit_Seri.png)
+Il risultato non è granchè, molti parametri sono in corrispondenza dei limiti, vuol dire che per ottenere un fitting migliore dovrei cambiare i lower e gli upper bound
+
+&nbsp;
+
+&nbsp;
+
+Provo allora ad usare il TRRA utilizzando diversi valori di x0 (punto di partenza). 
+![](figs/2023_03_09/parametri_TRRA_1.png)
+L'ultima colonna della matrice qui sopra corrisponde ai tempi in secondi.
+![](figs/2023_03_09/TRRA_Seri.png)
+Vorrei fare 11 fit, ma arrivato al 5 ottengo un errore che mi dice che i lower e gli upper bound non sono supportati con funzioni complesse. Provo allora a togliere i lower e gli uper bound che davo alla funzione lsqnonlin (li tengo come riferimento per selezionare i vari punti di partenza). Anche in questo caso non riesco a concludere le simulazioni perchè ad un certo punto ottengo una matrice con numero di condizionamento uguale a NaN. Non riesco neanche a plottare i primi 4 (ed unici) fit che avevo ottenuto perchè le ODE si fermano a causa della riduzione eccessiva del passo temporale 
+
+

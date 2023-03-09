@@ -53,12 +53,12 @@ P.Phi_W = 0;
 P.Phi_E = 1.05e4;
 
 % Parameters of the simulation
-P.L = 4e-4;
-P.num_points = 100;
-P.T = 25;
-P.eps_r = 2;
-P.Phi_W = 0;
-P.Phi_E = 4e3;
+% P.L = 4e-4;
+% P.num_points = 100;
+% P.T = 25;
+% P.eps_r = 2;
+% P.Phi_W = 0;
+% P.Phi_E = 4e3;
 P.mu_h = 5e-14;
 P.mu_e = 5e-14;
 P.nh0t = 6e20;
@@ -174,18 +174,19 @@ current_path = pwd();
 cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
 addpath('Functions\')
 
-load('data\objective_for_TRRA\standard_parameters.mat');
+% load('data\objective_for_TRRA\standard_parameters.mat');
+load('data\Seri_objective.mat');
 
 % ex -> the parameter is an exponent 
 % li -> the parameter is a linear parameter
       %ex   %ex   %li   %ex   %ex   %ex   %ex
       %mu   %n0t  %phi  %B    %D    %S    %n0
     %[-13.3010, 20.7782, 1, -0.6990, -1, -2.3979, 18]
-lb = [-15,   19,  0.9,   -1,   -1,   -3,   17];
-ub = [-13,   21,  1.1,    0,    0,   -2,   19];
+lb = [-16,   19,  0.5,   -5,   -5,   -5,   16];
+ub = [-12,   25,  1.5,    1,    1,   -1,   20];
 
 solver = 'particleswarm';
-fit_what = "N";
+fit_what = "J";
 options = optimoptions(solver);
 options.UseParallel = true; %false
 options.FunctionTolerance = 1e-3; %1e-6
@@ -210,18 +211,22 @@ clear current_path
 current_path = pwd();
 cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
 addpath('Functions\')
-load('data\objective_for_TRRA\standard_parameters.mat');
-xv = [  -15.0521, 21.9994, 1.3488, -2.0000,  0.9927, -1.6929, 19.8905;
-        -13.7688, 19.6215, 0.9803, -1.7340, -0.7647, -1.9544, 18.1863;
-        -14.3044, 18.6844, 1.3037, -1.5070, -1.2044, -1.1258, 17.5855;
-        -13.5613, 18.4901, 0.9680, -1.1268, -1.0439, -1.3199, 18.1837;
-        -13.6049, 19.9784, 0.9997, -0.9889, -0.7097, -2.5412, 18.0487;
-        -13.5188, 19.8481, 1.0058, -0.5853, -0.5179, -2.4820, 18.0743;
-        -13.5023, 21.0258, 1.0189, -0.2705, -0.2111, -2.2225, 18.0881;
-        -13.1998, 20.8002, 1.1999,  0.1005,  0.1001, -1.9003, 18.8000;
-        -12.7999, 21.2002, 1.3000,  0.4000,  0.4000, -1.6000, 19.2000 ];
-%         -12.7999| 21.2002| 1.3000|  0.4000|  0.4000| -1.6000| 19.2000;
-%         -12.7999| 21.2002| 1.3000|  0.4000|  0.4000| -1.6000| 19.2000   ];
+
+% load('data\objective_for_TRRA\standard_parameters.mat');
+load('data\Seri_objective.mat');
+
+% xv = [  -15.0521, 21.9994, 1.3488, -2.0000,  0.9927, -1.6929, 19.8905;
+%         -13.7688, 19.6215, 0.9803, -1.7340, -0.7647, -1.9544, 18.1863;
+%         -14.3044, 18.6844, 1.3037, -1.5070, -1.2044, -1.1258, 17.5855;
+%         -13.5613, 18.4901, 0.9680, -1.1268, -1.0439, -1.3199, 18.1837;
+%         -13.6049, 19.9784, 0.9997, -0.9889, -0.7097, -2.5412, 18.0487;
+%         -13.5188, 19.8481, 1.0058, -0.5853, -0.5179, -2.4820, 18.0743;
+%         -13.5023, 21.0258, 1.0189, -0.2705, -0.2111, -2.2225, 18.0881;
+%         -13.1998, 20.8002, 1.1999,  0.1005,  0.1001, -1.9003, 18.8000;
+%         -12.7999, 21.2002, 1.3000,  0.4000,  0.4000, -1.6000, 19.2000 ];
+% xv = [-13.7661 , 19.0018 , 0.50000 , -4.0000 , 0.2812 , -4.0000 , 20.0000];
+
+% Fixed Parameters
 P.L = 4e-4;
 P.num_points = 100;
 P.T = 298.15;
@@ -229,7 +234,13 @@ P.eps_r = 2;
 P.Phi_W = 0;
 P.Phi_E = 4e3;
 
-for i = 1:size(xv,1)
+% Physics constants
+P.a = 7.5005e12;
+P.e = 1.6022e-19;
+P.kB = 1.381e-23;
+P.eps0 = 8.854e-12;
+
+for i = 1:4 %size(xv,1)
 
     % Parameters fitted 
     P.mu_h = 10^xv(i,1);
@@ -247,12 +258,6 @@ for i = 1:size(xv,1)
     P.S2 = 10^xv(i,6);
     P.S3 = 10^xv(i,6);
     P.n_start = [10^xv(i,7), 10^xv(i,7), 0, 0];
-    
-    % Physics constants
-    P.a = 7.5005e12;
-    P.e = 1.6022e-19;
-    P.kB = 1.381e-23;
-    P.eps0 = 8.854e-12;
     
     % Derived parameters
     P.Delta = P.L / P.num_points;
@@ -283,16 +288,32 @@ for i = 1:size(xv,1)
     
     % Confronting real result with fitted one
     if i == 1
-        loglog(time,Jobjective,'k-','LineWidth',3,'DisplayName','Objective')
+        figure1 = figure;
+        loglog(time,Jobjective,'r-','LineWidth',2,'DisplayName','Objective')
         hold on
     end
-    loglog(time,J_fitted,'-','LineWidth',1,'DisplayName',"Fit_" + num2str(i))
+    loglog(time,J_fitted,'--','LineWidth',2,'DisplayName', "Fit_" + num2str(i))
 end
 grid on
 legend
 xlabel('time (s)')
 ylabel('J (A/m^2)')
 set(gca,'FontSize',15)
+
+% x1 = 900;
+% x2 = 1100;
+% y1 = 1.4e-8;
+% y2 = 2.4e-8;
+% rectangle('Position',[x1, y1, x2-x1, y2-y1])
+% ax = axes('Position',[.3 .3 .3 .3]);
+% box on
+% loglog(time, J_fitted, 'r-','LineWidth',2,'DisplayName','Objective')
+% hold on
+% loglog(time, Jobjective, 'b--','LineWidth',2,'DisplayName', 'Fit')
+% grid on
+% ax.XLim = [x1, x2];
+% ax.YLim = [y1, y2];
+% annotation(figure1,'arrow',[0.511 0.598],[0.610 0.721]);
 
 cd(current_path)
 clear current_path
