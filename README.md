@@ -200,6 +200,7 @@ Il risultato con il TRRA non è altrettanto bello, ma ha il vantaggio che ci met
 
 Quello che si vede da questo grafico è che la bontà del fit è molto dipendente dal punto di partenza che si da all'algoritmo TRRA.
 
+## 9/3/2023
 Lancio una nuova simulazione con il particle swarm, questa volta essendo meno stringente con le MaxStallIterations e la FunctionTolerance, per verificare se riesco ad ottenere comunque una buona accuratezza in un tempo inferiore
 
 | FunctionTolerance | MaxStallIterations | WallClockTime(s) |
@@ -244,6 +245,67 @@ Provo allora ad usare il TRRA utilizzando diversi valori di x0 (punto di partenz
 ![](figs/2023_03_09/parametri_TRRA_1.png)
 L'ultima colonna della matrice qui sopra corrisponde ai tempi in secondi.
 ![](figs/2023_03_09/TRRA_Seri.png)
-Vorrei fare 11 fit, ma arrivato al 5 ottengo un errore che mi dice che i lower e gli upper bound non sono supportati con funzioni complesse. Provo allora a togliere i lower e gli uper bound che davo alla funzione lsqnonlin (li tengo come riferimento per selezionare i vari punti di partenza). Anche in questo caso non riesco a concludere le simulazioni perchè ad un certo punto ottengo una matrice con numero di condizionamento uguale a NaN. Non riesco neanche a plottare i primi 4 (ed unici) fit che avevo ottenuto perchè le ODE si fermano a causa della riduzione eccessiva del passo temporale 
+Vorrei fare 11 fit, ma arrivato al 5 ottengo un errore che mi dice che i lower e gli upper bound non sono supportati con funzioni complesse. Provo allora a togliere i lower e gli uper bound che davo alla funzione lsqnonlin (li tengo come riferimento per selezionare i vari punti di partenza). Anche in questo caso non riesco a concludere le simulazioni perchè ad un certo punto ottengo una matrice con numero di condizionamento uguale a NaN. Non riesco neanche a plottare i primi 4 (ed unici) fit che avevo ottenuto perchè le ODE si fermano a causa della riduzione eccessiva del passo temporale.
+
+Lancio una simulazione in cui anche $\varepsilon_{r}$ viene tenuta come parametro.
+
+## 10/3/2023
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 | $\varepsilon_{r}$ |
+|-- |--     |--   |--         |-- |-- |-- |--  |--                 |
+| lower bound  |-16| 19| 0.5| -8| -4| -8| 16 |  0.5  |
+| upper bound  |-12| 25| 1.5| 2| 2| 2| 22 | 6 |
+| guessed | -15.9569 | 21.6586 | 0.50000 | -1.1056 | 0.7763 | -7.7562 | 21.1404 | 0.5000 |
+
+| FunctionTolerance | MaxStallIterations | WallClockTime(s) |
+|--                 |--                  |--                |
+| 1e-6              | 50                 |  3972 = 1h 6m   |
+
+![](figs/2023_03_10/fit_Seri_PS.png)
+
+**fitness function = 11.3755**
+
+Anche in questo caso i risulti sono abbastanza brutti. Concludo che sia necessario modificare/migliorare il modello
+
+Sono andato a recuperare i parametri dei due fit che avevo fatto a mano:
+
+|   | L | $\Delta V$ | $\mu$ | n0t | $\varphi$ | $B_{h}$ | $B_{e}$ | $D_{h}$ | $D_{e}$ | $S_{0}$ | $S_{1}$ | $S_{2}$ | $S_{3}$ | n0 | $\varepsilon_{r}$ |
+|-- |-- |--          |--     |--   |--         |--       |--       |--       |--       |--       |--       |--       |--       |--  |--                 |
+| Fit a mano #1 | 4e-4 | 12e3 | 9e-15 | 1e24 | 0.65 | 2e-1 | 1e-1 | 1e-1 | 5e-2 | 4e-3 | 4e-3 | 4e-3 | 0 | 4e21 | 4 |
+| Fit a mano #2 | 3e-4 | 9e3 | 1e-12 | 1e25 | 1 | 2 | 1 | 1e-2 | 5e-3 | 4e-3 | 4e-3 | 4e-3 | 0 | 1e20 | 4 |
+
+![](figs/2023_03_10/fit_1_a_mano.png)
+
+![](figs/2023_03_10/fit_2_a_mano.png)
+
+I parametri erano stati scelti quando si faceva la stima della corrente di conduzione al centro delle interfacce, in quel caso la somiglianza era maggiore.
+
+Nel caso del Fit #1 vengono dei valori di corrente di polarizzazione negativi **!!!**  
+Facendo una simulazione con gli stessi parametri del "fit a mano 1" con un codice che avevo fatto in precedenza ottengo una corrente che non diventa negativa. Andando a vedere le number density vedo che in entrambi i casi ce ne sono di negative, ce ne sono molte di più nel caso in cui la corrente non diventa negativa (mi aspetterei il contrario) -> mi viene voglia di fare un full esplicito
+
+Nel frattempo lancio una simulazione in cui ho ristretto l'ampiezza dei bounds(attorno al fit non tanto bello di un po' di tempo fa) e mantengo sempre $\varepsilon_{r}$ variabile
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 | $\varepsilon_{r}$ |
+|-- |--     |--   |--         |-- |-- |-- |--  |--                 |
+| lower bound  |-14| 19| 0.5| -4| 0| -4| 19.5 |  1.5  |
+| upper bound  |-13.5| 19.5| 0.6| -3.5| 0.5| -3.5| 20 | 5 |
+| guessed previously | -13.7661 | 19.0018 | 0.50000 | -4.0000 | 0.2812 | -4.0000 | 20.0000 | **2** |
+| guessed | -14.0000 | 19.0075 | 0.50000 | -3.5000 | 0 | -3.9901 | 19.7327 | 1.5000 |
+
+| FunctionTolerance | MaxStallIterations | WallClockTime(s) |
+|--                 |--                  |--                |
+| 1e-6              | 50                 |  3479 = 58m   |
+
+![](figs/2023_03_10/fit_stretto_epsilon_variabile.png)
+
+**fitness function = 9.6294**
+
+
+
+
+# TODO
+* fare un full esplicito in MATLAB
+* corrente con $J + \frac{\partial D}{\partial t}$
+
 
 

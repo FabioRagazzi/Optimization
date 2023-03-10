@@ -1,5 +1,8 @@
 function [d_n_stato_dt] = odefunc_Drift_Diffusion(t, n_stato, P)
 % ODEFUNC_DRIFT_DIFFUSION Computes dndt given the current values of n
+% if t > 1.07e+04
+%     ;
+% end
 n = reshape(n_stato, [P.num_points, 4]);
 rho = sum(n.*[1, -1, 1, -1],2) * P.e;
 phi = Electrostatic(rho, P.coeff, P.Phi_W, P.Phi_E, P.Kelet); 

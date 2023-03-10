@@ -38,6 +38,100 @@ grid on
 t_smooth = t_interp;
 J_smooth = J_interp_mean;
 
+%% FIT A MANO #1
+% Parameters of the simulation
+P.L = 4e-4;
+P.num_points = 100;
+P.T = 60;
+P.eps_r = 4;
+P.Phi_W = 0;
+P.Phi_E = 12e3;
+P.mu_h = 9e-15;
+P.mu_e = 9e-15;
+P.nh0t = 1e24;
+P.ne0t = 1e24;
+P.phih = 0.65;
+P.phie = 0.65;
+P.Bh = 2e-1;
+P.Be = 1e-1;
+P.Dh = 1e-1;
+P.De = 5e-2;
+P.S0 = 4e-3;
+P.S1 = 4e-3;
+P.S2 = 4e-3;
+P.S3 = 0;
+P.n_start = [4e21, 4e21, 0, 0];
+
+% Physics constants
+P.a = 7.5005e12;
+P.e = 1.6022e-19;
+P.kB = 1.381e-23;
+P.eps0 = 8.854e-12;
+P.abs0 = 273.15;
+
+% Derived parameters
+P.Delta = P.L / P.num_points;
+P.kBT = P.kB * P.T;
+P.eps = P.eps_r * P.eps0;
+P.T = P.T + P.abs0;
+P.beta = 6.08e-24 / sqrt(P.eps_r);
+P.coeff =  8 * P.eps / (3 * P.Delta^2);
+P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
+P.D_h = P.mu_h * P.T * P.kB/ P.e;
+P.D_e = P.mu_e * P.T * P.kB/ P.e;
+P.S0 = P.S0 * P.e;
+P.S1 = P.S1 * P.e;
+P.S2 = P.S2 * P.e;
+P.S3 = P.S3 * P.e;
+P.Kelet = Kelectrostatic(P.num_points, P.Delta, P.eps);
+
+%% FIT A MANO #2
+% Parameters of the simulation
+P.L = 3e-4;
+P.num_points = 100;
+P.T = 60;
+P.eps_r = 4;
+P.Phi_W = 0;
+P.Phi_E = 9e3;
+P.mu_h = 1e-12;
+P.mu_e = 1e-12;
+P.nh0t = 1e25;
+P.ne0t = 1e25;
+P.phih = 1;
+P.phie = 1;
+P.Bh = 2;
+P.Be = 1;
+P.Dh = 1e-2;
+P.De = 5e-3;
+P.S0 = 4e-3;
+P.S1 = 4e-3;
+P.S2 = 4e-3;
+P.S3 = 0;
+P.n_start = [1e20, 1e20, 0, 0];
+
+% Physics constants
+P.a = 7.5005e12;
+P.e = 1.6022e-19;
+P.kB = 1.381e-23;
+P.eps0 = 8.854e-12;
+P.abs0 = 273.15;
+
+% Derived parameters
+P.Delta = P.L / P.num_points;
+P.kBT = P.kB * P.T;
+P.eps = P.eps_r * P.eps0;
+P.T = P.T + P.abs0;
+P.beta = 6.08e-24 / sqrt(P.eps_r);
+P.coeff =  8 * P.eps / (3 * P.Delta^2);
+P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
+P.D_h = P.mu_h * P.T * P.kB/ P.e;
+P.D_e = P.mu_e * P.T * P.kB/ P.e;
+P.S0 = P.S0 * P.e;
+P.S1 = P.S1 * P.e;
+P.S2 = P.S2 * P.e;
+P.S3 = P.S3 * P.e;
+P.Kelet = Kelectrostatic(P.num_points, P.Delta, P.eps);
+
 %% SET OF [STANDARD, SERI] PARAMETERS
 clc, clear variables
 current_path = pwd();
@@ -108,10 +202,10 @@ cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
 addpath('Functions\')
 
 % Loading the parameters for the simulation
-load('data\P_standard') 
+load('data\Fit_a_mano_1.mat') 
 
 % Specifying the time instants that will be outputted
-time = [0, logspace(0,5,99)];
+time = [0, logspace(0,5,60)];
 
 % Setting initial condition for the number density
 n_stato_0 = ones(P.num_points, 4) .* P.n_start;
@@ -126,6 +220,33 @@ toc
 % Post Processing
 [x, x_interfacce, x_interni] = create_x_domain(P.L, P.num_points);
 [nh, ne, nht, net, rho, phi, E, J] = post_processing(nout, tout, P);
+
+cd(current_path)
+clear current_path
+
+%% J + dD / dt
+current_path = pwd();
+cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
+addpath('Functions\')
+
+J_cond = compute_J_cond(nh, ne, E, P.D_h, P.D_e, P.mu_h, P.mu_e, P.Delta, P.aT2exp, P.kBT, P.beta, P.e);
+dDdt = compute_dDdt(E, tout', P.eps);
+J_dDdt = -(J_cond);
+% surf(J_dDdt)
+
+J_from_dDdt = integral_func(J_dDdt', P.Delta) / P.L;
+figure
+loglog(tout,J_from_dDdt,'g-')
+hold on
+plot(tout,J,'k--')
+
+% figure
+% id = plot(J_dDdt(:,1));
+% for i = 2:size(J_dDdt,2)
+%     delete(id);
+%     id = plot(J_dDdt(:,i));
+%     pause(0.1)
+% end
 
 cd(current_path)
 clear current_path
@@ -224,13 +345,13 @@ load('data\Seri_objective.mat');
 %         -13.5023, 21.0258, 1.0189, -0.2705, -0.2111, -2.2225, 18.0881;
 %         -13.1998, 20.8002, 1.1999,  0.1005,  0.1001, -1.9003, 18.8000;
 %         -12.7999, 21.2002, 1.3000,  0.4000,  0.4000, -1.6000, 19.2000 ];
-% xv = [-13.7661 , 19.0018 , 0.50000 , -4.0000 , 0.2812 , -4.0000 , 20.0000];
+xv = [-14.0000 , 19.0075 , 0.50000 , -3.5000 , 0 , -3.9901 , 19.7327];
 
 % Fixed Parameters
 P.L = 4e-4;
 P.num_points = 100;
 P.T = 298.15;
-P.eps_r = 2;
+P.eps_r = 1.5; %!!!!!
 P.Phi_W = 0;
 P.Phi_E = 4e3;
 
@@ -240,7 +361,7 @@ P.e = 1.6022e-19;
 P.kB = 1.381e-23;
 P.eps0 = 8.854e-12;
 
-for i = 1:4 %size(xv,1)
+for i = 1:size(xv,1)
 
     % Parameters fitted 
     P.mu_h = 10^xv(i,1);
@@ -292,7 +413,7 @@ for i = 1:4 %size(xv,1)
         loglog(time,Jobjective,'r-','LineWidth',2,'DisplayName','Objective')
         hold on
     end
-    loglog(time,J_fitted,'--','LineWidth',2,'DisplayName', "Fit_" + num2str(i))
+    loglog(time,J_fitted,'b--','LineWidth',2,'DisplayName', "Fit_" + num2str(i))
 end
 grid on
 legend
