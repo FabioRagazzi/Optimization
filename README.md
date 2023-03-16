@@ -301,7 +301,18 @@ Nel frattempo lancio una simulazione in cui ho ristretto l'ampiezza dei bounds(a
 **fitness function = 9.6294**
 
 
+## 13/3/2023
 
+Ho trovato un errore che facevo nel calcolo del $J + \frac{\partial D}{\partial t}$  
+Le cose ancora non tornano, devo indagare meglio  
+
+## 15/3/2023
+Controllo la funzione che calcola il $\frac{\partial D}{\partial t}$ e mi convinco che funziona bene.  
+Realizzo un full esplicito e riesco con successo, almeno a prima vista, a calcolare bene la corrente di polarizzazione
+
+&nbsp;
+
+&nbsp;
 
 # TODO
 * fare un full esplicito in MATLAB

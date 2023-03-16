@@ -139,26 +139,26 @@ cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
 addpath('Functions\')
 
 %SERI
-P.L = 3.5e-4;
-P.num_points = 100;
-P.T = 60;
-P.eps_r = 2;
-P.Phi_W = 0;
-P.Phi_E = 1.05e4;
-
-% Parameters of the simulation
-% P.L = 4e-4;
+% P.L = 3.5e-4;
 % P.num_points = 100;
-% P.T = 25;
+% P.T = 60;
 % P.eps_r = 2;
 % P.Phi_W = 0;
-% P.Phi_E = 4e3;
+% P.Phi_E = 1.05e4;
+
+% Parameters of the simulation
+P.L = 4e-4;
+P.num_points = 100;
+P.T = 25;
+P.eps_r = 2;
+P.Phi_W = 0;
+P.Phi_E = 4e3;
 P.mu_h = 5e-14;
 P.mu_e = 5e-14;
 P.nh0t = 6e20;
 P.ne0t = 6e20;
-P.phih = 1;
-P.phie = 1;
+P.phih = 1; 
+P.phie = 1; 
 P.Bh = 0.2;
 P.Be = 0.2;
 P.Dh = 0.1;
@@ -178,9 +178,9 @@ P.abs0 = 273.15;
 
 % Derived parameters
 P.Delta = P.L / P.num_points;
-P.kBT = P.kB * P.T;
 P.eps = P.eps_r * P.eps0;
 P.T = P.T + P.abs0;
+P.kBT = P.kB * P.T;
 P.beta = 6.08e-24 / sqrt(P.eps_r);
 P.coeff =  8 * P.eps / (3 * P.Delta^2);
 P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
@@ -196,16 +196,16 @@ cd(current_path)
 clear current_path
 
 %% SIMULATION & POST PROCESSING
-clc, clear variables
+% clc, clear variables
 current_path = pwd();
 cd('C:\Users\Faz98\Documents\GitHub\Optimization\TRRA')
 addpath('Functions\')
 
 % Loading the parameters for the simulation
-load('data\Fit_a_mano_1.mat') 
+% load('data\Fit_a_mano_1.mat') 
 
 % Specifying the time instants that will be outputted
-time = [0, logspace(0,5,60)];
+time = linspace(0, 1e5); %[0 1e5]; %logspace(1,5,99)
 
 % Setting initial condition for the number density
 n_stato_0 = ones(P.num_points, 4) .* P.n_start;
@@ -219,7 +219,7 @@ toc
 
 % Post Processing
 [x, x_interfacce, x_interni] = create_x_domain(P.L, P.num_points);
-[nh, ne, nht, net, rho, phi, E, J] = post_processing(nout, tout, P);
+[nh, ne, nht, net, rho, phi, E, J, J_dDdt] = post_processing(nout, tout, P);
 
 cd(current_path)
 clear current_path
@@ -231,14 +231,15 @@ addpath('Functions\')
 
 J_cond = compute_J_cond(nh, ne, E, P.D_h, P.D_e, P.mu_h, P.mu_e, P.Delta, P.aT2exp, P.kBT, P.beta, P.e);
 dDdt = compute_dDdt(E, tout', P.eps);
-J_dDdt = -(J_cond);
-% surf(J_dDdt)
+J_dDdt = J_cond + dDdt;
+% surf(-J_dDdt / P.L)
+% set(gca,'Zscale','log')
 
-J_from_dDdt = integral_func(J_dDdt', P.Delta) / P.L;
-figure
-loglog(tout,J_from_dDdt,'g-')
-hold on
-plot(tout,J,'k--')
+J_from_dDdt = -integral_func(J_dDdt', P.Delta) / P.L;
+% figure
+% loglog(tout,J_from_dDdt,'g-')
+% hold on
+% plot(tout,J,'k--')
 
 % figure
 % id = plot(J_dDdt(:,1));
