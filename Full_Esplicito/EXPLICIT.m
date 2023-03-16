@@ -18,8 +18,8 @@ P.mu_h = 5e-14;
 P.mu_e = 5e-14;
 P.nh0t = 6e20;
 P.ne0t = 6e20;
-P.phih = 0.7; 
-P.phie = 0.7; 
+P.phih = 1; 
+P.phie = 1; 
 P.Bh = 0.2;
 P.Be = 0.2;
 P.Dh = 0.1;
@@ -29,7 +29,7 @@ P.S1 = 4e-3;
 P.S2 = 4e-3;
 P.S3 = 4e-3;
 P.n_start = [1e18, 1e18, 0, 0];
-P.time_instats = [0, logspace(0, 4, 99)];
+P.time_instats = [0, logspace(0, 5, 99)];
 
 % Physics constants
 P.a = 7.5005e12;
@@ -46,8 +46,8 @@ P.kBT = P.kB * P.T;
 P.beta = sqrt((P.e^3)/(4*pi*P.eps));
 P.coeff =  8 * P.eps / (3 * P.Delta^2);
 P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
-P.D_h = P.mu_h * P.kBT / P.e;
-P.D_e = P.mu_e * P.kBT / P.e;
+P.D_h = P.mu_h * P.kBT; % / P.e;
+P.D_e = P.mu_e * P.kBT; % / P.e;
 P.S0 = P.S0 * P.e;
 P.S1 = P.S1 * P.e;
 P.S2 = P.S2 * P.e;
@@ -67,8 +67,10 @@ if ~ P.flag_chimica
     P.S3 = 0; 
 end
 
+rmpath("Functions\")
 cd(current_path)
 clear current_path
+fprintf("-> PARAMETERS\n")
 
 %% SOLVE FULL EXPLICIT
 current_path = pwd();
@@ -189,10 +191,16 @@ while true
 end
 toc
 
+rmpath("Functions\")
 cd(current_path)
 clear current_path
+fprintf("-> SOLVE FULL EXPLICIT\n")
 
 %% GRAPH
+current_path = pwd();
+cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito')
+addpath("Functions\")
+
 [x, x_interfacce, x_interni] = create_x_domain(P.L, P.num_points);
 
 J_cond = compute_J_cond(nh_out, ne_out, E_out, P.D_h, P.D_e, P.mu_h, P.mu_e, P.Delta, P.aT2exp, P.kBT, P.beta, P.e);
@@ -200,7 +208,17 @@ dDdt = compute_dDdt(E_out, P.time_instats, P.eps);
 J_dDdt = J_cond + dDdt;
 
 J_dDdt_mean = -integral_func(J_dDdt', P.Delta) / P.L;
-loglog(P.time_instats, J_dDdt_mean)
+
+% Plot polarization current
+interpreter = 'tex';
+loglog(P.time_instats, J_dDdt_mean, 'g-', 'LineWidth',2)
+% hold on
+% loglog(P.time_instats, J, 'k--', 'LineWidth',2)
+grid on
+title('Polarization Current', 'Interpreter',interpreter)
+xlabel('Time (s)','Interpreter',interpreter)
+ylabel('Current Density (A/m^2)', 'Interpreter',interpreter)
+set(gca,'FontSize',15)
 
 % ID(1) = plot(x_interni, ne_out(:,1), 'k-', 'LineWidth', 2);
 % hold on
@@ -213,4 +231,7 @@ loglog(P.time_instats, J_dDdt_mean)
 %     pause(0.1)
 % end
 
-
+rmpath("Functions\")
+cd(current_path)
+clear current_path
+fprintf("-> GRAPH\n")

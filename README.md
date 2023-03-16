@@ -303,20 +303,41 @@ Nel frattempo lancio una simulazione in cui ho ristretto l'ampiezza dei bounds(a
 
 ## 13/3/2023
 
-Ho trovato un errore che facevo nel calcolo del $J + \frac{\partial D}{\partial t}$  
+Ho trovato un errore che facevo nel calcolo del $J + \frac{\partial D}{\partial t}$ (non avevo messo bene una parentesi nel calcolo del gradiente delle number density)  
 Le cose ancora non tornano, devo indagare meglio  
 
 ## 15/3/2023
 Controllo la funzione che calcola il $\frac{\partial D}{\partial t}$ e mi convinco che funziona bene.  
 Realizzo un full esplicito e riesco con successo, almeno a prima vista, a calcolare bene la corrente di polarizzazione
 
-&nbsp;
+## 16/3/2023
+Eseguo una simulazione con il modello full esplicito e calcolo la corrente con il $J + \frac{\partial D}{\partial t}$
+![](figs/2023_03_16/esplicito.png)
+Eseguo la stessa identica simulazione con le ODE
+![](figs/2023_03_16/ODE.png)
+
+**LE ODE NON DANNO NUMBER DENSITY < 0**  
+Questo mi fa ipotizzare che tutte le volte che ottenevo qualche number density <0 ci fosse qualcosa che non andava (metto un errore in odefunc quando le number density diventano <0)
+
+Sistemo un po' il codice passato e vado a ricontrollare il confronto tra il fit a mano #1 e la corrente di Seri: come mi aspetto il fit non torna, ma almono la corrente calcolata con Sato e con il $J + \frac{\partial D}{\partial t}$ viene uguale. Anche in questo caso le number density sono tutte > 0 **BENE!**
+![](figs/2023_03_16/confronto_1.png)
 
 &nbsp;
 
-# TODO
-* fare un full esplicito in MATLAB
-* corrente con $J + \frac{\partial D}{\partial t}$
+&nbsp;
+
+### TODO
+* sanity check per il fitting &#x2610;
+* aumentare n0 e vedere che succede &#x2610;
+* grafico di $\mu = \mu(E,T)$ &#x2610;
+* modello Nordici con ODE &#x2610;
+* fare un semi implicito in MATLAB  &#x2610;
+* confronto corrente con $J + \frac{\partial D}{\partial t}$ e Sato  &#x2611;
+* $\mu = \mu(E,n)$  &#x2610;
+* equilibrio termini di sorgente &#x2610;
+* fare un full esplicito in MATLAB &#x2611;
+* stop quando n <0 nelle ODE &#x2611;
+
 
 
 
