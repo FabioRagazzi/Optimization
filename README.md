@@ -322,6 +322,31 @@ Questo mi fa ipotizzare che tutte le volte che ottenevo qualche number density <
 Sistemo un po' il codice passato e vado a ricontrollare il confronto tra il fit a mano #1 e la corrente di Seri: come mi aspetto il fit non torna, ma almono la corrente calcolata con Sato e con il $J + \frac{\partial D}{\partial t}$ viene uguale. Anche in questo caso le number density sono tutte > 0 **BENE!**
 ![](figs/2023_03_16/confronto_1.png)
 
+## 17/3/2023
+Ho fatto uno script per vedere la dipendenza della mobilità dal campo elettrico e dalla temperatura  
+Scopro un errore bello grosso: la costante di Richardson vale $A = 1.2 \cdot 10^{6} A m^{-2} K^{-2}$, io avevo sempre utilizzato come esponente $-6$ il che mi portava ad ottenere un valore di costante normalizzata (divisa per la carica dell'elettrone per ottenere un flusso invece che una densità di corrente) pari a $a = 7.5 \cdot 10^{12}$ quando in realtà il valore corretto era 
+$$a = 7.5 \cdot 10^{24}$$  
+Questo spiega perchè avessi sempre trovato dei potenziali di estrazione più bassi rispetto ai valori di riferimento generalmente accettati (circa 1.2 eV)  
+
+Noto che il parametro S0 se fissato ad un certo valore fa la differenza tra la comparsa o meno di number density < 0 nella simulazione effettuata con le ODE (in realtà non è l'unico parametro, mi è successo una volta anche con le mobilità)
+
+Provo di nuovo a fare un fitting con il TRRA 
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 |
+|-- |--     |--   |--         |-- |-- |-- |--  |
+| lower bound  |-15|20|1|-4|-4|-4|19|
+| upper bound  |-12|25|1.5|2|2|2|23|
+| initial guess |-13|21|1.3|-1|-2|-2|20|
+| guessed |-12.9162|24.0893|1.3090|-0.4318|-1.4241|-2.8589|19.4116|
+
+| FunctionTolerance | OptimalityTolerance | WallClockTime(s) |
+|--                 |--                   |--                |
+| 1e-10             | 1e-8                | 43               |
+
+![](figs/2023_03_17/TRRA_fit.png)
+
+Ora la situazione è molto migliorata, provo anche a fare un fit con il Particle Swarm
+
 &nbsp;
 
 &nbsp;
@@ -329,14 +354,14 @@ Sistemo un po' il codice passato e vado a ricontrollare il confronto tra il fit 
 ### TODO
 * sanity check per il fitting &#x2610;
 * aumentare n0 e vedere che succede &#x2610;
-* grafico di $\mu = \mu(E,T)$ &#x2610;
 * modello Nordici con ODE &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
-* confronto corrente con $J + \frac{\partial D}{\partial t}$ e Sato  &#x2611;
 * $\mu = \mu(E,n)$  &#x2610;
 * equilibrio termini di sorgente &#x2610;
 * fare un full esplicito in MATLAB &#x2611;
+* grafico di $\mu = \mu(E,T)$ &#x2611;
 * stop quando n <0 nelle ODE &#x2611;
+* confronto corrente con $J + \frac{\partial D}{\partial t}$ e Sato  &#x2611;
 
 
 
