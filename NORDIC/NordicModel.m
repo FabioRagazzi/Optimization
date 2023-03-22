@@ -4,20 +4,20 @@ classdef NordicModel
     
     properties (SetAccess = immutable)
         % physic constants
-        h, e, kB, eps0, A
+        h, e, kB, eps0, A, abs0
 
         % user imputs that will remain constant
-        T, eps_r, phi, lambda, a_int, a_sh, N_deep, N_int
+        Tc, eps_r, phi, lambda, a_int, a_sh, N_deep, N_int
         w_hop, w_tr_hop, w_tr_int, w_tr
-        Pt, At, Pr, S0, S1, S2, S3, V 
+        Pt, At, Pr, S0, S1, S2, S3, V, L 
 
         % variables derived from user inputs that will remain constant
-        v, beta, eps, kBT, Boltz_num, B0, arg_sinh, ext_mult_sinh
+        v, beta, eps, kBT, Boltz_num, B0, arg_sinh, ext_mult_sinh, a, TK
     end
     
-%     properties (SetAccess = private)
-%         
-%     end
+    properties (SetAccess = private)
+        E, mu, u, B
+    end
 
     methods
         function obj = NordicModel(Table_row)
@@ -30,9 +30,11 @@ classdef NordicModel
             obj.kB = 1.380649e-23;
             obj.eps0 = 8.854187817e-12;
             obj.A = 1.20173e6;
+            obj.abs0 = 273.15;
 
             % Initializing all the user inputs
-            obj.T = Table_row.T;
+            obj.L = Table_row.L;
+            obj.Tc = Table_row.T;
             obj.eps_r = Table_row.eps_r;
             obj.phi.e = Table_row.phi_e;
             obj.phi.h = Table_row.phi_h;
@@ -67,25 +69,43 @@ classdef NordicModel
             obj.V.h = Table_row.V_h;
 
             % Initializing derived parameters
-            obj.kBT = obj.kB * obj.T;
+            obj.TK = obj.Tc + obj.abs0;
+            obj.kBT = obj.kB * obj.TK;
             obj.Boltz_num = obj.e / obj.kBT;
             obj.v = obj.kBT / obj.h;
             obj.eps = obj.eps0 * obj.eps_r;
             obj.beta = sqrt((obj.e^3)/(4*pi*obj.eps));
             obj.B0.e = obj.N_deep.e * obj.v * exp(-obj.w_tr_int.e * obj.Boltz_num) / obj.N_int.e; 
             obj.B0.h = obj.N_deep.h * obj.v * exp(-obj.w_tr_int.h * obj.Boltz_num) / obj.N_int.h; 
-            obj.arg_sinh.e = obj.e^2 * obj.a_sh.e / (2 * obj.kBT);
-            obj.arg_sinh.h = obj.e^2 * obj.a_sh.h / (2 * obj.kBT);
+            obj.arg_sinh.e = obj.e * obj.a_sh.e / (2 * obj.kBT);
+            obj.arg_sinh.h = obj.e * obj.a_sh.h / (2 * obj.kBT);
             obj.ext_mult_sinh.e = 2 * obj.v * obj.a_int.e * exp(-obj.w_hop.e * obj.Boltz_num);
             obj.ext_mult_sinh.h = 2 * obj.v * obj.a_int.h * exp(-obj.w_hop.h * obj.Boltz_num);
+            obj.a = obj.A / obj.e;
         end
         
-%         function outputArg = method1(obj,inputArg)
-%             % METHOD1 Summary of this method goes here
-%             %   Detailed explanation goes here
-%             outputArg = obj.Property1 + inputArg;
-%         end
-% 
+        function obj = compute_E(obj)
+            obj.E = 1e8 * rand(1,10);
+        end
+
+        function obj = compute_mobility(obj)
+            obj.mu = struct;
+            obj.mu.e = obj.ext_mult_sinh.e * sinh(obj.arg_sinh.e * obj.E) ./ obj.E;
+            obj.mu.h = obj.ext_mult_sinh.h * sinh(obj.arg_sinh.h * obj.E) ./ obj.E;
+        end
+
+        function obj = compute_velocity(obj)
+            obj.u = struct;
+            obj.u.e = -obj.mu.e .* obj.E;
+            obj.u.h =  obj.mu.h .* obj.E;
+        end
+
+        function obj = compute_B(obj)
+            obj.B = struct;
+            obj.B.e = obj.Pt.e * obj.N_deep.e * obj.At.e * obj.u.e;
+            obj.B.h = obj.Pt.h * obj.N_deep.h * obj.At.h * obj.u.h;
+        end
+
 %         function [] = set_Property1(obj,new_val)
 %             % METHOD1 Summary of this method goes here
 %             %   Detailed explanation goes here

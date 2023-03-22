@@ -345,23 +345,97 @@ Provo di nuovo a fare un fitting con il TRRA
 
 ![](figs/2023_03_17/TRRA_fit.png)
 
-Ora la situazione è molto migliorata, provo anche a fare un fit con il Particle Swarm
+Ora la situazione è molto migliorata, ricorda i grafici che aveva ottenuto la Le Roy 20 anni fa in *"Description of charge transport
+in polyethylene using a fluid model
+with a constant mobility: fitting model
+and experiments"*
+
+![](figs/2023_03_17/Le_Roy.png)
+
+## 20/3/2023
+Provo anche a fare un fit con il Particle Swarm
+
+|   | $\mu$ | n0t | $\varphi$ | B | D | S | n0 |
+|-- |--     |--   |--         |-- |-- |-- |--  |
+| lower bound  |-15|20|1|-4|-4|-4|19|
+| upper bound  |-12|25|1.5|2|2|2|23|
+| guessed |-13.8450|24.9148|1.1626|-3.4693|-3.9943|-1.6546|20.3837|
+| guessed |-12.9162|24.0893|1.3090|-0.4318|-1.4241|-2.8589|19.4116|
+
+| FunctionTolerance | MaxStallIterations | WallClockTime(s) |
+|--                 |--                  |--                |
+| 1e-3              | 20                 |  211_000 = 2d : 10h : 36m : 40s   |
+
+![](figs/2023_03_20/PS_fit_SERI.png)
+
+## 21/3/2023
+Inizio ad implementare il modello dei Nordici. Nella priga riga di PARAMETERS_TABLE metto i parametri che hanno trovato i Nordici
+
+## 22/3/2023
+Implemento la formula per la mobilità dipendente dal campo elettrico e faccio dei test sui risultati del modello quando si mette la mobilità dipendente dal campo elettrico
+
+![](figs/2023_03_22/very_low_fields.png)
+![](figs/2023_03_22/low_fields.png)
+![](figs/2023_03_22/medium_fields.png)
+![](figs/2023_03_22/medium_fields_2.png)
+![](figs/2023_03_22/medium_high_fields.png)
+![](figs/2023_03_22/high_fields.png)
+
+I grafici mostrati sopra sono stati realizzati utilizzando in ordine i parametri denominati: 
+* "mu_dependency_E_1e5.mat"  
+* "mu_dependency_E_3e7.mat" 
+* "mu_dependency_E_6e7.mat" 
+* "mu_dependency_E_9e7.mat" 
+* "mu_dependency_E_1.5e8.mat" 
+* "mu_dependency_E_3e8.mat" 
+
+
+
+Implemento la formula per il calcolo del coefficiente di trapping dipendente dal campo elettrico.
+Cerco i valori dei coefficienti Be e Bh che fissati a mano mi danno un andamento molto simile a quello che ottengo considerando B dipendente dal campo, questo valido per bassi campi elettrici (1e5 V/m)
+
+![](figs/2023_03_22/B_dependency_E_1e5.png)
+
+I parametri che trovo che mi consentono di ottenere questo buon accordo sono
+>P.Bh = 2.4e-2;
+>
+>P.Be = 1.2e-2;
+
+Provo a fare dei test con gli stessi parametri fissati a mano e diversi valori di campo
+![](figs/2023_03_22/B_dependency_E_1e6.png)
+![](figs/2023_03_22/.B_dependency_E_1e7.png)
+![](figs/2023_03_22/B_dependency_E_1e8.png)
+
+I parametri utilizzati per ottenere i grafici sopra illustrati sono:
+*  "B_dependency_E_1e5.mat"
+*  "B_dependency_E_1e6.mat"
+*  "B_dependency_E_1e7.mat"
+*  "B_dependency_E_1e8.mat"
+
+In tutti non è stata considerata la dipendenza dal campo elettrico della mobilità
+
+
 
 &nbsp;
 
 &nbsp;
 
 ### TODO
-* sanity check per il fitting &#x2610;
-* aumentare n0 e vedere che succede &#x2610;
 * modello Nordici con ODE &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
 * $\mu = \mu(E,n)$  &#x2610;
 * equilibrio termini di sorgente &#x2610;
+* sanity check per il fitting &#x2611;
+* aumentare n0 e vedere che succede &#x2611;
 * fare un full esplicito in MATLAB &#x2611;
 * grafico di $\mu = \mu(E,T)$ &#x2611;
 * stop quando n <0 nelle ODE &#x2611;
 * confronto corrente con $J + \frac{\partial D}{\partial t}$ e Sato  &#x2611;
+
+### DUBBI
+* $B_{(e,h)} = \mathrm{mult\_B} \cdot u_{e,h}$ Ma B è per ogni cella e u è alle interfacce
+* $e$ o $e^2$ nell'argomento del sinh ? 
+* $A_{T_{(e,h)}} = a_{sh_{(h,e)}}^2$ oppure $A_{T_{(e,h)}} = a_{sh_{(e,h)}}^2$ ?
 
 
 

@@ -30,15 +30,14 @@ load('data\SERI_smooth.mat')
 loglog(t_SERI_smooth, J_SERI_smooth, 'r-', 'LineWidth',2, 'DisplayName','Seri')
 hold on
 % loglog(tout, J, 'g-', 'LineWidth',2)
-loglog(tout, J_dDdt, 'k--', 'LineWidth',2, 'DisplayName','TRRA Fit')
+loglog(tout, J_dDdt, 'k--', 'LineWidth',2, 'DisplayName','PS Fit')
 grid on
 hold off
 xlabel('time (s)')
 ylabel('current density (Am^-^2)')
-title('TRRA Fit Result')
+title('PS Fit Result')
 legend
 set(gca, 'FontSize', 15)
-
 
 rmpath('Functions\')
 cd(current_path)

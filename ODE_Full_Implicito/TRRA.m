@@ -25,6 +25,8 @@ tic
 toc
 disp(xv)
 
+save('data\most_recent_output_TRRA','xv')
+
 rmpath('Functions\')
 cd(current_path)
 clear current_path
