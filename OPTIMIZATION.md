@@ -414,7 +414,16 @@ I parametri utilizzati per ottenere i grafici sopra illustrati sono:
 
 In tutti non è stata considerata la dipendenza dal campo elettrico della mobilità
 
+## 23/3/2023
+![](figs/2023_03_23/B_dependence_on_E.png)
 
+![](figs/2023_03_23/B_dependence_on_E_with_mobility.png)
+
+Le due figure sopra riportano la dipendenza del coefficiente di detrapping B dal campo elettrico. La prima si riferisce al caso in cui la mobilità viene lasciata costante mentre la seconda è relativa ad un caso in cui anche la mobilità è dipendente dal campo elettrico
+
+Deduco che ha senso rifare le simulazioni di ieri mettendo sia la dipendenza di B che di $\mu$ dal campo elettrico  
+
+Ragiono un po' sulla questione della 
 
 &nbsp;
 
@@ -424,7 +433,7 @@ In tutti non è stata considerata la dipendenza dal campo elettrico della mobili
 * modello Nordici con ODE &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
 * $\mu = \mu(E,n)$  &#x2610;
-* equilibrio termini di sorgente &#x2610;
+* equilibrio termini di sorgente &#x2611;
 * sanity check per il fitting &#x2611;
 * aumentare n0 e vedere che succede &#x2611;
 * fare un full esplicito in MATLAB &#x2611;
@@ -436,6 +445,7 @@ In tutti non è stata considerata la dipendenza dal campo elettrico della mobili
 * $B_{(e,h)} = \mathrm{mult\_B} \cdot u_{e,h}$ Ma B è per ogni cella e u è alle interfacce
 * $e$ o $e^2$ nell'argomento del sinh ? 
 * $A_{T_{(e,h)}} = a_{sh_{(h,e)}}^2$ oppure $A_{T_{(e,h)}} = a_{sh_{(e,h)}}^2$ ?
+* Ha senso fare una funzione tipo "Compare_mu" per i gli altri coefficienti?
 
 
 
