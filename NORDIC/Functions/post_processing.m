@@ -35,20 +35,20 @@ J_dDdt = J_cond + dDdt;
 J_from_dDdt = -integral_func(J_dDdt', P.Delta) / P.L;
 
 J = zeros(num_iter,1); % Polarization current/current density (unit area)
-for k = 1:num_iter
-    n_k = reshape(nout(k,:),[P.num_points,4]);
-    if flag_mobility_dependent_on_E
-        [mu_h, mu_e] = Mobility(E(:,k), P.ext_mult_sinh, P.arg_sinh);
-        mu = [mu_h, mu_e];
-    else
-        mu = [P.mu_h, P.mu_e] .* ones(size(E(:,k)));
-    end
-    u_k = E(:,k) .* mu .* [1 -1];
-    Diff = mu * P.kBT / P.e;
-    [~, Gamma_interfaces] = Fluxes(n_k(:,1:2), P.num_points, u_k, P.Delta, Diff, E(1,k), E(end,k), P.aT2exp, P.kBT, P.beta);
-    f = sum(Gamma_interfaces.*[1,-1], 2);
-    J(k) = -integral_func(f', P.Delta) * P.e / P.L;
-end
+% for k = 1:num_iter
+%     n_k = reshape(nout(k,:),[P.num_points,4]);
+%     if flag_mobility_dependent_on_E
+%         [mu_h, mu_e] = Mobility(E(:,k), P.ext_mult_sinh, P.arg_sinh);
+%         mu = [mu_h, mu_e];
+%     else
+%         mu = [P.mu_h, P.mu_e] .* ones(size(E(:,k)));
+%     end
+%     u_k = E(:,k) .* mu .* [1 -1];
+%     Diff = mu * P.kBT / P.e;
+%     [~, Gamma_interfaces] = Fluxes(n_k(:,1:2), P.num_points, u_k, P.Delta, Diff, E(1,k), E(end,k), P.aT2exp, P.kBT, P.beta);
+%     f = sum(Gamma_interfaces.*[1,-1], 2);
+%     J(k) = -integral_func(f', P.Delta) * P.e / P.L;
+% end
 
 end
 

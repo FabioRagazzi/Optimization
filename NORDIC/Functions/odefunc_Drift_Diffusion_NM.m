@@ -2,7 +2,7 @@ function [d_n_stato_dt] = odefunc_Drift_Diffusion_NM(t, n_stato, P,...
     flag_mobility_dependent_on_E, flag_B_dependent_on_E, flag_D_dependent_on_E, flag_S_dependent_on_E)
 % ODEFUNC_DRIFT_DIFFUSION Computes dndt given the current values of n
 
-% % Stop if number density became negative
+% Stop if number density became negative
 % if find(n_stato<0)
 %     error("Number density became less than 0 at t = " + num2str(t))
 % end
@@ -45,7 +45,7 @@ if flag_S_dependent_on_E
     S = mu_center * [0, 0, 1, 1; 0, 1, 0, 1] * P.mult_S;
     S = S + P.S_base;
 else
-    S = [P.S0, P.S1, P.S2, P.S3] .* ones(size(E));
+    S = [P.S0, P.S1, P.S2, P.S3] .* ones(size(E,1)-1, size(E,2));
 end
 
 % Compite diffusion coefficients with Einstein relation

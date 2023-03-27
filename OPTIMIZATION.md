@@ -423,16 +423,25 @@ Le due figure sopra riportano la dipendenza del coefficiente di detrapping B dal
 
 Deduco che ha senso rifare le simulazioni di ieri mettendo sia la dipendenza di B che di $\mu$ dal campo elettrico  
 
-Ragiono un po' sulla questione della 
+## 27/3/2023
+Utilizzando i parametri che vengono forniti nell'articolo dei Nordici (Doedens) le ODE non riescono a concludere la simulazione. Vedo che se metto un valore del campo elettrico più basso invece riescono a concludere. Indago questo aspetto: 
+
+![](figs/2023_03_27/E_1e6.png)
+![](figs/2023_03_27/E_2e6.png)
+
+Con i parametri attuali, se metto il campo a $E = 3 \cdot 10^6 (V/m)$ si creano delle number density <0, anche ignorando questo aspetto le ODE non riescono a concludere e quello che si ottiene è questo grafico
+
+![](figs/2023_03_27/E_3e6.png)
 
 &nbsp;
 
 &nbsp;
 
 ### TODO
-* modello Nordici con ODE &#x2610;
+* fare un fit con il TRRA mettendo solo la mobilità dipendente dal campo elettrico &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
 * $\mu = \mu(E,n)$  &#x2610;
+* modello Nordici con ODE &#x2611;
 * equilibrio termini di sorgente &#x2611;
 * sanity check per il fitting &#x2611;
 * aumentare n0 e vedere che succede &#x2611;

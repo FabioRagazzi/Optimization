@@ -8,7 +8,7 @@ fprintf("-> ODE NM\n")
 load("Parameters\inbox.mat") 
 
 % Specifying the time instants that will be outputted
-time_instants = [0, 4, logspace(1,2,98)];
+time_instants = [0, 4, logspace(1,6,98)];
 
 % Setting initial condition for the number density
 n_stato_0 = ones(P.num_points, 4) .* P.n_start;
