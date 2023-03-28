@@ -433,6 +433,16 @@ Con i parametri attuali, se metto il campo a $E = 3 \cdot 10^6 (V/m)$ si creano 
 
 ![](figs/2023_03_27/E_3e6.png)
 
+Provo intanto a fare il fit con il TRRA mettendo solo la mobilità dipendente dal campo elettrico ma non riesco a farlo funzionare, ottengo un errore legato al fatto che la dimensione del gradiente sia inferiore alla tolleranza
+
+## 28/3/2023
+Faccio un full esplicito che implementa il modello dei nordici e per fare un primo check provo a confrontarne i risultati con il full esplicito che mantiene tutti i parametri ($\mu$, B, D, S) indipendenti dal campo elettrico.
+
+![](figs/2023_03_28/confronto_full_espliciti.png)
+
+Qualcosa non va, dovrò indagare meglio. vedo che già dalla prima iterazione ci sono delle differenze nelle number density che ottengo
+
+
 &nbsp;
 
 &nbsp;

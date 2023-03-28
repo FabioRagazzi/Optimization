@@ -1,116 +1,97 @@
-%% PARAMETERS
-clearvars, clc
-current_path = pwd();
-cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito')
-addpath("Functions\")
-
-% Flags for the simulation
-P.flag_chimica = true;
-
-% Parameters of the simulation
-P.L = 3.5e-4;
-P.num_points = 100;
-P.T = 60;
-P.eps_r = 2;
-P.Phi_W = 0;
-P.Phi_E = P.L * 3e7;
-P.mu_h = 1e-14;
-P.mu_e = 1e-14;
-P.nh0t = 6e20;
-P.ne0t = 6e20;
-P.phih = 1.4; 
-P.phie = 1.4; 
-P.Bh = 0.2;
-P.Be = 0.2;
-P.Dh = 0.1;
-P.De = 0.1;
-P.S0 = 4e-3;
-P.S1 = 4e-3;
-P.S2 = 4e-3;
-P.S3 = 4e-3;
-P.n_start = [1e18, 1e18, 0, 0];
-P.time_instats = [0, logspace(0, 5, 99)];
-
-% Physics constants
-P.h = 6.62607015e-34;
-P.e = 1.602176634e-19;
-P.kB = 1.380649e-23;
-P.eps0 = 8.854187817e-12;
-P.abs0 = 273.15;
-P.A = 1.20173e6;
-
-% Derived parameters
-P.a = P.A / P.e;
-P.Delta = P.L / P.num_points;
-P.eps = P.eps_r * P.eps0;
-P.T = P.T + P.abs0;
-P.kBT = P.kB * P.T;
-P.beta = sqrt((P.e^3)/(4*pi*P.eps));
-P.coeff =  8 * P.eps / (3 * P.Delta^2);
-P.aT2exp = P.a * (P.T^2) * exp(-[P.phie, P.phih] * P.e / P.kBT); 
-P.D_h = P.mu_h * P.kBT / P.e;
-P.D_e = P.mu_e * P.kBT / P.e;
-P.S0 = P.S0 * P.e;
-P.S1 = P.S1 * P.e;
-P.S2 = P.S2 * P.e;
-P.S3 = P.S3 * P.e;
-P.Kelet = Kelectrostatic(P.num_points, P.Delta, P.eps);
-
-if ~ P.flag_chimica
-    P.nh0t = 1;
-    P.ne0t = 1;
-    P.Bh = 0;
-    P.Be = 0;
-    P.Dh = 0;
-    P.De = 0;
-    P.S0 = 0;
-    P.S1 = 0;
-    P.S2 = 0;
-    P.S3 = 0; 
-end
-
-rmpath("Functions\")
-cd(current_path)
-clear current_path
-fprintf("-> PARAMETERS\n")
-
 %% SOLVE FULL EXPLICIT
+clear, clc
 current_path = pwd();
-cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito')
+cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito_Nordic')
 addpath("Functions\")
+fprintf("-> SOLVE FULL EXPLICIT NORDIC\n")
+
+% loading the parameters for the simulation
+load('Parameters\inbox.mat')
+
+% defining the time instants for the simulation
+time_instants = [0, logspace(0, 5, 99)];
+
+% specifying the flags and CFL
+flag_mu = false;
+flag_B = false;
+flag_D = false;
+flag_S = false;
+CFL = 0.5;
 
 % output variables definition
-nh_out = zeros(P.num_points, length(P.time_instats));
-ne_out = zeros(P.num_points, length(P.time_instats));
-nht_out = zeros(P.num_points, length(P.time_instats));
-net_out = zeros(P.num_points, length(P.time_instats));
-rho_out = zeros(P.num_points, length(P.time_instats));
-phi_out = zeros(P.num_points+2, length(P.time_instats));
-E_out = zeros(P.num_points+1, length(P.time_instats));
+nh_out = zeros(P.num_points, length(time_instants));
+ne_out = zeros(P.num_points, length(time_instants));
+nht_out = zeros(P.num_points, length(time_instants));
+net_out = zeros(P.num_points, length(time_instants));
+rho_out = zeros(P.num_points, length(time_instants));
+phi_out = zeros(P.num_points+2, length(time_instants));
+E_out = zeros(P.num_points+1, length(time_instants));
+mu_out = zeros(P.num_points+1, length(time_instants), 2);
+B_out = zeros(P.num_points, length(time_instants), 2);
+D_out = zeros(P.num_points, length(time_instants), 2);
+S_out = zeros(P.num_points, length(time_instants), 4);
+Diff_out = zeros(P.num_points-1, length(time_instants), 2);
 
 % setting initial condition
-CFL = 0.5;
 exit_flag = false;
 save_flag = true;
 save_index = 1;
 n = ones(P.num_points, 4) .* P.n_start;
 n_new = zeros(size(n));
-t_current = P.time_instats(1);
+t_current = time_instants(1);
 index_time_goal_next = 2;
-t_goal_next = P.time_instats(2);
+t_goal_next = time_instants(2);
 
 % starting the loop
 tic
 while true
 
     % at this point the number density of all the species at the current time
-    % instant are known, we need to calculate the number density of all the
-    % species at the next time instant:
-
+    % instant are known, we can therefore calculate the charge density, 
+    % electric potential and electric field relative to the current time
+    % instant:
     rho = sum(n.*[1, -1, 1, -1], 2) * P.e;
     phi = Electrostatic(rho, P.coeff, P.Phi_W, P.Phi_E, P.Kelet); 
     E = Electric_Field(phi, P.Delta, P.Phi_W, P.Phi_E);
-    u = E .* [P.mu_h, -P.mu_e];
+
+    % Compute mobility based on the relative flag
+    if flag_mu
+        [mu_h, mu_e] = Mobility(E, P.ext_mult_sinh, P.arg_sinh);
+        mu = [mu_h, mu_e];
+    else
+        mu = [P.mu_h, P.mu_e] .* ones(size(E));
+    end
+
+    % Compute drift velocity 
+    u = E .* mu .* [1 -1];
+
+    % Compute trapping coefficient based on the relative flag
+    u_center = (u(1:end-1,:) + u(2:end,:)) / 2;
+    if flag_B
+        B = P.B0 + P.mult_B .* u_center;
+    else
+        B = [P.Bh, P.Be] .* ones(size(E,1)-1, size(E,2));
+    end
+    
+    % Compute detrapping coefficient based on the relative flag
+    E_center = (E(1:end-1,:) + E(2:end,:)) / 2;
+    if flag_D
+        D = P.mult_D .* sinh(E_center .* P.arg_sinh) + P.add_D;
+    else
+        D = [P.Dh, P.De] .* ones(size(E,1)-1, size(E,2));
+    end
+    
+    % Compute recombination coefficients based on the relative flag
+    mu_center = (mu(1:end-1,:) + mu(2:end,:)) / 2;
+    if flag_S
+        S = mu_center * [0, 0, 1, 1; 0, 1, 0, 1] * P.mult_S;
+        S = S + P.S_base;
+    else
+        S = [P.S0, P.S1, P.S2, P.S3] .* ones(size(E,1)-1, size(E,2));
+    end
+    
+    % Compite diffusion coefficients with Einstein relation
+    Diff = mu * P.kBT / P.e;
     
     % saving the values if the "save_flag" is "true"
     if save_flag
@@ -121,6 +102,11 @@ while true
         rho_out(:,save_index) = rho;
         phi_out(:,save_index) = [P.Phi_W; phi; P.Phi_E];
         E_out(:,save_index) = E;
+        mu_out(:,save_index,:) = mu;
+        B_out(:,save_index,:) = B;
+        D_out(:,save_index,:) = D;
+        S_out(:,save_index,:) = S;
+        Diff_out(:,save_index,:) = Diff(2:end-1,:);
         save_index = save_index + 1;
         save_flag = false;
     end
@@ -129,23 +115,26 @@ while true
     if exit_flag
         break
     end
-    
+
+    % if we didn't exit the loop and this point has been reached we start
+    % the computation of the number density at the next time instant:
+
     % source terms contributions (omega has a column for each kind of
     % species) and also denominator contributions for dt for stability
-    [omega, den_for_stab] = Omega_and_stability(n, P.nh0t, P.ne0t, P.Bh, P.Be, P.Dh, P.De, P.S0, P.S1, P.S2, P.S3);
+    [omega, den_for_stab] = Omega_and_stability(n, P.N_deep, B, D, S);
 
     % injection from electrodes (g_schottky has two values, one for the left
     % electrode and one for the right electrode)
     g_schottky = Schottky([E(1), E(end)], P.aT2exp, P.kBT, P.beta);
 
     % computing Kh for free holes (useful for dt for stability)
-    col1 = P.D_h./P.Delta + max(0,u(2:end-1,1));
-    col2 = P.D_h./P.Delta - min(0,u(2:end-1,1));
+    col1 = Diff(2:end-1,1)./P.Delta + max(0,u(2:end-1,1));
+    col2 = Diff(2:end-1,1)./P.Delta - min(0,u(2:end-1,1));
     Kh = assemble_matrix_sparse(col1, col2, P.num_points);
     
     % computing Ke for free electrons (useful for dt for stability)
-    col1 = P.D_e./P.Delta + max(0,u(2:end-1,2));
-    col2 = P.D_e./P.Delta - min(0,u(2:end-1,2));
+    col1 = Diff(2:end-1,2)./P.Delta + max(0,u(2:end-1,2));
+    col2 = Diff(2:end-1,2)./P.Delta - min(0,u(2:end-1,2));
     Ke = assemble_matrix_sparse(col1, col2, P.num_points);
     
     % computing the time step (dt) that will be used for all the species (minimum of all)
@@ -160,10 +149,10 @@ while true
         save_flag = true;
         dt = t_goal_next - t_current;
         index_time_goal_next = index_time_goal_next + 1;
-        if index_time_goal_next > length(P.time_instats)
+        if index_time_goal_next > length(time_instants)
             exit_flag = true;
         else
-            t_goal_next = P.time_instats(index_time_goal_next);
+            t_goal_next = time_instants(index_time_goal_next);
         end
     end
     t_current = t_current + dt;
@@ -196,26 +185,25 @@ toc
 rmpath("Functions\")
 cd(current_path)
 clear current_path
-fprintf("-> SOLVE FULL EXPLICIT\n")
 
 %% GRAPH
 current_path = pwd();
-cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito')
+cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito_Nordic\')
 addpath("Functions\")
 
 [x, x_interfacce, x_interni] = create_x_domain(P.L, P.num_points);
 
-J_cond = compute_J_cond(nh_out, ne_out, E_out, P.D_h, P.D_e, P.mu_h, P.mu_e, P.Delta, P.aT2exp, P.kBT, P.beta, P.e);
-dDdt = compute_dDdt(E_out, P.time_instats, P.eps);
+J_cond = compute_J_cond(nh_out, ne_out, E_out, Diff_out(:,:,1), Diff_out(:,:,2), mu_out(:,:,1), mu_out(:,:,2), P.Delta, P.aT2exp, P.kBT, P.beta, P.e);
+dDdt = compute_dDdt(E_out, time_instants, P.eps);
 J_dDdt = J_cond + dDdt;
 
 J_dDdt_mean = -integral_func(J_dDdt', P.Delta) / P.L;
 
 % Plot polarization current
 interpreter = 'tex';
-loglog(P.time_instats, J_dDdt_mean, 'g-', 'LineWidth',2)
+loglog(time_instants, J_dDdt_mean, 'g-', 'LineWidth',2)
 % hold on
-% loglog(P.time_instats, J, 'k--', 'LineWidth',2)
+% loglog(time_instants, J, 'k--', 'LineWidth',2)
 grid on
 title('Polarization Current', 'Interpreter',interpreter)
 xlabel('Time (s)','Interpreter',interpreter)
@@ -226,7 +214,7 @@ set(gca,'FontSize',15)
 % hold on
 % % ID(2) = plot(x_interni, ne(:,1), 'g--', 'LineWidth', 2);
 % pause(1)
-% for i = 2:length(P.time_instats)
+% for i = 2:length(time_instants)
 %     delete(ID)
 %     ID(1) = plot(x_interni, ne_out(:,i), 'k-', 'LineWidth', 2);
 % %     ID(2) = plot(x_interni, ne(:,i), 'g--', 'LineWidth', 2);
