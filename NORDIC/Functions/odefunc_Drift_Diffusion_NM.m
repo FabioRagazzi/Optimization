@@ -34,7 +34,7 @@ end
 % Compute detrapping coefficient based on the relative flag
 E_center = (E(1:end-1,:) + E(2:end,:)) / 2;
 if flag_D_dependent_on_E
-    D = P.mult_D .* sinh(E_center .* P.arg_sinh) + P.add_D;
+    D = P.mult_D .* sinh(abs(E_center) .* P.arg_sinh) + P.add_D;
 else
     D = [P.Dh, P.De] .* ones(size(E,1)-1, size(E,2));
 end

@@ -6,17 +6,17 @@ addpath("Functions\")
 fprintf("-> SOLVE FULL EXPLICIT NORDIC\n")
 
 % loading the parameters for the simulation
-load('Parameters\inbox.mat')
+load('Parameters\Nordic_standard.mat')
 
 % defining the time instants for the simulation
 time_instants = [0, logspace(0, 5, 99)];
 
 % specifying the flags and CFL
-flag_mu = false;
-flag_B = false;
-flag_D = false;
-flag_S = false;
-CFL = 0.5;
+flag_mu = true;
+flag_B = true;
+flag_D = true;
+flag_S = true;
+CFL = 0.1;
 
 % output variables definition
 nh_out = zeros(P.num_points, length(time_instants));
@@ -66,24 +66,24 @@ while true
     u = E .* mu .* [1 -1];
 
     % Compute trapping coefficient based on the relative flag
-    u_center = (u(1:end-1,:) + u(2:end,:)) / 2;
     if flag_B
+        u_center = (u(1:end-1,:) + u(2:end,:)) / 2;
         B = P.B0 + P.mult_B .* u_center;
     else
         B = [P.Bh, P.Be] .* ones(size(E,1)-1, size(E,2));
     end
     
     % Compute detrapping coefficient based on the relative flag
-    E_center = (E(1:end-1,:) + E(2:end,:)) / 2;
     if flag_D
+        E_center = abs((E(1:end-1,:) + E(2:end,:))) / 2;
         D = P.mult_D .* sinh(E_center .* P.arg_sinh) + P.add_D;
     else
         D = [P.Dh, P.De] .* ones(size(E,1)-1, size(E,2));
     end
     
     % Compute recombination coefficients based on the relative flag
-    mu_center = (mu(1:end-1,:) + mu(2:end,:)) / 2;
     if flag_S
+        mu_center = (mu(1:end-1,:) + mu(2:end,:)) / 2;
         S = mu_center * [0, 0, 1, 1; 0, 1, 0, 1] * P.mult_S;
         S = S + P.S_base;
     else
@@ -140,7 +140,7 @@ while true
     % computing the time step (dt) that will be used for all the species (minimum of all)
     den_for_stab(:,1:2) = den_for_stab(:,1:2) + [diag(Kh), diag(Ke)]./P.Delta;
     if find(den_for_stab<0)
-        error("dt became less than 0")
+        error("dt became less than 0 at t = " + num2str(t_current))
     end
     dt = CFL/max(max(den_for_stab(den_for_stab>0)));
     
@@ -193,7 +193,7 @@ addpath("Functions\")
 
 [x, x_interfacce, x_interni] = create_x_domain(P.L, P.num_points);
 
-J_cond = compute_J_cond(nh_out, ne_out, E_out, Diff_out(:,:,1), Diff_out(:,:,2), mu_out(:,:,1), mu_out(:,:,2), P.Delta, P.aT2exp, P.kBT, P.beta, P.e);
+J_cond = compute_J_cond(nh_out, ne_out, E_out, Diff_out(:,:,1), Diff_out(:,:,2), mu_out(:,:,1).*E_out, -mu_out(:,:,2).*E_out, P.Delta, P.aT2exp, P.kBT, P.beta, P.e);
 dDdt = compute_dDdt(E_out, time_instants, P.eps);
 J_dDdt = J_cond + dDdt;
 
@@ -201,7 +201,7 @@ J_dDdt_mean = -integral_func(J_dDdt', P.Delta) / P.L;
 
 % Plot polarization current
 interpreter = 'tex';
-loglog(time_instants, J_dDdt_mean, 'g-', 'LineWidth',2)
+loglog(time_instants, J_dDdt_mean, 'ro', 'LineWidth',2)
 % hold on
 % loglog(time_instants, J, 'k--', 'LineWidth',2)
 grid on

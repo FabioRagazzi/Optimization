@@ -440,8 +440,63 @@ Faccio un full esplicito che implementa il modello dei nordici e per fare un pri
 
 ![](figs/2023_03_28/confronto_full_espliciti.png)
 
-Qualcosa non va, dovrò indagare meglio. vedo che già dalla prima iterazione ci sono delle differenze nelle number density che ottengo
+Qualcosa non va, dovrò indagare meglio. vedo che già dalla prima iterazione ci sono delle differenze nelle number density che ottengo  
 
+## 29/3/2023
+Ricontrollo bene in debug e vedo che le number density calcolate sono identiche. Alla fine riesco a trovare l'errore, avevo sbagliato passando la mobilità invece della velocità alla funzione "compute_J_cond" (occhio al segno della velocità)
+
+![](figs/2023_03_29/Confronto_full_esplicito_Nordic.png)
+
+Faccio un check utilizzando le ODE_Nordic, dovrei ottenere lo stesso identico risultato
+
+![](figs/2023_03_29/ODE_Nordic.png)
+
+Mi tengo da parte questi parametri (utilizzati per ottenere i risultati appena mostrati) per test futuri.
+
+~~~~
+% Essential parameters of the simulation
+P.L = 3.5e-4;
+P.num_points = 100;
+P.T = 60;
+P.eps_r = 2;
+P.Phi_W = 0;
+P.Phi_E = P.L * 3e7;
+P.phih = 1.4;
+P.phie = 1.4;
+P.n_start = [1e18, 1e18, 0, 0];
+
+% Fixed parameters not depending on the electric field 
+P.mu_h = 1e-14;
+P.mu_e = 1e-14;
+P.Bh = 2e-1;
+P.Be = 2e-1;
+P.Dh = 1e-1;
+P.De = 1e-1;
+P.S0 = 4e-3;
+P.S1 = 4e-3;
+P.S2 = 4e-3;
+P.S3 = 4e-3;
+
+% Extra Schottky parameter
+P.lambda_e = 1;
+P.lambda_h = 1;
+
+P.N_deep = [6e20, 6e20]; % (m^-3)
+~~~~
+
+Ora provo a cambiare i parametri, mettendo anche le dipendenze dal campo elettrico e vedo se ottengo gli stessi risultati con le ODE e con il semi-implicito  
+* tengo i parametri di sopra (per quelli non specificati uso quelli dei nordici) e metto la mobilità dipendente dal campo elettrico -> i risultati sono uguali
+* tengo i parametri di sopra (per quelli non specificati uso quelli dei nordici ad eccezione di N.deep che è 6e20) e metto la mobilità e il coeffciente di trapping dipendenti dal campo elettrico -> i risultati sono uguali
+* tengo i parametri di sopra (per quelli non specificati uso quelli dei nordici ad eccezione di N.deep che è 6e20) e metto la mobilità e il coeffciente di trapping e detrapping dipendenti dal campo elettrico -> i risultati non sono uguali !!
+**Scopro  un errore: non avevo messo il valore assoluto dal campo elettrico dentro il sinh** -> adesso i risultati vengono uguali
+* i risultati vengono uguali anche mettendo la dipendenza di tutti i parametri dal campo elettrico
+
+Utilizzando i parametri che vengono forniti nell'articolo dei nordici (e con una number density iniziale per elettroni e lacune liberi pari a 1e20 mentre fissata a zero per gli intrappolati) si ottiene il seguente risultato. Nella figura vengono confrontati i risultati ottenuti eseguendo i calcoli con le ODE e con l'Esplicito
+![](figs/2023_03_29/ODE_Esplicito_Nordic_0_8.png)
+![](figs/2023_03_29/ODE_Esplicito_Nordic_0_1.png)
+
+Si vede che riducendo il CFL i risultati dell'Esplicito tendono a coincidere di più con i risultati ottenuti dalle ODE.  
+Sistemo un po' di cose per il TRRA, per renderlo più comodo, domani lo proverò
 
 &nbsp;
 
@@ -465,6 +520,8 @@ Qualcosa non va, dovrò indagare meglio. vedo che già dalla prima iterazione ci
 * $e$ o $e^2$ nell'argomento del sinh ? 
 * $A_{T_{(e,h)}} = a_{sh_{(h,e)}}^2$ oppure $A_{T_{(e,h)}} = a_{sh_{(e,h)}}^2$ ?
 * Ha senso fare una funzione tipo "Compare_mu" per i gli altri coefficienti?
+
+
 
 
 
