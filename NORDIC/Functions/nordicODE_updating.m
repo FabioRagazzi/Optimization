@@ -29,7 +29,11 @@ function [out] = nordicODE_updating(x, tags, names, exp_lin_flags, equals, Param
 
 [Parameters] = updateP(Parameters, names, cell_array, exp_lin_flags, array_flags, equals);
 
-[Parameters] = CompleteP(Parameters);
+% Set to false the flag that do not correspond to a simulation parameter
+flagT = false;
+flagS = false;
+flagSbase = true;
+[Parameters] = CompleteP(Parameters, flagT, flagS, flagSbase);
 
 [out] = NordicODE(Parameters, time_instants, E_flags, ODE_options);
 

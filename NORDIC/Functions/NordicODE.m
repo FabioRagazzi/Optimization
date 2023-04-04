@@ -15,11 +15,13 @@ tic
 [out.tout, out.nout] = ode23tb(@(t,n_stato)odefunc_Drift_Diffusion_NM(t, n_stato, Parameters, flag_mu, flag_B, flag_D, flag_S), time_instants, n_stato_0, ODE_options);
 out.wct = toc;
 
-% Post Processing
-tic
-[out.x, out.x_interfacce, out.x_interni] = create_x_domain(Parameters.L, Parameters.num_points);
-[out.nh, out.ne, out.nht, out.net, out.rho, out.phi, out.E, out.J, out.J_dDdt] = post_processing(out.nout, out.tout, Parameters, flag_mu);
-out.ppt = toc;
+% Post Processing (only if simulation successfully completed)
+if length(time_instants) == length(out.tout)
+    tic
+    [out.x, out.x_interfacce, out.x_interni] = create_x_domain(Parameters.L, Parameters.num_points);
+    [out.nh, out.ne, out.nht, out.net, out.rho, out.phi, out.E, out.J, out.J_dDdt] = post_processing(out.nout, out.tout, Parameters, flag_mu);
+    out.ppt = toc;
+end
 
 end
 

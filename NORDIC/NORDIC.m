@@ -15,9 +15,9 @@ time_instants = [0, logspace(0, 5, 99)];
 E_flags = logical([ 0,    0,    0,    0]);
 
 % Specifying the options for the ODE
-options = odeset('Stats','off');
+ODE_options = odeset('Stats','off');
 
-[out] = NordicODE(P, time_instants, E_flags, options);
+[out] = NordicODE(P, time_instants, E_flags, ODE_options);
 
 compare_Sato_JdDdt(out)
 

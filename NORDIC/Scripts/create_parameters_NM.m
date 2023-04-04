@@ -12,25 +12,25 @@ P.T = 60;
 P.eps_r = 2;
 P.Phi_W = 0;
 P.Phi_E = P.L * 3e7;
-P.phih = 1.3;
-P.phie = 1.3;
-P.n_start = [1e18, 1e18, 0, 0];
+P.phih = 1.4;
+P.phie = 1.4;
+P.n_start = [1e20, 1e20, 0, 0];
 
 % Fixed parameters not depending on the electric field 
 P.mu_h = 1e-14;
 P.mu_e = 1e-14;
-P.Bh = 2e-1;
-P.Be = 2e-1;
+P.Bh = 1e-1;
+P.Be = 1e-1;
 P.Dh = 1e-1;
 P.De = 1e-1;
-P.S0 = 4e-3;
-P.S1 = 4e-3;
-P.S2 = 4e-3;
-P.S3 = 4e-3;
+P.S0 = 1e-3;
+P.S1 = 1e-3;
+P.S2 = 1e-3;
+P.S3 = 1e-3;
 
 % Extra Schottky parameter
-P.lambda_e = 4.1e-5;
-P.lambda_h = 1e-1;
+P.lambda_e = 1;
+P.lambda_h = 1;
 % Extra parameters needed when the mobility is dependent from the electric
 % field
 P.a_int = [100 80] * 1e-9; % (m)
@@ -51,8 +51,11 @@ P.w_tr = [1.03, 1.03]; % (eV)
 P.S_base = [1e-4, 1e-4, 1e-4, 1e-4];
 P.Pr = 1; % ()
 
-% Complete P with the derived parameters
-[P] = CompleteP(P);
+% Complete P with the derived parameters (all flags set to true)
+flagT = true;
+flagS = true;
+flagSbase = true;
+[P] = CompleteP(P, flagT, flagS, flagSbase);
 
 % Saving the parameters as "inbox"
 save('..\Parameters\inbox', "P");

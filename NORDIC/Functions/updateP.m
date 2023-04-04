@@ -37,7 +37,7 @@ if (length(names) == length(values)) && (length(values) == length(exp_lin_flags)
     end
     for i = 1:length(equals)
         index = equals{i}{2};
-        if exp_lin_flags(i)
+        if exp_lin_flags(index)
             eval("P." + equals{i}{1} + " = " + num2str(10^values{index}) + ";")
         else
             eval("P." + equals{i}{1} + " = " + num2str(values{index}) + ";")

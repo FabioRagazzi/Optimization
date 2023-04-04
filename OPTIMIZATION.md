@@ -498,6 +498,59 @@ Utilizzando i parametri che vengono forniti nell'articolo dei nordici (e con una
 Si vede che riducendo il CFL i risultati dell'Esplicito tendono a coincidere di più con i risultati ottenuti dalle ODE.  
 Sistemo un po' di cose per il TRRA, per renderlo più comodo, domani lo proverò
 
+## 30/3/2023
+Lavoro al literature survey sulle DBD degli ultimi anni di cui mi ha incaricato Arturo 
+
+## 4/4/2023
+Lavoro un po' sull'implementazione del fitting con TRRA per renderlo più pratico. Lancio una simulazione con nessun parametro dipendente dal campo elettrico e ottengo questo risultato
+![](figs/2023_04_04/TRRA_Fit_Classico.png)
+E' un buon risultato perchè si riesce a riprodurre fedelmente il primo tratto della curva, oserei dire come mai prima d'ora.  
+Provo a riutilizzare dei vecchi parametri che avevo trovato e ottengo un fit ottimo, migliore di quello che avevo ottenuto in precedenza con questi stessi parametri (eppure il modello dovrebbe essere identico)   
+Non riesco a capire a cosa sia dovuta la differenza, comunque i parametri per cui ottengo il bel risultato sono:
+| $\mu$ | n0t | $\varphi$ | B | D | S | n0 |
+|--     |--   |--         |-- |-- |-- |--  |
+|-12.9162|24.0893|1.3090|-0.4318|-1.4241|-2.8589|19.4116|
+~~~~
+x0 = [-12.9162  1.3090  -0.4318  -1.4241  -2.8589  19.4116  24.0893];
+~~~~
+~~~~
+L: 3.5000e-04
+num_points: 100
+T: 333.1500
+eps_r: 2
+Phi_W: 0
+Phi_E: 10500
+n_start: [/, /, 1e5 o 0, 1e5 o 0]
+~~~~
+
+![](figs/2023_04_04/Vecchi_parametri.png)
+
+Provo a lanciare un fitting con il TRRA in cui per la prima volta considero la mobilità dipendente dal campo elettrico e vado quindi a fare l'ottimizzazione dei parametri ad essa collegati:
+* a_sh
+* a_int
+* w_hop
+
+|phih | Bh | Dh | S0 | n_start | N_deep | a_int | w_hop | a_sh | 
+|--   |--  |--  |--  |--       |--      |--     |--     |--    |
+| 1.3015 |  -1.0232  | -1.0232 |  -1.0232 |  19.0000 |  24.9979  | -7.0155 |   0.7015  | -9.0155  |
+
+![](figs/2023_04_04/mobilita_dipendente_da_E.png)
+
+Il prossimo passo è provare a fare un fit di tutti i parametri del modello dei nordici (tenendoli simmetrici). In realtà i parametri non sono tutti ma quasi tutti, quelli non considerati nel fitting sono:
+~~~~
+L: 3.5000e-04
+num_points: 100
+T: 333.1500
+eps_r: 2
+Phi_W: 0
+Phi_E: 10500
+n_start: [/, /, 0, 0]
+P.lambda_e = 1;
+P.lambda_h = 1;
+P.Pt = [1, 1];
+P.Pr = 1; 
+~~~~
+
 &nbsp;
 
 &nbsp;

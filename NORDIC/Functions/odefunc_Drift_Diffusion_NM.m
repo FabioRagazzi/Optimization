@@ -2,7 +2,7 @@ function [d_n_stato_dt] = odefunc_Drift_Diffusion_NM(t, n_stato, P,...
     flag_mobility_dependent_on_E, flag_B_dependent_on_E, flag_D_dependent_on_E, flag_S_dependent_on_E)
 % ODEFUNC_DRIFT_DIFFUSION Computes dndt given the current values of n
 
-% Stop if number density became negative
+% % Stop if number density became negative
 % if find(n_stato<0)
 %     error("Number density became less than 0 at t = " + num2str(t))
 % end
