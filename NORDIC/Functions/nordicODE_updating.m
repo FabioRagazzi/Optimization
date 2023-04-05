@@ -1,4 +1,4 @@
-function [out] = nordicODE_updating(x, tags, names, exp_lin_flags, equals, Parameters, time_instants, E_flags, ODE_options)
+function [out] = nordicODE_updating(x, tags, names, exp_lin_flags, equals, Parameters, F, time_instants, E_flags, ODE_options, flag_n)
 %
 % NORDICODE_UPDATING Performs a Nordic ODE simulations updating only
 % certain parameters
@@ -29,13 +29,12 @@ function [out] = nordicODE_updating(x, tags, names, exp_lin_flags, equals, Param
 
 [Parameters] = updateP(Parameters, names, cell_array, exp_lin_flags, array_flags, equals);
 
-% Set to false the flag that do not correspond to a simulation parameter
-flagT = false;
-flagS = false;
-flagSbase = true;
-[Parameters] = CompleteP(Parameters, flagT, flagS, flagSbase);
+[Parameters] = CompleteP(Parameters, F.flagT, F.flagS, F.flagSbase);
 
-[out] = NordicODE(Parameters, time_instants, E_flags, ODE_options);
+if ~ exist('falg_n','var')
+    flag_n = false;
+end
+[out] = NordicODE(Parameters, time_instants, E_flags, ODE_options, flag_n);
 
 end
 

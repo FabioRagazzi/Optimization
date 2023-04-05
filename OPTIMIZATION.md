@@ -502,18 +502,23 @@ Sistemo un po' di cose per il TRRA, per renderlo più comodo, domani lo proverò
 Lavoro al literature survey sulle DBD degli ultimi anni di cui mi ha incaricato Arturo 
 
 ## 4/4/2023
-Lavoro un po' sull'implementazione del fitting con TRRA per renderlo più pratico. Lancio una simulazione con nessun parametro dipendente dal campo elettrico e ottengo questo risultato
+Lavoro un po' sull'implementazione del fitting con TRRA per renderlo più pratico. Lancio una simulazione con **nessun parametro dipendente dal campo elettrico** e ottengo questo risultato
 ![](figs/2023_04_04/TRRA_Fit_Classico.png)
 E' un buon risultato perchè si riesce a riprodurre fedelmente il primo tratto della curva, oserei dire come mai prima d'ora.  
-Provo a riutilizzare dei vecchi parametri che avevo trovato e ottengo un fit ottimo, migliore di quello che avevo ottenuto in precedenza con questi stessi parametri (eppure il modello dovrebbe essere identico)   
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+Provo a **riutilizzare dei vecchi parametri** che avevo trovato e ottengo un fit ottimo, migliore di quello che avevo ottenuto in precedenza con questi stessi parametri (eppure il modello dovrebbe essere identico)   
 Non riesco a capire a cosa sia dovuta la differenza, comunque i parametri per cui ottengo il bel risultato sono:
-| $\mu$ | n0t | $\varphi$ | B | D | S | n0 |
+| $\mu$ | $\varphi$ | B | D | S | n0 | n0t |
 |--     |--   |--         |-- |-- |-- |--  |
-|-12.9162|24.0893|1.3090|-0.4318|-1.4241|-2.8589|19.4116|
+|-12.9162|1.3090|-0.4318|-1.4241|-2.8589|19.4116|24.0893|
 ~~~~
-x0 = [-12.9162  1.3090  -0.4318  -1.4241  -2.8589  19.4116  24.0893];
-~~~~
-~~~~
+xv = [-12.9162  1.3090  -0.4318  -1.4241  -2.8589  19.4116  24.0893];
 L: 3.5000e-04
 num_points: 100
 T: 333.1500
@@ -522,10 +527,45 @@ Phi_W: 0
 Phi_E: 10500
 n_start: [/, /, 1e5 o 0, 1e5 o 0]
 ~~~~
-
 ![](figs/2023_04_04/Vecchi_parametri.png)
 
-Provo a lanciare un fitting con il TRRA in cui per la prima volta considero la mobilità dipendente dal campo elettrico e vado quindi a fare l'ottimizzazione dei parametri ad essa collegati:
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+Provo a mantenere gli stessi identici parametri che hanno prodotto il bel risultato mostrato sopra e **mettere la mobilità dipendente dal campo elettrico utilizzando i parametri che fornivano i Nordici nell'articolo**(solo grafico, no TRRA).
+~~~~
+P.a_int = [100 80] * 1e-9; % (m)
+P.w_hop = [0.74, 0.76]; % (eV)
+P.a_sh = [1.25 2.25] * 1e-9; % (m)
+~~~~
+![](figs/2023_04_05/Fit_classico_con_mobilita_Nordici.png)
+Quello che si vede è che il risultato peggiora 
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+Ora provo a mettere la **mobilità dipendente dal campo elettrico con i parametri trovati dai Nordici**. Uso poi il TRRA per trovare i parametri classici ($\varphi$, B, D, S, $n_{0}$, $n_{0t}$) escludendo la mobilità $\mu$
+|| $\varphi$ | B | D | S | n0 | n0t |
+|--|--     |--   |--         |-- |-- |-- |
+|x0|1.2778  | -0.5556  | -0.5556  | -0.5556  | 21.3333 |  22.8889|
+|xv|1.2825  | -0.6783  | -0.6783  | -0.6783  | 19.2925 |  25.8647|
+
+![](figs/2023_04_05/.Fit_classic_mu_E_Nordicpng.png)
+Questa figura è la più bella di 10, il TRRA è **MOLTO** dipendente dal punto di partenza
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+Provo a lanciare un fitting con il TRRA in cui considero la **mobilità dipendente dal campo elettrico e vado quindi a fare l'ottimizzazione anche dei parametri ad essa collegati**
 * a_sh
 * a_int
 * w_hop
@@ -536,7 +576,29 @@ Provo a lanciare un fitting con il TRRA in cui per la prima volta considero la m
 
 ![](figs/2023_04_04/mobilita_dipendente_da_E.png)
 
-Il prossimo passo è provare a fare un fit di tutti i parametri del modello dei nordici (tenendoli simmetrici). In realtà i parametri non sono tutti ma quasi tutti, quelli non considerati nel fitting sono:
+Provo a lanciare un Particle Swarm per questo caso:
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+Ora lancio una simulazione con il TRRA in cui **mantengo i parametri classici fissi al valore che ha prodotto il fit migliore fino ad ora e ottimizzo i parametri relativi alla mobilità dipendente dal campo**
+|      | a_int(1) | a_int(2) | w_hop(1) | w_hop(2) | a_sh(1) | a_sh(2) |
+|--    |--        |--        |--        |--        |--       |--       |
+|  x0  |-7.7500   |-7.7500   |0.6500    |0.6500    |-9.7500  |-9.7500  |
+|  xv  |-7.7473   |-7.7473   |0.6459    |0.6459    |-9.7478  |-9.7478  |
+
+![](figs/2023_04_05/Classic_param_fixed_fit_mobE.png)
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+Il prossimo passo è provare a fare un fit di **tutti i parametri del modello dei Nordici** (tenendoli simmetrici). In realtà i parametri non sono tutti ma quasi tutti, quelli non considerati nel fitting sono:
 ~~~~
 L: 3.5000e-04
 num_points: 100
@@ -551,14 +613,31 @@ P.Pt = [1, 1];
 P.Pr = 1; 
 ~~~~
 
-&nbsp;
+Ottengo il seguente risultato:
+
+||a_int | w_hop | a_sh | w_tr_int | N_int | N_deep | w_tr_hop | w_tr | S_base | n_start | phih | 
+|--|--|--|--|--|--|--|--|--|--|--|--|
+|x0|-7|0.7|-9|0.7|23|20|1|1|-3.5|21|1.3|
+|xv|-6.9605|0.6961|-8.9605|0.6961|22.6898|20.3280|0.9960|0.9960|-3.4506|19.3698|1.2960|
+~~~~
+xv = [-6.9605   0.6961   -8.9605   0.6961   22.6898   20.3280   0.9960   0.9960   -3.4506   19.3698   1.2960];
+~~~~
+
+![](figs/2023_04_05/fitting_Nordici.png)
+
+Provo a fare anche un Particle Swarm di quest'ultimo caso:
+
+&nbsp;  
+
+&nbsp;  
 
 &nbsp;
 
-### TODO
-* fare un fit con il TRRA mettendo solo la mobilità dipendente dal campo elettrico &#x2610;
+# TODO
+* mettere la possibilità di spaziatura variabile &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
 * $\mu = \mu(E,n)$  &#x2610;
+* fare un fit con il TRRA mettendo solo la mobilità dipendente dal campo elettrico &#x2611;
 * modello Nordici con ODE &#x2611;
 * equilibrio termini di sorgente &#x2611;
 * sanity check per il fitting &#x2611;
@@ -568,13 +647,13 @@ P.Pr = 1;
 * stop quando n <0 nelle ODE &#x2611;
 * confronto corrente con $J + \frac{\partial D}{\partial t}$ e Sato  &#x2611;
 
-### DUBBI
+# DUBBI
 * $B_{(e,h)} = \mathrm{mult\_B} \cdot u_{e,h}$ Ma B è per ogni cella e u è alle interfacce
 * $e$ o $e^2$ nell'argomento del sinh ? 
 * $A_{T_{(e,h)}} = a_{sh_{(h,e)}}^2$ oppure $A_{T_{(e,h)}} = a_{sh_{(e,h)}}^2$ ?
 * Ha senso fare una funzione tipo "Compare_mu" per i gli altri coefficienti?
 
-
+# NOTE
 
 
 

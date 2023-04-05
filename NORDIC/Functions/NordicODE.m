@@ -1,4 +1,4 @@
-function [out] = NordicODE(Parameters, time_instants, E_flags, ODE_options)
+function [out] = NordicODE(Parameters, time_instants, E_flags, ODE_options, flag_n)
 
 % Setting initial condition for the number density
 n_stato_0 = ones(Parameters.num_points, 4) .* Parameters.n_start;
@@ -11,8 +11,11 @@ flag_D = E_flags(3); % set to true to have a detrapping coefficient dependent on
 flag_S = E_flags(4); % set to true to have the recombination coefficients dependent on the electric field
 
 % Solving with ODE
+if ~ exist('falg_n','var')
+    flag_n = false;
+end
 tic
-[out.tout, out.nout] = ode23tb(@(t,n_stato)odefunc_Drift_Diffusion_NM(t, n_stato, Parameters, flag_mu, flag_B, flag_D, flag_S), time_instants, n_stato_0, ODE_options);
+[out.tout, out.nout] = ode23tb(@(t,n_stato)odefunc_Drift_Diffusion_NM(t, n_stato, Parameters, flag_mu, flag_B, flag_D, flag_S, flag_n), time_instants, n_stato_0, ODE_options);
 out.wct = toc;
 
 % Post Processing (only if simulation successfully completed)

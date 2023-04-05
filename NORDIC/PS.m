@@ -2,7 +2,7 @@ clc, clearvars, close all
 current_path = pwd();
 cd('C:\Users\Faz98\Documents\GitHub\Optimization\NORDIC\')
 addpath('Functions\')
-fprintf("-> FITTING WITH TRRA THE NORDIC MODEL\n")
+fprintf("-> FITTING WITH PS THE NORDIC MODEL\n")
 
 load('data\Data_for_fit_Seri_N0trap_1e5.mat');
 % load('Parameters\Best_fit_Seri.mat')
@@ -65,17 +65,12 @@ ub = [1.5,   3,   3,   3,  24,  26];
 
 [F.flagT, F.flagS, F.flagSbase] = flags_from_names(names);
 
-Num_swipes = 2;
-if Num_swipes > 1
-    delta_bounds = (ub - lb) / (Num_swipes-1);
-end
-
-% Specifying the options for TRRA
-options = optimoptions('lsqnonlin');
-options.Display = 'iter';
-option.StepTolerance = 1e-8; % 1e-6
-options.OptimalityTolerance = 1e-8; % 1e-6
-options.FunctionTolerance = 1e-8; % 1e-6
+% Specifying the options for PS
+options = optimoptions('particleswarm');
+options.Display = 'final';
+options.FunctionTolerance = 1e-3; % 1e-6
+options.MaxIterations = 1e5; % 200*nvars
+options.MaxStallIterations = 20; % 20
 options.UseParallel = true;
 
 % Specifying the options for the ODE
@@ -89,30 +84,21 @@ E_flags(3) = false; %(D) set to true to have a detrapping coefficient dependent 
 E_flags(4) = false; %(S) set to true to have the recombination coefficients dependent on the electric field
 
 % Defining the objective function
-obj_func_TRRA = @(x) objective_function_J_NM("TRRA", x, tags, names, exp_lin_flags, equals, P, F,...
+obj_func_PS = @(x) objective_function_J_NM("PS", x, tags, names, exp_lin_flags, equals, P, F,...
                                                   time_instants, E_flags, ODE_options, Jobjective);
 
-% Starting a loop to try different starting points in the TRRA 
-xv = zeros(Num_swipes, length(lb));
-x0 = zeros(Num_swipes, length(lb));
-for i = 1:Num_swipes
-%     x0 = [1.3090    -0.4318    -1.4241    -2.8589    19.4116    24.0893]; % to manually select the initial guess
-    x0(i,:) = lb + delta_bounds * (i-1);
+tic
+[xv,~,~,output] = particleswarm(obj_func_PS, length(ub), lb, ub, options);
+toc
+disp(xv)
+save('data\most_recent_output_PS','xv')
 
-    tic
-    [xv(i,:),~,~,~,output] = lsqnonlin(obj_func_TRRA, x0(i,:), lb, ub, options); 
-    toc
-    disp(xv(i,:))
-    save('data\most_recent_output_TRRA','xv')
-   
-    % After TRRA finished, launching a simulation to see the result
-    flag_n = true; % do this to get an error if number density becomes < 0
-    [out] = nordicODE_updating(xv(i,:), tags, names, exp_lin_flags, equals, P, F, time_instants, E_flags, ODE_options, flag_n);
-    
-    figure
-    compare_Sato_JdDdt(out, Jobjective, time_instants)
-    title("Swipe #" + num2str(i) + " in TRRA")
-end
+% After PS finished, launching a simulation to see the result
+flag_n = true; % do this to get an error if number density becomes < 0
+[out] = nordicODE_updating(xv, tags, names, exp_lin_flags, equals, P, F, time_instants, E_flags, ODE_options, flag_n);
+
+figure
+compare_Sato_JdDdt(out, Jobjective, time_instants)
 
 rmpath('Functions\')
 cd(current_path)

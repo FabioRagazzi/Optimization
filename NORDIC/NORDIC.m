@@ -8,7 +8,7 @@ fprintf("-> ODE NM\n")
 load("Parameters\inbox.mat") 
 
 % Specifying the time instants that will be outputted
-time_instants = [0, logspace(0, 5, 99)];
+time_instants = [0, logspace(0, 5, 99)] + 4.4694;
 
 % Specifying the flags for the electric field dependence
 %                   mu    B     D     S
@@ -17,9 +17,12 @@ E_flags = logical([ 0,    0,    0,    0]);
 % Specifying the options for the ODE
 ODE_options = odeset('Stats','off');
 
-[out] = NordicODE(P, time_instants, E_flags, ODE_options);
+% Deciding if stopping when number density becomes < 0
+flag_n = true;
+[out] = NordicODE(P, time_instants, E_flags, ODE_options, flag_n);
 
-compare_Sato_JdDdt(out)
+load("data\Data_for_fit_Seri_N0trap_0.mat")
+compare_Sato_JdDdt(out, Jobjective, time_instants)
 
 % This part is useful for a maual fitting of a current
 % load('data\SERI_smooth.mat')
