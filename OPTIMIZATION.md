@@ -577,6 +577,7 @@ Provo a lanciare un fitting con il TRRA in cui considero la **mobilità dipenden
 ![](figs/2023_04_04/mobilita_dipendente_da_E.png)
 
 Provo a lanciare un Particle Swarm per questo caso:
+sta girando
 
 &nbsp;  
 
@@ -633,6 +634,51 @@ Provo a fare anche un Particle Swarm di quest'ultimo caso:
 
 &nbsp;
 
+## 11/4/2023
+Modifico il codice per mettere la possibilità di avere una spaziatura variabile lungo il dominio. Prendo un **caso di riferimento** con spaziatura costante:
+~~~~
+% Parameters of the simulation
+P.L = 3.5e-4;
+P.num_points = 100;
+P.T = 60;
+P.eps_r = 2;
+P.Phi_W = 0;
+P.Phi_E = P.L * 3e7;
+P.mu_h = 1e-13;
+P.mu_e = 1e-13;
+P.nh0t = 1e25;
+P.ne0t = 1e25;
+P.phih = 1.3;
+P.phie = 1.3;
+P.Bh = 1e-2;
+P.Be = 1e-2;
+P.Dh = 1e-3;
+P.De = 1e-3;
+P.S0 = 4e-3;
+P.S1 = 4e-3;
+P.S2 = 4e-3;
+P.S3 = 4e-3;
+P.n_start = [1e21, 1e21, 0, 0];
+~~~~
+![](figs/2023_04_11/Spaziatura_costante.png)
+
+Modifico il codice e vado a vedere se mantenendo la spaziatura costante si ottiene lo stesso risultato
+
+![](figs/2023_04_11/Spaziatura_costante_nuovo_codice.png)
+I due risultati sono uguali, deduco che ho fatto bene l'implementazione del nuovo codice.  
+Ora provo ad infittire la spaziatura in corrispondenza degli elettrodi per vedere se i risultati cambiano
+
+![](figs/2023_04_11/Infittimento_dagli_elettrodi.png)
+Come era prevedibile ora l'accumulo in corrispondenza degli elettrodi è maggiore. Si vede che la corrente di polarizzazione non è cambiata perchè nelle fasi iniziali non c'è ancora accumulo agli elettrodi e anche quado si forma il picco di carica in corrispondenza degli elettrodi questo non contribuisce in alcun modo alla conduzione (elettrodi che bloccano l'uscita della carica)
+
+
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
 # TODO
 * mettere la possibilità di spaziatura variabile &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
@@ -654,6 +700,7 @@ Provo a fare anche un Particle Swarm di quest'ultimo caso:
 * Ha senso fare una funzione tipo "Compare_mu" per i gli altri coefficienti?
 
 # NOTE
+* Non chiamare mai una funzione "odefun" se no MATLAB impazzisce
 
 
 

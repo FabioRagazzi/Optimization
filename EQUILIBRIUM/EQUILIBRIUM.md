@@ -67,15 +67,7 @@ $$ \bf{S_{12} = S_{1} = S_{2}} $$
 
 $$ -B n (1-\frac{n_{t}}{N_{t}}) + Dn_{t} = - S_{0}n_{t}^2 - S_{12}n_{t}n$$
 
-in cui l'ultimo deriva dall'unione delle equazioni (1) e (6)  
-
-Verifico che effettivamente rispettando i vincoli posso ottenere una condizione stabile con qualunque valore desiderato di number density di partenza per i portatori liberi e intrappolati
-
-![](figs/2023_04_11/Condizione_di_equilibrio.png)
-Questo è un buon risultato, posso provare ad implementare il termine di sorgente nel modello
-
-# NOTE
-* Non chiamare mai una funzione "odefun" se no MATLAB impazzisce
+in cui l'ultimo deriva dall'unione delle equazioni (1) e (6)
 
 
 

@@ -1,5 +1,5 @@
-function [dDdt] = compute_dDdt(E, t, eps)
-%COMPUTE_DDDT Summary of this function goes here
+function [dDdt] = Compute_dDdt(E, t, eps)
+% Compute_dDdt Summary of this function goes here
 % E is a matrix where every column contains the values of the electric field at a given time instant  
 dEdt = E;
 dim_t = size(E,2);

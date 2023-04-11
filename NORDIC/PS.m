@@ -9,15 +9,15 @@ load('data\Data_for_fit_Seri_N0trap_1e5.mat');
 
 % Specyfing the parameter to fit
 
-% CLASSIC
-names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "N_deep(1)"]; 
-tags = [1, 2, 3, 4, 5, 6];
-exp_lin_flags = logical([0, 1, 1, 1, 1, 1]);
-equals = {{"phie",1}, {"Be",2}, {"De",3}, ...
-          {"S1",4}, {"S2",4}, {"S3",4}....
-          {"n_start(2)",5}, {"N_deep(2)",6}};
-lb = [1.0,  -5,  -5,  -5,  18,  19];
-ub = [1.5,   3,   3,   3,  24,  26];
+% % CLASSIC
+% names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "N_deep(1)"]; 
+% tags = [1, 2, 3, 4, 5, 6];
+% exp_lin_flags = logical([0, 1, 1, 1, 1, 1]);
+% equals = {{"phie",1}, {"Be",2}, {"De",3}, ...
+%           {"S1",4}, {"S2",4}, {"S3",4}....
+%           {"n_start(2)",5}, {"N_deep(2)",6}};
+% lb = [1.2777, -0.5557, -0.5557, -0.5557, 21.3332, 22.8888];
+% ub = [1.2779, -0.5555, -0.5555, -0.5555, 21.3334, 22.8890];
 
 % names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "N_deep(1)"]; 
 % tags = [1, 2, 3, 4, 5, 6];
@@ -28,15 +28,15 @@ ub = [1.5,   3,   3,   3,  24,  26];
 % lb = [1.1,  -4,  -4,  -4,  19,  20];
 % ub = [1.5,   2,   2,   2,  23,  25];
 
-% names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "N_deep(1)", "a_int(1)", "w_hop(1)", "a_sh(1)"]; 
-% tags = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-% exp_lin_flags = logical([0, 1, 1, 1, 1, 1, 1, 0, 1]);
-% equals = {{"phie",1}, {"Be",2}, {"De",3}, ...
-%           {"S1",4}, {"S2",4}, {"S3",4}, ....
-%           {"n_start(2)",5}, {"N_deep(2)",6}, ... 
-%           {"a_int(2)",7}, {"w_hop(2)",8}, {"a_sh(2)",9}};
-% lb = [1.1,  -4,  -4,  -4,  19,  20,  -9,  0.5,  -11];
-% ub = [1.5,   2,   2,   2,  23,  25,  -5,  0.9,   -7];
+names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "N_deep(1)", "a_int(1)", "w_hop(1)", "a_sh(1)"]; 
+tags = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+exp_lin_flags = logical([0, 1, 1, 1, 1, 1, 1, 0, 1]);
+equals = {{"phie",1}, {"Be",2}, {"De",3}, ...
+          {"S1",4}, {"S2",4}, {"S3",4}, ....
+          {"n_start(2)",5}, {"N_deep(2)",6}, ... 
+          {"a_int(2)",7}, {"w_hop(2)",8}, {"a_sh(2)",9}};
+lb = [1.1,  -4,  -4,  -4,  19,  20,  -9,  0.5,  -11];
+ub = [1.5,   2,   2,   2,  23,  25,  -5,  0.9,   -7];
 
 % % MOBILITY DEPENDENT ON E
 % names = ["a_int", "w_hop", "a_sh"]; 
@@ -68,9 +68,9 @@ ub = [1.5,   3,   3,   3,  24,  26];
 % Specifying the options for PS
 options = optimoptions('particleswarm');
 options.Display = 'final';
-options.FunctionTolerance = 1e-3; % 1e-6
-options.MaxIterations = 1e5; % 200*nvars
-options.MaxStallIterations = 20; % 20
+options.FunctionTolerance = 1e-1; % 1e-6
+options.MaxIterations = 1; % 200*nvars
+options.MaxStallIterations = 1; % 20
 options.UseParallel = true;
 
 % Specifying the options for the ODE
@@ -99,6 +99,7 @@ flag_n = true; % do this to get an error if number density becomes < 0
 
 figure
 compare_Sato_JdDdt(out, Jobjective, time_instants)
+title("Fit with PS")
 
 rmpath('Functions\')
 cd(current_path)

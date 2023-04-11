@@ -1,11 +1,11 @@
-function [J_cond] = compute_J_cond(nh, ne, E, K_diff_h, K_diff_e, mu_h, mu_e, Delta, aT2exp, kBT, beta, e)
-%COMPUTE_J_COND Summary of this function goes here
+function [J_cond] = ComputeJCond(nh, ne, E, K_diff_h, K_diff_e, mu_h, mu_e, deltas, aT2exp, kBT, beta, e)
+% ComputeJCond Summary of this function goes here
 %   Detailed explanation goes here
 J_cond_h = zeros(size(E));
 J_cond_e = zeros(size(E));
 
-J_diffusion_h = -K_diff_h * (nh(2:end,:) - nh(1:end-1,:)) ./ Delta;
-J_diffusion_e = -K_diff_e * (ne(2:end,:) - ne(1:end-1,:)) ./ Delta;
+J_diffusion_h = -K_diff_h * (nh(2:end,:) - nh(1:end-1,:)) ./ deltas(2:end-1)';
+J_diffusion_e = -K_diff_e * (ne(2:end,:) - ne(1:end-1,:)) ./ deltas(2:end-1)';
 u_h = mu_h * E;
 u_e = -mu_e * E;
 Umax_h = max(0, u_h);
