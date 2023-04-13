@@ -10,14 +10,14 @@ load('data\Data_for_fit_Seri_N0trap_1e5.mat');
 % Specyfing the parameter to fit
 
 % CLASSIC
-names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "N_deep(1)"]; 
-tags = [1, 2, 3, 4, 5, 6];
-exp_lin_flags = logical([0, 1, 1, 1, 1, 1]);
+names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "N_deep(1)", "mu_h"]; 
+tags = [1, 2, 3, 4, 5, 6, 7];
+exp_lin_flags = logical([0, 1, 1, 1, 1, 1, 1]);
 equals = {{"phie",1}, {"Be",2}, {"De",3}, ...
           {"S1",4}, {"S2",4}, {"S3",4}....
-          {"n_start(2)",5}, {"N_deep(2)",6}};
-lb = [1.0,  -5,  -5,  -5,  18,  19];
-ub = [1.5,   3,   3,   3,  24,  26];
+          {"n_start(2)",5}, {"N_deep(2)",6}, {"mu_e",7}};
+lb = [1.0,  -5,  -5,  -5,  18,  19, -15];
+ub = [1.5,   3,   3,   3,  24,  26, -12];
 
 % names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "N_deep(1)"]; 
 % tags = [1, 2, 3, 4, 5, 6];
@@ -65,7 +65,7 @@ ub = [1.5,   3,   3,   3,  24,  26];
 
 [F.flagT, F.flagS, F.flagSbase] = flags_from_names(names);
 
-Num_swipes = 2;
+Num_swipes = 5;
 if Num_swipes > 1
     delta_bounds = (ub - lb) / (Num_swipes-1);
 end
@@ -83,7 +83,7 @@ ODE_options = odeset('Stats','off');
 
 % Setting the flags for the electric field dependency
 E_flags = false(1,4);
-E_flags(1) = true; %(mu) set to true to have a mobility dependent on the electric field
+E_flags(1) = false; %(mu) set to true to have a mobility dependent on the electric field
 E_flags(2) = false; %(B) set to true to have a trapping coefficient dependent on the electric field
 E_flags(3) = false; %(D) set to true to have a detrapping coefficient dependent on the electric field
 E_flags(4) = false; %(S) set to true to have the recombination coefficients dependent on the electric field
@@ -97,7 +97,8 @@ xv = zeros(Num_swipes, length(lb));
 x0 = zeros(Num_swipes, length(lb));
 for i = 1:Num_swipes
 %     x0 = [1.3090    -0.4318    -1.4241    -2.8589    19.4116    24.0893]; % to manually select the initial guess
-    x0(i,:) = lb + delta_bounds * (i-1);
+%     x0(i,:) = lb + delta_bounds * (i-1);
+    x0(i,:) = RandomX0(lb, ub); 
 
     tic
     [xv(i,:),~,~,~,output] = lsqnonlin(obj_func_TRRA, x0(i,:), lb, ub, options); 
