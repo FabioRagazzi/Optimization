@@ -6,7 +6,7 @@ function [] = CompareSatoJdDdt(out, fit_objective, time_objective)
 % time_objective -> (optional) extra time values to plot
 % OUTPUT
 % [] -> none
-loglog(out.tout, out.J, 'g-', 'LineWidth', 2, 'DisplayName','Sato')
+loglog(out.tout, out.J_Sato, 'g-', 'LineWidth', 2, 'DisplayName','Sato')
 hold on
 loglog(out.tout, out.J_dDdt, 'k--', 'LineWidth', 2, 'DisplayName','J + dD/dt')
 hold off

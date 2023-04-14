@@ -20,7 +20,7 @@ J_cond = ComputeJCond(nh, ne, E, P.D_h, P.D_e, P.mu_h, P.mu_e, P.deltas, P.aT2ex
 dDdt = Compute_dDdt(E, tout', P.eps);
 J_dDdt = J_cond + dDdt;
 J_from_dDdt = -IntegralFunc(J_dDdt', delta_x_face) / P.L;
-J_Sato = -IntegralFunc(J_cond', delta_x_face) / P.L;
+J_Sato = -IntegralFunc(J_cond', P.delta_x_face) / P.L;
 
 % J = zeros(num_iter,1); % Polarization current/current density (unit area)
 % % for k = 1:num_iter

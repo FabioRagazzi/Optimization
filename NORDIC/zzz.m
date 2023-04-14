@@ -106,11 +106,11 @@ rmpath('Functions\')
 clear, clc, close all
 addpath("Functions\")
 P.L = 3.5e-4;
-P.num_points = 40;
+P.num_points = 100;
 P.LW = 2.5e-5;
 P.LE = 2.5e-5;
-P.nW = 7;
-P.nE = 7;
+P.nW = 1;
+P.nE = 1;
 P.deltas = CreateDeltas(P.LW, P.LE, P.nW, P.nE, P.num_points, P.L);
 [x, x_int, x_face] = CreateX(P.deltas);
 
@@ -123,54 +123,79 @@ end
 ylim([-1, 1])
 rmpath('Functions\')
 
-
 %% Test OdefuncDriftDiffusion
 clear, clc, close all
 addpath("Functions\")
 
+P = Parameters("CASE1");
 
-
-P.L = 3.5e-4;
-P.num_points = 40;
-P.LW = 2.5e-5;
-P.LE = 2.5e-5;
-P.nW = 7;
-P.nE = 7;
-P.T = 60;
-P.Phi_W = 0;
-P.Phi_E = P.L * 1e7;
-P.deltas = CreateDeltas(P.LW, P.LE, P.nW, P.nE, P.num_points, P.L);
-P.EletStat = EletStat1D(P.deltas, P.eps, "sparse");
-
-P.eps_r = 2.3;
-P.phih = 1.148;
-P.phie = 0.905;
-P.n_start = [1e21, 1e21, 1e5, 1e5];
-
-% Fixed parameters not depending on the electric field 
-P.mu_h = 1e-13;
-P.mu_e = 1e-13;
-P.Bh = 2.4e-2;
-P.Be = 1.2e-2;
-P.Dh = 1e-3;
-P.De = 1e-3;
-P.S0 = 4e-3;
-P.S1 = 4e-3;
-P.S2 = 4e-3;
-P.S3 = 4e-3;
-
-
-
-options.flagMu = 0;
-options.flagB = 0;
-options.flagD = 0;
-options.flagS = 0;
+% Specifying the options for the simulation
+options.flagMu = 1;
+options.flagB = 1;
+options.flagD = 1;
+options.flagS = 1;
+options.flag_n = 1;
 options.flux_scheme = "Upwind";
+options.injection = "Fixed"; % Schottky / Fixed
+options.ODE_options = odeset('Stats','off');
 
+n_stato = rand(4*P.num_points,1);
+
+[dndt] = OdefuncDriftDiffusion(3, n_stato, P, options);
+disp(dndt)
 
 rmpath('Functions\')
 
+%% Test ComputeJCond
+clear, clc, close all
+addpath("Functions\")
 
+np = 10;
+nt = 5;
+nh = rand(np, nt);
+ne = rand(np, nt);
+E = rand(np+1, nt);
+Diff_h = rand(np+1, nt);
+Diff_e = rand(np+1, nt);
+u_h = rand(np+1, nt);
+u_e = rand(np+1, nt);
+deltas = rand(1, np+1);
+aT2exp = [1, 1];
+kBT = 1;
+beta = 1;
+e = 1;
+options.flux_scheme = "Upwind";
+
+[J_cond] = ComputeJCond(nh, ne, E, Diff_h, Diff_e, u_h, u_e, deltas, aT2exp, kBT, beta, e, options);
+disp(J_cond)
+
+rmpath('Functions\')
+
+%% Test ComputedDdt
+clear, clc, close all
+addpath("Functions\")
+
+np = 10;
+nt = 7;
+E = rand(np+1, nt);
+t = rand(1,nt);
+eps = 1;
+dDdt = ComputedDdt(E, t, eps);
+disp(dDdt)
+
+rmpath('Functions\')
+
+%% Name-Value Arguments
+disp(myFunction(3, a=2, b=5))
+
+function result = myFunction(x, options)
+    arguments
+        x
+        options.a = 1;
+        options.b = 1;
+    end
+    result = x + options.a * options.b;
+end
 
 
 

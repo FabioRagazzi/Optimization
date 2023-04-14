@@ -671,7 +671,19 @@ Ora provo ad infittire la spaziatura in corrispondenza degli elettrodi per veder
 ![](figs/2023_04_11/Infittimento_dagli_elettrodi.png)
 Come era prevedibile ora l'accumulo in corrispondenza degli elettrodi è maggiore. Si vede che la corrente di polarizzazione non è cambiata perchè nelle fasi iniziali non c'è ancora accumulo agli elettrodi e anche quado si forma il picco di carica in corrispondenza degli elettrodi questo non contribuisce in alcun modo alla conduzione (elettrodi che bloccano l'uscita della carica)
 
+&nbsp;  
 
+&nbsp;  
+
+&nbsp;
+
+## 14/4/2023
+Continuo a modificare il codice con le ODE migliorandolo. Dovrei essere riiuscito a mettere la possibilità di utilizzare il Koren limiter. Faccio una prova ("RECTANGLE") in cui metto una distribuzione di number density iniziale rettangolare (per elettroni e lacune). Dopo 100 secondi ottengo queste situazioni (senza l'auto-campo):
+ ![](figs/2023_04_14/Koren.png)
+ ![](figs/2023_04_14/Upwind.png)
+ Se invece considero anche il campo prodotto dalla distribuzione di carica interna al dominio
+ ![](figs/2023_04_14/Koren_full.png)
+![](figs/2023_04_14/Upwind_full.png)
 
 &nbsp;  
 

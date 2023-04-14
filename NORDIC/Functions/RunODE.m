@@ -12,19 +12,26 @@ function [out] = RunODE(P, time_instants, options)
 n_stato_0 = ones(P.num_points, 4) .* P.n_start;
 n_stato_0 = reshape(n_stato_0, [P.num_points*4, 1]);
 
-% Solving with ODE
+% If options is not provided set default value
 if ~ exist('options','var')
-    options.flag_n = false;
+    options.flagMu = 0;
+    options.flagB = 0;
+    options.flagD = 0;
+    options.flagS = 0;
+    options.flag_n = 0;
+    options.flux_scheme = "Upwind";
+    options.injection = "Fixed";
+    options.source = "Off";
+    options.ODE_options = odeset('Stats','off');
 end
+
+% Solving with ODE
+start_time = toc;
 [out.tout, out.nout] = ode23tb(@(t,n_stato)OdefuncDriftDiffusion(t, n_stato, P, options), time_instants, n_stato_0, options.ODE_options);
+out.wct = toc - start_time;
 
-% Post Processing (only if simulation successfully completed)
-if length(time_instants) == length(out.tout)
-    tic
-    [out.x, out.x_interfacce, out.x_interni] = create_x_domain(P.L, P.num_points);
-    [out.nh, out.ne, out.nht, out.net, out.rho, out.phi, out.E, out.J, out.J_dDdt] = post_processing(out.nout, out.tout, P, flag_mu);
-    out.ppt = toc;
+% Post Processing
+start_time = toc;
+[out.nh, out.ne, out.nht, out.net, out.rho, out.phi, out.E, out.J_Sato, out.J_dDdt] = PostProcessing(out.nout, out.tout, P, options);
+out.ppt = toc - start_time;
 end
-
-end
-

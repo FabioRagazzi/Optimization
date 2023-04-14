@@ -43,11 +43,22 @@ S = Recombination(mu_center, P.mult_S, P.S_base, [P.S0, P.S1, P.S2, P.S3], optio
 % Compute diffusion coefficients with Einstein relation
 Diff = mu * P.kBT / P.e;
 
-% E(1), E(end), P.aT2exp, P.kBT, P.beta
-% Gamma_interfaces(end,1) = -Schottky(Eend, aT2exp(end), kBT, beta);
-% Gamma_interfaces(1,2) = Schottky(E1, aT2exp(1), kBT, beta);
+% Compute border conditions 
+if options.injection == "Schottky"
+    gamma = Schottky(E([1, end]), P.aT2exp, P.kBT, P.beta);
+    BC = [0, gamma(1); gamma(2), 0];
+elseif options.injection == "Fixed"
+    BC = P.fix_inj;
+end
 
+% Compute fluxes and source terms to obtain dndt
 Gamma = Fluxes(n(:,1:2), u, P.deltas, P.Vol, Diff, BC, options);
-dndt = Omega(n, P.N_deep, B, D, S);
+if options.source == "On"
+    dndt = Omega(n, P.Ndeep, B, D, S);
+elseif options.source == "Off"
+    dndt = zeros(4*P.num_points,1);
+else
+    error("Invalid value for options.source")
+end
 dndt(1:2*P.num_points) = dndt(1:2*P.num_points) - Gamma;
 end

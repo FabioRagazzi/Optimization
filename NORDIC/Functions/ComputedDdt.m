@@ -1,7 +1,12 @@
-function [dDdt] = compute_dDdt(E, t, eps)
-%COMPUTE_DDDT Summary of this function goes here
-% E is a matrix where every column contains the values of the electric field at a given time instant  
-dEdt = E;
+function [dDdt] = ComputedDdt(E, t, eps)
+% ComputedDdt computes the derivative of vector D over time
+% INPUT
+% E -> matrix with all the values of electric fiels at the interfaces
+% t -> array(MUST! be row vector) containing the time instants at which E is calculated
+% eps -> dielectric permettivity
+% OUTPUT
+% dDdt -> derivative of D over time
+dEdt = zeros(size(E));
 dim_t = size(E,2);
 r = zeros(1,dim_t);
 delta_t = t(2:end) - t(1:end-1);
