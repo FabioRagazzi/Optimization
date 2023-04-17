@@ -47,7 +47,51 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
+        case "LE_ROY"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 4e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 293.15;
+        P.eps_r = 2;
+
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = 4e3;
+        P.phih = 1.16;
+        P.phie = 1.27;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [1e18, 1e18, 0, 0];
+        P.Ndeep = ones(P.num_points,2) .* [6.2e20, 6.2e20];
+        
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 2e-13;
+        P.mu_e = 1e-14;
+        P.Bh = 2e-1;
+        P.Be = 1e-1;
+        P.Dh = 3e-5;
+        P.De = 3e-5;
+        P.S0 = 6.4e-19;
+        P.S1 = 6.4e-19;
+        P.S2 = 6.4e-19;
+        P.S3 = 0;
+
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
     case "NORDIC_STANDARD"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
@@ -98,6 +142,9 @@ switch name
         P.S_base = [2e-23, 2e-23, 2e-23, 2e-23];
         P.Pr = 1; % ()
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
     case "RECTANGLE"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
@@ -139,7 +186,9 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
-
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
     otherwise
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT

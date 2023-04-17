@@ -26,12 +26,14 @@ if ~ exist('options','var')
 end
 
 % Solving with ODE
-start_time = toc;
+start_time_ODE = tic;
 [out.tout, out.nout] = ode23tb(@(t,n_stato)OdefuncDriftDiffusion(t, n_stato, P, options), time_instants, n_stato_0, options.ODE_options);
-out.wct = toc - start_time;
+out.wct = toc(start_time_ODE);
 
 % Post Processing
-start_time = toc;
-[out.nh, out.ne, out.nht, out.net, out.rho, out.phi, out.E, out.J_Sato, out.J_dDdt] = PostProcessing(out.nout, out.tout, P, options);
-out.ppt = toc - start_time;
+start_time_Post_Processing = tic;
+if length(out.tout) == length(time_instants)
+    [out.nh, out.ne, out.nht, out.net, out.rho, out.phi, out.E, out.J_Sato, out.J_dDdt] = PostProcessing(out.nout, out.tout, P, options);
+end
+out.ppt = toc(start_time_Post_Processing);
 end

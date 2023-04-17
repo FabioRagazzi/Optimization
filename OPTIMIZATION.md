@@ -692,9 +692,9 @@ Continuo a modificare il codice con le ODE migliorandolo. Dovrei essere riiuscit
 &nbsp;
 
 # TODO
-* mettere la possibilità di spaziatura variabile &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
 * $\mu = \mu(E,n)$  &#x2610;
+* mettere la possibilità di spaziatura variabile &#x2611;
 * fare un fit con il TRRA mettendo solo la mobilità dipendente dal campo elettrico &#x2611;
 * modello Nordici con ODE &#x2611;
 * equilibrio termini di sorgente &#x2611;

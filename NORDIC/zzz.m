@@ -188,17 +188,40 @@ rmpath('Functions\')
 %% Name-Value Arguments
 disp(myFunction(3, a=2, b=5))
 
-function result = myFunction(x, options)
-    arguments
-        x
-        options.a = 1;
-        options.b = 1;
-    end
-    result = x + options.a * options.b;
-end
+% function result = myFunction(x, options)
+%     arguments
+%         x
+%         options.a = 1;
+%         options.b = 1;
+%     end
+%     result = x + options.a * options.b;
+% end
 
+%% Test TRRA
+clearvars, clc, close all
+addpath("Functions\")
 
+load('data\Data_Seri.mat');
+[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("CLASSIC");
+P = Parameters("BEST_FIT_SERI");
 
+options.flagMu = 0;
+options.flagB = 0;
+options.flagD = 0;
+options.flagS = 0;
+options.flag_n = 1;
+options.flux_scheme = "Upwind";
+options.injection = "Schottky"; % Schottky / Fixed
+options.source = "On";
+options.ODE_options = odeset('Stats','off');
 
+names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "Ndeep(1)", "mu_h"]; 
+tags = [1, 2, 3, 4, 5, 6, 7];
 
+x = [1.3090, -0.4318, -1.4241, -2.8589-18.7953, 19.4116, 24.0893, -12.9162];
 
+[out] = RunODEUpdating(x, tags, names, exp_lin_flags, equals, P, time_instants, options);
+% [out] = RunODE(P, time_instants, options);
+CompareSatoJdDdt(out, Jobjective, time_instants)
+
+rmpath('Functions\')
