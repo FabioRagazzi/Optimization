@@ -6,7 +6,7 @@ P = Parameters("LE_ROY");
 
 % Specifying the time instants that will be outputted
 % time_instants = linspace(0, 100);
-time_instants = [0, logspace(0, 4, 99)];
+time_instants = [0, logspace(0, 5, 99)];
 
 % Specifying the options for the simulation
 options.flagMu = 0;

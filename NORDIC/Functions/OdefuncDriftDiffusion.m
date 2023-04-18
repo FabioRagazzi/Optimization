@@ -45,7 +45,7 @@ Diff = mu * P.kBT / P.e;
 
 % Compute border conditions 
 if options.injection == "Schottky"
-    gamma = Schottky(E([1, end]), P.aT2exp, P.kBT, P.beta);
+    gamma = Schottky(E([1, end])', P.aT2exp, P.kBT, P.beta);
     BC = [0, gamma(1); gamma(2), 0];
 elseif options.injection == "Fixed"
     BC = P.fix_inj;

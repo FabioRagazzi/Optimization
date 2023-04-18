@@ -225,3 +225,200 @@ x = [1.3090, -0.4318, -1.4241, -2.8589-18.7953, 19.4116, 24.0893, -12.9162];
 CompareSatoJdDdt(out, Jobjective, time_instants)
 
 rmpath('Functions\')
+
+%% EEEIC PHI
+clearvars, clc, close all
+addpath('Functions\')
+
+P = Parameters("LE_ROY");
+time_instants = [0, logspace(0, 5, 99)];
+
+% Specifying the options for the simulation
+options.flagMu = 0;
+options.flagB = 0;
+options.flagD = 0;
+options.flagS = 0;
+options.flag_n = 1;
+options.flux_scheme = "Upwind";
+options.injection = "Schottky"; % Schottky / Fixed
+options.source = "On";
+options.ODE_options = odeset('Stats','off');
+
+phi_values = [1.3, 1.32, 1.34, 1.36];
+linestyles = ["-", "--", ":", "-."];
+
+for i = 1:length(phi_values)
+    eval("P.phih = phi_values(" + num2str(i) + ");")
+    eval("P.phie = phi_values(" + num2str(i) + ");")
+    P = CompleteP(P);
+    eval("out" + num2str(i) + " = RunODE(P, time_instants, options);")
+end
+
+for i = 1:4
+    eval("graph" + num2str(i) + ".LineWidth = 2;")
+    name = "φ = " + num2str(phi_values(i));
+    eval("graph" + num2str(i) + ".DisplayName = name;")
+    eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
+end
+
+x_zoom_interval = [0.6e4, 3e4];
+y_zoom_interval = [0.2e-11, 2e-11];
+
+% Big Figure
+fig1 = figure;
+hold on
+grid on
+for i = 1:4
+    eval("loglog(out" + num2str(i) + ".tout, out" + num2str(i) + ".J_dDdt, graph" + num2str(i) + ")")
+end
+rectangle('Position',[x_zoom_interval(1), ...
+                      y_zoom_interval(1), ...
+                      x_zoom_interval(2) - x_zoom_interval(1), ...
+                      y_zoom_interval(2) - y_zoom_interval(1)])
+legend('Location','southwest')
+xlim([1, x_zoom_interval(2)])
+xticks(10.^[0, 1, 2, 3, 4])
+xlabel('time (s)')
+ylabel('current density (A/m^-^2)')
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+
+% Small Figure
+ax = axes('Position',[0.45 0.55 0.3 0.3]);
+box on
+hold on
+grid on
+for i = 1:4
+    eval("graph"+ num2str(i) +".Parent = ax;")
+    eval("loglog(out" + num2str(i) + ".tout, out" + num2str(i) + ".J_dDdt, graph" + num2str(i) + ")")
+end
+ax.XLim = x_zoom_interval;
+ax.YLim = y_zoom_interval;
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+
+annotation(fig1,'arrow',[0.75 0.88],[0.55 0.325]);
+
+rmpath('Functions\')
+
+%% EEEIC MU
+clearvars, clc, close all
+addpath('Functions\')
+
+P = Parameters("LE_ROY");
+time_instants = [0, logspace(0, 4, 99)];
+
+% Specifying the options for the simulation
+options.flagMu = 0;
+options.flagB = 0;
+options.flagD = 0;
+options.flagS = 0;
+options.flag_n = 1;
+options.flux_scheme = "Upwind";
+options.injection = "Schottky"; % Schottky / Fixed
+options.source = "On";
+options.ODE_options = odeset('Stats','off');
+
+mu_values = [1e-12, 1e-13, 1e-14, 1e-15];
+linestyles = ["-", "--", ":", "-."];
+
+% Simulations
+for i = 1:length(mu_values)
+    eval("P.mu_h = mu_values(" + num2str(i) + ");")
+    eval("P.mu_e = mu_values(" + num2str(i) + ");")
+    eval("out" + num2str(i) + " = RunODE(P, time_instants, options);")
+end
+
+% Settings for the various graphs
+for i = 1:length(mu_values)
+    eval("graph" + num2str(i) + ".LineWidth = 2;")
+    name = "μ = " + num2str(mu_values(i));
+    eval("graph" + num2str(i) + ".DisplayName = name;")
+    eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
+end
+
+% Big Figure
+fig1 = figure;
+hold on
+grid on
+for i = 1:length(mu_values)
+    eval("loglog(out" + num2str(i) + ".tout, out" + num2str(i) + ".J_dDdt, graph" + num2str(i) + ")")
+end
+legend
+xlabel('time (s)')
+ylabel('current density (A/m^-^2)')
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+
+rmpath('Functions\')
+
+%% EEEIC N0
+clearvars, clc, close all
+addpath('Functions\')
+
+P = Parameters("LE_ROY");
+time_instants = [0, logspace(0, 4, 99)];
+
+% Specifying the options for the simulation
+options.flagMu = 0;
+options.flagB = 0;
+options.flagD = 0;
+options.flagS = 0;
+options.flag_n = 1;
+options.flux_scheme = "Upwind";
+options.injection = "Schottky"; % Schottky / Fixed
+options.source = "On";
+options.ODE_options = odeset('Stats','off');
+
+n0_values = [1e20, 1e19, 1e18, 1e17];
+linestyles = ["-", "--", ":", "-."];
+
+% Simulations
+for i = 1:length(n0_values)
+    eval("P.n_start(1) = n0_values(" + num2str(i) + ");")
+    eval("P.n_start(2) = n0_values(" + num2str(i) + ");")
+    eval("out" + num2str(i) + " = RunODE(P, time_instants, options);")
+end
+
+% Settings for the various graphs
+for i = 1:length(n0_values)
+    eval("graph" + num2str(i) + ".LineWidth = 2;")
+    name = "n_0 = " + num2str(n0_values(i));
+    eval("graph" + num2str(i) + ".DisplayName = name;")
+    eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
+end
+
+% Big Figure
+fig1 = figure;
+hold on
+grid on
+for i = 1:length(n0_values)
+    eval("loglog(out" + num2str(i) + ".tout, out" + num2str(i) + ".J_dDdt, graph" + num2str(i) + ")")
+end
+legend
+xlabel('time (s)')
+ylabel('current density (A/m^-^2)')
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+
+rmpath('Functions\')
+
+%% EEEIC FIT 1 e 2
+clearvars, clc, close all
+addpath('Functions\')
+
+P = Parameters("EEEIC_FIT_1");
+time_instants = [0, logspace(0, 5, 99)];
+
+options.flagMu = 0;
+options.flagB = 0;
+options.flagD = 0;
+options.flagS = 0;
+options.flag_n = 1;
+options.flux_scheme = "Upwind";
+options.injection = "Schottky"; % Schottky / Fixed
+options.source = "On";
+options.ODE_options = odeset('Stats','off');
+
+[out] = RunODE(P, time_instants, options);
+
+load("data\Data_Seri.mat")
+CompareSatoJdDdt(out, Jobjective, time_instants)
+
+rmpath('Functions\')
