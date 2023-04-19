@@ -18,7 +18,7 @@ if ~ exist('options','var')
     options.flagB = 0;
     options.flagD = 0;
     options.flagS = 0;
-    options.flag_n = 0;
+%     options.flag_n = 0;
     options.flux_scheme = "Upwind";
     options.injection = "Fixed";
     options.source = "Off";
@@ -27,7 +27,11 @@ end
 
 % Solving with ODE
 start_time_ODE = tic;
-[out.tout, out.nout] = ode23tb(@(t,n_stato)OdefuncDriftDiffusion(t, n_stato, P, options), time_instants, n_stato_0, options.ODE_options);
+if isa(options.ODE_options.Events, 'function_handle')
+    [out.tout, out.nout, ~, ~, ~] = ode23tb(@(t,n_stato)OdefuncDriftDiffusion(t, n_stato, P, options), time_instants, n_stato_0, options.ODE_options);
+else
+    [out.tout, out.nout] = ode23tb(@(t,n_stato)OdefuncDriftDiffusion(t, n_stato, P, options), time_instants, n_stato_0, options.ODE_options);
+end
 out.wct = toc(start_time_ODE);
 
 % Post Processing

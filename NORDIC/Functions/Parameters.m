@@ -29,7 +29,7 @@ switch name
         P.phih = 1.3090;
         P.phie = 1.3090;
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [10^(19.4116), 10^(19.4116), 0, 0];
+        P.n_start = [10^(19.4116), 10^(19.4116), 1e2, 1e2];
         P.Ndeep = ones(P.num_points,2) .* [10^(24.0893), 10^(24.0893)];
         
         % Fixed parameters not depending on the electric field 
@@ -147,7 +147,7 @@ switch name
         % Material
         P.T = 333.15;
         P.eps_r = 2.3;
-        
+
         % PARAMETERS THAT CAN BE USED FOR A FIT
         % Essential Parameters
         P.Phi_W = 0;
@@ -229,7 +229,7 @@ switch name
         P.nW = 0;
         P.nE = 0;
         % Material
-        P.T = 333;
+        P.T = 333.15;
         P.eps_r = 2.3;
         
         % PARAMETERS THAT CAN BE USED FOR A FIT
@@ -315,8 +315,8 @@ switch name
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
-    otherwise
+    
+    case "VERY_LONG"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -326,7 +326,7 @@ switch name
         P.nW = 7;
         P.nE = 7;
         % Material
-        P.T = 333;
+        P.T = 333.15;
         P.eps_r = 2.3;
         
         % PARAMETERS THAT CAN BE USED FOR A FIT
@@ -345,10 +345,92 @@ switch name
         P.Be = 1.2e-2;
         P.Dh = 1e-3;
         P.De = 1e-3;
-        P.S0 = 5e-22;
-        P.S1 = 5e-22;
-        P.S2 = 5e-22;
-        P.S3 = 5e-22;
+        P.S0 = 5e-10;
+        P.S1 = 5e-10;
+        P.S2 = 5e-10;
+        P.S3 = 5e-10;
+        
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+    
+    case "VERY_VERY_LONG"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 3.5e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 333.15;
+        P.eps_r = 2;
+        
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = P.L * 3e7;
+        P.phih = 1;
+        P.phie = 1;
+        P.n_start = [1e24, 1e24, 1e2, 1e2]; % [1e24, 1e24, 1e2, 1e2]
+        P.Ndeep = ones(P.num_points,2) .* [1e25, 1e25]; % [1e26, 1e26] (m^-3)
+        
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 7.4198e-13;
+        P.mu_e = 7.4198e-13;
+        P.Bh = 1;
+        P.Be = 1;
+        P.Dh = 2.8154e-5;
+        P.De = 2.8154e-5;
+        P.S0 = 1e-24;
+        P.S1 = 1e-24;
+        P.S2 = 1e-24;
+        P.S3 = 1e-24;
+        
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+    otherwise
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 3.5e-4;
+        P.num_points = 100;
+        P.LW = 2.5e-5;
+        P.LE = 2.5e-5;
+        P.nW = 7;
+        P.nE = 7;
+        % Material
+        P.T = 333.15;
+        P.eps_r = 2.3;
+        
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = P.L * 3e7;
+        P.phih = 1.3;
+        P.phie = 1.3;
+        P.n_start = [1e19, 1e19, 1e2, 1e2];
+        P.Ndeep = ones(P.num_points,2) .* [5.9293e20, 2.4966e20]; % (m^-3)
+        
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 1e-13;
+        P.mu_e = 1e-13;
+        P.Bh = 2.4e-2;
+        P.Be = 1.2e-2;
+        P.Dh = 1e-3;
+        P.De = 1e-3;
+        P.S0 = 5e-10;
+        P.S1 = 5e-10;
+        P.S2 = 5e-10;
+        P.S3 = 5e-10;
         
         % Extra Schottky parameter
         P.lambda_e = 1; % ()

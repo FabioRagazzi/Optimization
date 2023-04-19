@@ -697,9 +697,19 @@ Continuo a modificare il codice con le ODE migliorandolo. Dovrei essere riiuscit
 ## 19/4/2023
 # Linkb
 Ero rimasto  ad un [PS non finito](#linka)  
-Deduco che il motivo per cui non ha finito era l'intervallo di ricerca dei parametri troppo ampio
+Deduco che il motivo per cui non ha finito era l'intervallo di ricerca dei parametri troppo ampio  
 Se restringo l'intervallo di ricerca il PS sembra funzionare  
-Sospetto che se l'intervallo è troppo ampio ci saranno in mezzo anche delle combinazioni di parametri che portano la simulazione a fallire, probabilmente è meglio per la riuscita dell'algoritmo eliminare questa condizione
+Sospetto che se l'intervallo è troppo ampio ci saranno in mezzo anche delle combinazioni di parametri che portano la simulazione a fallire, probabilmente è meglio per la riuscita dell'algoritmo eliminare questa condizione   
+**TROVATO ERRORE!!**   
+Il problema era in parte dovuto al fatto che il valore di fitness di default (utilizzato nel caso in cui la simulazione fallisse) fosse molto basso e quindi l'algoritmo continuava ad utilizzare valori dei parametri che portavano al fallimento delle simulazioni  
+Altra cosa da sistemare è il fatto che se le number density diventano < 0 si possono ottenere delle simulazioni estremamente lunghe ("VERY_LONG" impiega circa 90 secondi). Occorre quindi che non appena le number density diventano < 0 l'integrazione si fermi. Per ottenere questo realizzo una funzione evento da passare alle ODE  
+Il problema non è legato a number density che diventano minori di zero perchè anche dopo aver realizzato la funzione evento continuo ad avere che la simulazione si blocca nello stesso punto  
+Preso dalla disperazione lancio un PS in seriale e faccio degli screen ai parametri delle simulazioni che durano molto per poi andare a controllare singolarmente in debug.  
+Ad esempio, questa simulazione si era bloccata, perche?
+
+![](figs/2023_04_19/screen1.png)  
+Tutti 1  
+![](figs/2023_04_19/screen1_B.png)
 
 
 &nbsp;  

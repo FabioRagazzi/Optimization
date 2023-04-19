@@ -8,7 +8,7 @@ load('data\Data_Seri.mat');
 P = Parameters("BEST_FIT_SERI");
 
 % Specyfing the parameters to fit
-[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("CLASSIC_NARROW_RANGE");
+[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("CLASSIC");
 
 % Specifying the options for PS
 OPT_options = optimoptions('particleswarm');
@@ -16,7 +16,7 @@ OPT_options.Display = 'iter';
 OPT_options.FunctionTolerance = 1e-1; % 1e-6
 OPT_options.MaxIterations = 200; % 200*nvars
 OPT_options.MaxStallIterations = 5; % 20
-OPT_options.UseParallel = true;
+OPT_options.UseParallel = false;
 
 % Specifying the options for the simulation
 options.flagMu = 0;
@@ -27,7 +27,8 @@ options.flag_n = 0;
 options.flux_scheme = "Upwind";
 options.injection = "Schottky"; % Schottky / Fixed
 options.source = "On";
-options.ODE_options = odeset('Stats','off');
+options.ODE_options = odeset('Stats','off', ...
+                             'Events',@(t, n_stato)EventFcn(t, n_stato));
 
 % Defining the objective function
 func = @(x) ObjectiveFunctionJ("PS", x, tags, names, exp_lin_flags, equals, P, time_instants, Jobjective, options);

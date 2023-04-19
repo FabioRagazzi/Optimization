@@ -30,5 +30,6 @@ if opt_kind == "PS"
 elseif opt_kind == "TRRA"
     fitness = error_vector;
 end
+disp(fitness)
 
 end

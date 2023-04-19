@@ -9,11 +9,11 @@ function [dndt] = OdefuncDriftDiffusion(t, n_stato, P, options)
 % dndt -> first derivative of the number density 
 
 % Stop if number density became negative
-if options.flag_n
-    if find(n_stato<0)
-        error("Number density became less than 0 at t = " + num2str(t))
-    end
-end
+% if options.flag_n
+%     if find(n_stato<0)
+%         warning("Number density became less than 0 at t = " + num2str(t))
+%     end
+% end
 
 % Solving the Electrostatic problem
 n = reshape(n_stato, [], 4);
