@@ -1,5 +1,5 @@
 function [P] = UpdateP(P, names, values, exp_lin_flags, array_flags, equals)
-% UpdateP update directly certain fields of a P (parameter) structure
+% UpdateP updates directly certain fields of a P (parameter) structure
 % INPUT
 % P -> the original parameter structure
 % names -> array with strings representing the names of the variables to update

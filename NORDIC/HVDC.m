@@ -2,7 +2,7 @@ clearvars, clc, close all
 addpath('Functions\')
 
 % Creating the parameters for the simulation
-P = Parameters("LE_ROY");
+P = Parameters("EEEIC_FIT_2");
 
 % Specifying the time instants that will be outputted
 % time_instants = linspace(0, 100);

@@ -8,7 +8,7 @@ load('data\Data_Seri.mat');
 P = Parameters("BEST_FIT_SERI");
 
 % Specyfing the parameters to fit
-[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("CLASSIC");
+[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("CLASSIC_NARROW_RANGE");
 
 % Specifying the options for PS
 OPT_options = optimoptions('particleswarm');

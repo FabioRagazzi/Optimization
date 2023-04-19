@@ -570,14 +570,17 @@ Provo a lanciare un fitting con il TRRA in cui considero la **mobilità dipenden
 * a_int
 * w_hop
 
+# Linka
+[back](#linkb)
+
 |phih | Bh | Dh | S0 | n_start | N_deep | a_int | w_hop | a_sh | 
 |--   |--  |--  |--  |--       |--      |--     |--     |--    |
 | 1.3015 |  -1.0232  | -1.0232 |  -1.0232 |  19.0000 |  24.9979  | -7.0155 |   0.7015  | -9.0155  |
 
 ![](figs/2023_04_04/mobilita_dipendente_da_E.png)
 
-Provo a lanciare un Particle Swarm per questo caso:
-sta girando
+Provo a lanciare un Particle Swarm per questo caso:  
+Alla fine il computer si riavvia da solo dopo una settimana e il PS non aveva ancora finito, ci stava mettendo comunque troppo tempo
 
 &nbsp;  
 
@@ -691,6 +694,20 @@ Continuo a modificare il codice con le ODE migliorandolo. Dovrei essere riiuscit
 
 &nbsp;
 
+## 19/4/2023
+# Linkb
+Ero rimasto  ad un [PS non finito](#linka)  
+Deduco che il motivo per cui non ha finito era l'intervallo di ricerca dei parametri troppo ampio
+Se restringo l'intervallo di ricerca il PS sembra funzionare  
+Sospetto che se l'intervallo è troppo ampio ci saranno in mezzo anche delle combinazioni di parametri che portano la simulazione a fallire, probabilmente è meglio per la riuscita dell'algoritmo eliminare questa condizione
+
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
 # TODO
 * fare un semi implicito in MATLAB  &#x2610;
 * $\mu = \mu(E,n)$  &#x2610;
@@ -713,7 +730,6 @@ Continuo a modificare il codice con le ODE migliorandolo. Dovrei essere riiuscit
 
 # NOTE
 * Non chiamare mai una funzione "odefun" se no MATLAB impazzisce
-
 
 
 

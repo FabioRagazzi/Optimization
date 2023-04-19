@@ -135,6 +135,48 @@ switch name
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
+        case "EEEIC_POSSIBLE_FIT_2"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 4e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 333.15;
+        P.eps_r = 2.3;
+        
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = P.L * 3e7;
+        P.phih = 1.2937;
+        P.phie = 1.2937;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [10^(19.7251), 10^(19.7251), 0, 0];
+        P.Ndeep = ones(P.num_points,2) .* [10^(24.5343), 10^(24.5343)];
+        
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 10^(-13.4047);
+        P.mu_e = 10^(-13.4047);
+        P.Bh = 10^(-0.7463);
+        P.Be = 10^(-0.7463);
+        P.Dh = 10^(-1.4000);
+        P.De = 10^(-1.4000);
+        P.S0 = 10^(-21.8009);
+        P.S1 = 10^(-21.8009);
+        P.S2 = 10^(-21.8009);
+        P.S3 = 10^(-21.8009);
+
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
         case "EEEIC_FIT_2"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
