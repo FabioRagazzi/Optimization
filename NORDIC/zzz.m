@@ -238,11 +238,10 @@ options.flagMu = 0;
 options.flagB = 0;
 options.flagD = 0;
 options.flagS = 0;
-options.flag_n = 1;
 options.flux_scheme = "Upwind";
 options.injection = "Schottky"; % Schottky / Fixed
 options.source = "On";
-options.ODE_options = odeset('Stats','off');
+options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
 
 phi_values = [1.3, 1.32, 1.34, 1.36];
 linestyles = ["-", "--", ":", "-."];
@@ -293,9 +292,12 @@ for i = 1:4
 end
 ax.XLim = x_zoom_interval;
 ax.YLim = y_zoom_interval;
-set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',10)
 
 annotation(fig1,'arrow',[0.75 0.88],[0.55 0.325]);
+
+% Saving to .eps format
+exportgraphics(fig1, 'data\PaperEEEICfigures\phi.eps')
 
 rmpath('Functions\')
 
@@ -311,11 +313,10 @@ options.flagMu = 0;
 options.flagB = 0;
 options.flagD = 0;
 options.flagS = 0;
-options.flag_n = 1;
 options.flux_scheme = "Upwind";
 options.injection = "Schottky"; % Schottky / Fixed
 options.source = "On";
-options.ODE_options = odeset('Stats','off');
+options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
 
 mu_values = [1e-12, 1e-13, 1e-14, 1e-15];
 linestyles = ["-", "--", ":", "-."];
@@ -347,6 +348,9 @@ xlabel('time (s)')
 ylabel('current density (A/m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 
+% Saving to .eps format
+exportgraphics(fig1, 'data\PaperEEEICfigures\mu.eps')
+
 rmpath('Functions\')
 
 %% EEEIC N0
@@ -361,11 +365,10 @@ options.flagMu = 0;
 options.flagB = 0;
 options.flagD = 0;
 options.flagS = 0;
-options.flag_n = 1;
 options.flux_scheme = "Upwind";
 options.injection = "Schottky"; % Schottky / Fixed
 options.source = "On";
-options.ODE_options = odeset('Stats','off');
+options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
 
 n0_values = [1e20, 1e19, 1e18, 1e17];
 linestyles = ["-", "--", ":", "-."];
@@ -397,9 +400,12 @@ xlabel('time (s)')
 ylabel('current density (A/m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 
+% Saving to .eps format
+exportgraphics(fig1, 'data\PaperEEEICfigures\n0.eps')
+
 rmpath('Functions\')
 
-%% EEEIC FIT 1 e 2
+%% EEEIC FIT 1
 clearvars, clc, close all
 addpath('Functions\')
 
@@ -410,15 +416,113 @@ options.flagMu = 0;
 options.flagB = 0;
 options.flagD = 0;
 options.flagS = 0;
-options.flag_n = 1;
 options.flux_scheme = "Upwind";
 options.injection = "Schottky"; % Schottky / Fixed
 options.source = "On";
-options.ODE_options = odeset('Stats','off');
+options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
 
 [out] = RunODE(P, time_instants, options);
 
-load("data\Data_Seri.mat")
-CompareSatoJdDdt(out, Jobjective, time_instants)
+load("data\Data_Seri_Original.mat")
+
+% Big Figure
+fig1 = figure;
+hold on
+grid on
+index = find(out.tout>time_instants(1), 1) - 1;
+loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'DisplayName','Experimental Result')
+loglog(out.tout(index:end), out.J_dDdt(index:end), 'LineWidth',2, 'LineStyle',':', 'DisplayName','Fitting #1')
+legend
+xlabel('time (s)')
+ylabel('current density (A/m^-^2)')
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+ylim([2e-7, 5e-5])
+xlim([1, 2e5])
+xticks(10.^[0, 1, 2, 3, 4, 5])
+
+% Saving to .eps format
+exportgraphics(fig1, 'data\PaperEEEICfigures\fitting1.eps')
 
 rmpath('Functions\')
+
+%% EEEIC FIT 2
+clearvars, clc, close all
+addpath('Functions\')
+
+P = Parameters("EEEIC_POSSIBLE_FIT_2");
+time_instants = [0, logspace(0, 5, 99)] + 4.4694;
+
+options.flagMu = 0;
+options.flagB = 0;
+options.flagD = 0;
+options.flagS = 0;
+options.flux_scheme = "Upwind";
+options.injection = "Schottky"; % Schottky / Fixed
+options.source = "On";
+options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
+
+[out] = RunODE(P, time_instants, options);
+
+load("data\Data_Seri_Original.mat")
+
+% Big Figure
+fig1 = figure;
+hold on
+grid on
+loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'DisplayName','Experimental Result')
+loglog(out.tout, out.J_dDdt, 'LineWidth',2, 'LineStyle',':', 'DisplayName','Fitting #2')
+legend
+xlabel('time (s)')
+ylabel('current density (A/m^-^2)')
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+ylim([2e-7, 5e-5])
+xlim([1, 2e5])
+xticks(10.^[0, 1, 2, 3, 4, 5])
+
+% Saving to .eps format
+exportgraphics(fig1, 'data\PaperEEEICfigures\fitting2.eps')
+
+rmpath('Functions\')
+
+%% ARGUMENTS VALIDATION
+clearvars, clc, close all
+addpath('Functions\')
+
+x = [3, 2, 5];
+v = [1, 3, 2];
+method = "spline";
+out = myInterp(x, v, method, extra="A"); % x, v, method, extra="A"
+disp(out)
+
+rmpath('Functions\')
+
+function [out] = myInterp(x,v,method,options)
+    arguments
+        x (1,:) {mustBeNumeric, mustBeReal} = [1,1,1]
+        v (1,:) {mustBeNumeric, mustBeReal, mustBeEqualSize(v,x)} = [1,1,1]
+        method (1,:) char {mustBeMember(method,{'linear','cubic','spline'})} = 'linear'
+    end
+    arguments
+        options.extra (1,:) char {mustBeMember(options.extra,{'DefaultExtra','A','B'})} = 'DefaultExtra'
+    end
+    switch method
+        case 'linear'
+            out = x + v;
+        case 'cubic'
+            out = x .* v;
+        case 'spline'
+            out = x.^v;
+    end
+    fprintf(options.extra + "\n");
+end
+
+% Custom validation function
+function mustBeEqualSize(a, b)
+    % Test for equal size
+    if ~isequal(size(a), size(b))
+        eid = 'Size:notEqual';
+        msg = 'Size of first input must equal size of second input.';
+        throwAsCaller(MException(eid, msg))
+    end
+end
+

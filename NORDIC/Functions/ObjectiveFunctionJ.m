@@ -19,7 +19,7 @@ function [fitness] = ObjectiveFunctionJ(opt_kind, x, tags, names, exp_lin_flags,
 
 [out] = RunODEUpdating(x, tags, names, exp_lin_flags, equals, P, time_instants, options);
 
-error_vector = ones(size(Jobjective)) * 1e300;
+error_vector = ones(size(Jobjective)) * 1e150;
 if length(out.tout) == length(time_instants)
     error_vector = (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective);
 end
@@ -30,6 +30,11 @@ if opt_kind == "PS"
 elseif opt_kind == "TRRA"
     fitness = error_vector;
 end
-disp(fitness)
+
+if options.display == "On"
+    disp(fitness)
+elseif options.display ~= "Off"
+    error("Invalid value for options.display")
+end
 
 end

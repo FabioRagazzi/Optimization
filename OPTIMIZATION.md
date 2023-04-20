@@ -711,6 +711,40 @@ Ad esempio, questa simulazione si era bloccata, perche?
 Tutti 1  
 ![](figs/2023_04_19/screen1_B.png)
 
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+## 20/4/2023
+**TROVATO PROBLEMA!!**  
+Ciò che rendeva alcune simulazioni estremamente lunghe era un valore molto elevato di densità di trappole deep (Ndeep). Le simulazioni procedevano molto lentamente senza però mai fallire. Abbassando il valore di Ndeep il PS riesce ad arrivare in fondo  
+Provo a rilanciare la simulazione che [non si era ancora fermata dopo una settimana](#linka)  
+Questa volta il PS si ferma ma il risultato che fornisce porta le number density a valori minori di 0  
+**TROVATO PROBLEMA!!**
+Stavo facendo il fitting con dei range(lb-ub) totalmente sballati per i coefficienti di ricombinazione, me ne accorgo perchè anche il TRRA aveva problemi a fare il fitting
+
+Faccio l'ottimizzazione di un parametro alla volta usando il TRRA  
+Avevo ottenuto in precedenza un buon fitting con i parametri classici, tenendo quello come riferimento introduco una alla volta la dipendenza dal campo per:
+* mobilità
+* trapping
+* detrapping
+* ricombinazione  
+
+Ad ogni giro ottimizzo con il TRRA solo i parameteri relativi a quel parametro tenendo come riferimento i parametri trovati dia fitting precedenti
+
+Fino al detrapping riesco ad ottenere dei buoni fit (tutti con parametri simmetrici tra lacune ed elettroni)  
+Quando arrivo alla ricombinazione se la considero uguale per tutti i tipi non riesco ad ottenere un buon fit  
+Inoltre sembra che se i coefficienti diventano piccoli oltre un certo valore (1e-25) **non fa più alcuna differenza quale sia il loro valore**(ha senso) 
+
+Provo a non imporre che tutti e 4 abbiano lo stesso valore, ma la situazione non migliora
+
+![](figs/2023_04_20/fitting_E_dependant.png)
+La figura sopra è uno dei migliori risultati ottenuti introducendo la dipendenza dal campo nei coefficienti S  
+
+Se mi fermo ad uno step precedente ($\mu$, B e D dipendenti dal campo) invece riesco ad ottenere un risultato molto migliore
+![](figs/2023_04_20/mu_B_D_dependant_on_E.png)
 
 &nbsp;  
 
@@ -720,7 +754,7 @@ Tutti 1
 
 # TODO
 * fare un semi implicito in MATLAB  &#x2610;
-* $\mu = \mu(E,n)$  &#x2610;
+* $\mu = \mu(E,n)$  &#x2611;
 * mettere la possibilità di spaziatura variabile &#x2611;
 * fare un fit con il TRRA mettendo solo la mobilità dipendente dal campo elettrico &#x2611;
 * modello Nordici con ODE &#x2611;

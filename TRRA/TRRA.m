@@ -35,7 +35,7 @@ set(gca,'FontSize',15)
 
 t_interp = logspace(log10(t_seri(1)),log10(t_seri(end)),100);
 J_interp = interp1(t_seri,J_seri,t_interp); 
-J_interp_mean = smoothdata(J_interp);
+% J_interp_mean = smoothdata(J_interp);
 figure
 loglog(t_interp,J_interp_mean)
 xlim(get(ax1,'Xlim'))

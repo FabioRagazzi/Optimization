@@ -46,12 +46,160 @@ switch name
 
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
+        P.a_int = [100 80] * 1e-9; % (m)
+        P.w_hop = [0.74, 0.76]; % (eV)
+        P.a_sh = [1.25 2.25] * 1e-9; % (m)
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-        case "LE_ROY"
+    case "BEST_FIT_SERI_MOB_E"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 3.5e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 333.15;
+        P.eps_r = 2;
+
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = 1.05e4;
+        P.phih = 1.3090;
+        P.phie = 1.3090;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [10^(19.4116), 10^(19.4116), 1e2, 1e2];
+        P.Ndeep = ones(P.num_points,2) .* [10^(24.0893), 10^(24.0893)];
+        
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 10^(-12.9162);
+        P.mu_e = 10^(-12.9162);
+        P.Bh = 10^(-0.4318);
+        P.Be = 10^(-0.4318);
+        P.Dh = 10^(-1.4241);
+        P.De = 10^(-1.4241);
+        P.S0 = 10^(-2.8589) * 1.6022e-19;
+        P.S1 = 10^(-2.8589) * 1.6022e-19;
+        P.S2 = 10^(-2.8589) * 1.6022e-19;
+        P.S3 = 10^(-2.8589) * 1.6022e-19;
+
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+%             P.a_int = [1, 1] .* 10^(-6.9360);
+%             P.w_hop = [0.7464, 0.7464];
+%             P.a_sh = [1, 1] .* 10^(-9.0847);
+
+        P.a_int = [1, 1] .* 10^(-7.7473);
+        P.w_hop = [1, 1] .* 0.6459;
+        P.a_sh = [1, 1] .* 10^(-9.7478);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+    case "BEST_FIT_SERI_MOB_&_B_E"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 3.5e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 333.15;
+        P.eps_r = 2;
+
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = 1.05e4;
+        P.phih = 1.3090;
+        P.phie = 1.3090;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [10^(19.4116), 10^(19.4116), 1e2, 1e2];
+        P.Ndeep = ones(P.num_points,2) .* [10^(24.0893), 10^(24.0893)];
+        
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 10^(-12.9162);
+        P.mu_e = 10^(-12.9162);
+        P.Bh = 10^(-0.4318);
+        P.Be = 10^(-0.4318);
+        P.Dh = 10^(-1.4241);
+        P.De = 10^(-1.4241);
+        P.S0 = 10^(-2.8589) * 1.6022e-19;
+        P.S1 = 10^(-2.8589) * 1.6022e-19;
+        P.S2 = 10^(-2.8589) * 1.6022e-19;
+        P.S3 = 10^(-2.8589) * 1.6022e-19;
+
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+        P.a_int = [1, 1] .* 10^(-7.7473);
+        P.w_hop = [1, 1] .* 0.6459;
+        P.a_sh = [1, 1] .* 10^(-9.7478);
+        P.w_tr_int = [1, 1] .* 0.891; 
+        P.N_int = [1, 1] .* 10^(23.8);
+        
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+    case "BEST_FIT_SERI_MOB_&_B_&_D_E"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 3.5e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 333.15;
+        P.eps_r = 2;
+
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = 1.05e4;
+        P.phih = 1.3090;
+        P.phie = 1.3090;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [10^(19.4116), 10^(19.4116), 1e2, 1e2];
+        P.Ndeep = ones(P.num_points,2) .* [10^(24.0893), 10^(24.0893)];
+        
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 10^(-12.9162);
+        P.mu_e = 10^(-12.9162);
+        P.Bh = 10^(-0.4318);
+        P.Be = 10^(-0.4318);
+        P.Dh = 10^(-1.4241);
+        P.De = 10^(-1.4241);
+        P.S0 = 10^(-2.8589) * 1.6022e-19;
+        P.S1 = 10^(-2.8589) * 1.6022e-19;
+        P.S2 = 10^(-2.8589) * 1.6022e-19;
+        P.S3 = 10^(-2.8589) * 1.6022e-19;
+
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+        P.a_int = [1, 1] .* 10^(-7.7473);
+        P.w_hop = [1, 1] .* 0.6459;
+        P.a_sh = [1, 1] .* 10^(-9.7478);
+        P.w_tr_int = [1, 1] .* 0.891; 
+        P.N_int = [1, 1] .* 10^(23.8);
+        P.w_tr_hop = [1, 1] .* 0.9204; 
+        P.w_tr = [1, 1] .* 0.9559; 
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+   case "LE_ROY"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;
@@ -93,7 +241,7 @@ switch name
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-        case "EEEIC_FIT_1"
+    case "EEEIC_FIT_1"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;
@@ -135,7 +283,7 @@ switch name
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-        case "EEEIC_POSSIBLE_FIT_2"
+    case "EEEIC_POSSIBLE_FIT_2"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;
@@ -156,7 +304,7 @@ switch name
         P.phie = 1.2937;
         P.fix_inj = [0, 0; 0, 0];
         P.n_start = [10^(19.7251), 10^(19.7251), 0, 0];
-        P.Ndeep = ones(P.num_points,2) .* [10^(24.5343), 10^(24.5343)];
+        P.Ndeep = ones(P.num_points,2) .* [10^(22.5343), 10^(22.5343)];
         
         % Fixed parameters not depending on the electric field 
         P.mu_h = 10^(-13.4047);
@@ -177,7 +325,7 @@ switch name
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-        case "EEEIC_FIT_2"
+    case "EEEIC_FIT_2"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;

@@ -8,13 +8,6 @@ function [dndt] = OdefuncDriftDiffusion(t, n_stato, P, options)
 % OUTPUT
 % dndt -> first derivative of the number density 
 
-% Stop if number density became negative
-% if options.flag_n
-%     if find(n_stato<0)
-%         warning("Number density became less than 0 at t = " + num2str(t))
-%     end
-% end
-
 % Solving the Electrostatic problem
 n = reshape(n_stato, [], 4);
 rho = sum(n.*[1, -1, 1, -1],2) * P.e;
@@ -49,6 +42,8 @@ if options.injection == "Schottky"
     BC = [0, gamma(1); gamma(2), 0];
 elseif options.injection == "Fixed"
     BC = P.fix_inj;
+else
+    error("Invalid value for options.injection")
 end
 
 % Compute fluxes and source terms to obtain dndt

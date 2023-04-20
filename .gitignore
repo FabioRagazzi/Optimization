@@ -1,6 +1,8 @@
 *.asv
 *.mat
 *.fig
+*.svg
+*.eps
 figs/
 data/
 res/

@@ -18,7 +18,6 @@ if ~ exist('options','var')
     options.flagB = 0;
     options.flagD = 0;
     options.flagS = 0;
-%     options.flag_n = 0;
     options.flux_scheme = "Upwind";
     options.injection = "Fixed";
     options.source = "Off";
