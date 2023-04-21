@@ -255,7 +255,7 @@ end
 
 for i = 1:4
     eval("graph" + num2str(i) + ".LineWidth = 2;")
-    name = "φ = " + num2str(phi_values(i));
+    name = "{\it ϕ} = " + num2str(phi_values(i));
     eval("graph" + num2str(i) + ".DisplayName = name;")
     eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
 end
@@ -331,7 +331,7 @@ end
 % Settings for the various graphs
 for i = 1:length(mu_values)
     eval("graph" + num2str(i) + ".LineWidth = 2;")
-    name = "μ = " + num2str(mu_values(i));
+    name = "{\it μ} = " + num2str(mu_values(i));
     eval("graph" + num2str(i) + ".DisplayName = name;")
     eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
 end
@@ -383,7 +383,7 @@ end
 % Settings for the various graphs
 for i = 1:length(n0_values)
     eval("graph" + num2str(i) + ".LineWidth = 2;")
-    name = "n_0 = " + num2str(n0_values(i));
+    name = "{\it n^0} = " + num2str(n0_values(i));
     eval("graph" + num2str(i) + ".DisplayName = name;")
     eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
 end
@@ -430,7 +430,7 @@ fig1 = figure;
 hold on
 grid on
 index = find(out.tout>time_instants(1), 1) - 1;
-loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'DisplayName','Experimental Result')
+loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'DisplayName',"Experimental" + " " + "Measurement")
 loglog(out.tout(index:end), out.J_dDdt(index:end), 'LineWidth',2, 'LineStyle',':', 'DisplayName','Fitting #1')
 legend
 xlabel('time (s)')
@@ -469,7 +469,7 @@ load("data\Data_Seri_Original.mat")
 fig1 = figure;
 hold on
 grid on
-loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'DisplayName','Experimental Result')
+loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'DisplayName',"Experimental" + " " + "Measurement")
 loglog(out.tout, out.J_dDdt, 'LineWidth',2, 'LineStyle',':', 'DisplayName','Fitting #2')
 legend
 xlabel('time (s)')

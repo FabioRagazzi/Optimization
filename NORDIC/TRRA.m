@@ -5,7 +5,7 @@ addpath('Functions\')
 load('data\Data_Seri.mat');
 
 % Creating a reference parameter structure for the simulation
-P = Parameters("BEST_FIT_SERI_MOB_&_B_E");
+P = Parameters("BEST_FIT_SERI_MOB_&_B_&_D_E");
 
 % Specyfing the parameters to fit
 [names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("ONLY_S_E");

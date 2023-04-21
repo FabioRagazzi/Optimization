@@ -746,6 +746,20 @@ La figura sopra è uno dei migliori risultati ottenuti introducendo la dipendenz
 Se mi fermo ad uno step precedente ($\mu$, B e D dipendenti dal campo) invece riesco ad ottenere un risultato molto migliore
 ![](figs/2023_04_20/mu_B_D_dependant_on_E.png)
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+## 21/4/2023
+Aggiungo il parametro $P_{r}$ ai fitting che stavo facendo ieri per i coefficienti di ricombinazione e riesco ad ottenere un buon risultato con tutti i parametri dipendenti dal campo elettrico
+![](figs/2023_04_21/full_Nordic_Fit.png)
+
+Finisce il PS che avevo lanciato ieri con gli stessi parametri di quello famoso [che non aveva finito](#linka)  
+Questa volta finisce in tempi ragionevoli e riesco ad ottenere un buon risultato
+![](figs/2023_04_21/fitting_PS.png)
+
 &nbsp;  
 
 &nbsp;  
@@ -753,7 +767,13 @@ Se mi fermo ad uno step precedente ($\mu$, B e D dipendenti dal campo) invece ri
 &nbsp;
 
 # TODO
+* fare le 78.000 corse ($5^7$) &#x2610;
+* controllare se le mobilità sono state misurate &#x2610;
+* verificare i valori numerici delle mobilità nel caso Nordici vs. LeRoy &#x2610;
+* cambiare impostazioni ODE per killare prima &#x2610;
+* aggiungere un termine di sorgente per i portatori liberi &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
+* aggiungere $P_{r}$ al fitting &#x2611;
 * $\mu = \mu(E,n)$  &#x2611;
 * mettere la possibilità di spaziatura variabile &#x2611;
 * fare un fit con il TRRA mettendo solo la mobilità dipendente dal campo elettrico &#x2611;

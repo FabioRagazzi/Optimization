@@ -1,5 +1,5 @@
-function [cell_array, array_flags] = VectotToCellArray(vector, tags)
-% VectotToCellArray converts the input vector to a cell array according
+function [cell_array, array_flags] = VectorToCellArray(vector, tags)
+% VectorToCellArray converts the input vector to a cell array according
 % to the tags and also provides array_flags
 % INPUT
 % tags -> array with the same dimension as vector with integer numbers (>0)

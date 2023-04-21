@@ -15,7 +15,7 @@ function [out] = RunODEUpdating(x, tags, names, exp_lin_flags, equals, P, time_i
 % OUTPUT
 % out -> structure containing the various results of the simulation
 
-[cell_array, array_flags] = VectotToCellArray(x, tags);
+[cell_array, array_flags] = VectorToCellArray(x, tags);
 [P] = UpdateP(P, names, cell_array, exp_lin_flags, array_flags, equals);
 [P] = CompleteP(P);
 [out] = RunODE(P, time_instants, options);
