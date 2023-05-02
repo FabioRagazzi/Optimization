@@ -2,7 +2,7 @@ clearvars, clc, close all
 addpath('Functions\')
 
 % Creating the parameters for the simulation
-P = Parameters("LE_ROY");
+P = Parameters();
 
 % Specifying the time instants that will be outputted
 % time_instants = linspace(0, 100);

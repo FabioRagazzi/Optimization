@@ -1,5 +1,5 @@
 function [out] = RunODEUpdating(x, tags, names, exp_lin_flags, equals, P, time_instants, options)
-% NordicODEUpdating performs a ODE simulation updating only certain
+% RunODEUpdating performs a ODE simulation updating only certain
 % parameters
 % INPUT
 % x -> vector containing the new values of the parameters

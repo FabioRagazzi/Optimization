@@ -1,3 +1,74 @@
+%% SPAN PARAMETERS
+clear, clc, close all
+addpath("Functions\")
+
+load('data\Data_Seri.mat');
+P = Parameters("LE_ROY");
+
+phi_array = [1.1, 1.3, 1.5];
+n0_array =  [1e17, 1e18, 1e19]; 
+N_array =   [1e20, 1e21, 1e22]; 
+mu_array =  [1e-15, 1e-14, 1e-13];
+B_array =   [1e-3, 1e-2, 1e-1];
+D_array =   [1e-6, 1e-5, 1e-4];
+S_array =   [1e-25, 1e-24, 1e-23];
+
+num_val = 3;
+
+options.flagMu = 0;
+options.flagB = 0;
+options.flagD = 0;
+options.flagS = 0;
+options.flux_scheme = "Upwind"; % Upwind / Koren
+options.injection = "Schottky"; % Schottky / Fixed
+options.source = "On"; % On / Off
+options.ODE_options = odeset('Stats','off', 'Events',@(t, n_stato)EventFcn(t, n_stato));
+                             
+output_current = NaN * ones(num_val, 100, num_val, num_val, num_val, num_val, num_val, num_val);
+output_fitness = NaN * ones(num_val, num_val, num_val, num_val, num_val, num_val, num_val);
+output_time = NaN * ones(num_val, num_val, num_val, num_val, num_val, num_val, num_val);
+
+for index_phi = 1:num_val
+    for index_n0 = 1:num_val
+        for index_N = 1:num_val
+            for index_mu = 1:num_val
+                for index_B = 1:num_val
+                    for index_D = 1:num_val
+                        for index_S = 1:num_val
+                                    fprintf("[%d %d %d %d %d %d %d]\n", index_phi-1, index_n0-1, index_N-1, index_mu-1, index_B-1, index_D-1, index_S-1)
+                                    P.phih = phi_array(index_phi); P.phie = P.phih;
+                                    P.n_start = [n0_array(index_n0), n0_array(index_n0), 1e2, 1e2];
+                                    P.Ndeep = ones(P.num_points,2) .* [N_array(index_N), N_array(index_N)]; 
+                                    P.mu_h = mu_array(index_mu); P.mu_e = P.mu_h;
+                                    P.Bh = B_array(index_B); P.Be = P.Bh;
+                                    P.Dh = D_array(index_D); P.De = P.Dh;
+                                    P.S0 = S_array(index_S); P.S1 = P.S0; P.S2 = P.S0; P.S3 = P.S0;
+                                    P = CompleteP(P);
+                                    start_time = tic;
+                                    out = RunODE(P, time_instants, options);
+                                    elapsed_time = toc(start_time);
+                                    if length(out.tout) == length(time_instants)
+                                        fitness_value = norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) );
+                                        output_fitness(index_phi, index_n0, index_N, index_mu, index_B, index_D, index_S) = fitness_value;
+                                        output_current(index_phi, :, index_n0, index_N, index_mu, index_B, index_D, index_S) = out.J_dDdt;
+                                        output_time = elapsed_time;
+                                    end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+[val, ind] = min(output_fitness, [], 'all');
+[i1, i2, i3, i4, i5, i6, i7] = ind2sub(size(output_fitness), ind);
+
+pl1 = plot(ax1, time_instants, output_current(i1,:,i2,i3,i4,i5,i6,i7));
+PlotSettings("CURRENT", gcf, gca, pl1)
+
+rmpath("Functions\")
+
 %% Test Selecting parameters for Fit
 clear, clc, close all
 addpath("Functions\")
@@ -383,7 +454,7 @@ end
 % Settings for the various graphs
 for i = 1:length(n0_values)
     eval("graph" + num2str(i) + ".LineWidth = 2;")
-    name = "{\it n^0} = " + num2str(n0_values(i));
+    name = "{\it n^0_\mu} = " + num2str(n0_values(i));
     eval("graph" + num2str(i) + ".DisplayName = name;")
     eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
 end

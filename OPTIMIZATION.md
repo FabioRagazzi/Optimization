@@ -766,13 +766,22 @@ Questa volta finisce in tempi ragionevoli e riesco ad ottenere un buon risultato
 
 &nbsp;
 
+## 2/5/2023
+Scopro che non è possibile killare prima le ODE
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
 # TODO
 * fare le 78.000 corse ($5^7$) &#x2610;
 * controllare se le mobilità sono state misurate &#x2610;
 * verificare i valori numerici delle mobilità nel caso Nordici vs. LeRoy &#x2610;
-* cambiare impostazioni ODE per killare prima &#x2610;
 * aggiungere un termine di sorgente per i portatori liberi &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
+* cambiare impostazioni ODE per killare prima &#x2612;
 * aggiungere $P_{r}$ al fitting &#x2611;
 * $\mu = \mu(E,n)$  &#x2611;
 * mettere la possibilità di spaziatura variabile &#x2611;
