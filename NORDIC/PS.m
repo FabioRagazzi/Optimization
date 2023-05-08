@@ -1,6 +1,7 @@
 clc, clearvars, close all
 addpath('Functions\')
 
+%%
 % Loading data to fit
 load('data\Data_Seri.mat');
 
@@ -29,6 +30,8 @@ options.source = "On";
 options.display = "Off";
 options.ODE_options = odeset('Stats','off', ...
                              'Events',@(t, n_stato)EventFcn(t, n_stato));
+
+%%
 
 % Defining the objective function
 func = @(x) ObjectiveFunctionJ("PS", x, tags, names, exp_lin_flags, equals, P, time_instants, Jobjective, options);

@@ -263,10 +263,10 @@ switch name
         % Essential Parameters
         P.Phi_W = 0;
         P.Phi_E = 1.05e4;
-        P.phih = 1.3090;
-        P.phie = 1.3090;
+        P.phih = 1.301801348668261;
+        P.phie = 1.301801348668261;
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [10^(19.4116), 10^(19.4116), 1e2, 1e2];
+        P.n_start = [10^(19.435234678335124), 10^(19.435234678335124), 1e2, 1e2];
         P.Ndeep = ones(P.num_points,2) .* [10^(24.0893), 10^(24.0893)];
         
         % Set all classic parameters to 1
@@ -277,22 +277,22 @@ switch name
         P.lambda_h = 1; 
         % Extra parameters needed when the mobility is dependent from the electric
         % field
-        P.a_int = [1, 1] .* 10^(-7.7473);
-        P.w_hop = [1, 1] .* 0.6459;
-        P.a_sh = [1, 1] .* 10^(-9.7478);
+        P.a_int = [1, 1] .* 10^(-7.749997594584205);
+        P.w_hop = [1, 1] .* 0.645999607763634;
+        P.a_sh = [1, 1] .* 10^(-9.737199157335366);
         % Extra parameters needed when the trapping coefficient is dependent on the
         % electric field
-        P.w_tr_int = [1, 1] .* 0.891; 
-        P.N_int = [1, 1] .* 10^(23.8); 
+        P.w_tr_int = [1, 1] .* 0.880185448577121; 
+        P.N_int = [1, 1] .* 10^(23.964992374908963); 
         P.Pt = [1, 1];
         % Extra parameters needed when the detrapping coefficient is dependent on the
         % electric field
-        P.w_tr_hop = [1, 1] .* 0.9204; 
-        P.w_tr = [1, 1] .* 0.9559; 
+        P.w_tr_hop = [1, 1] .* 0.921167201442065; 
+        P.w_tr = [1, 1] .* 0.956000000000000; 
         % Extra parameters needed when the recombination coefficients are dependent on the
         % electric field
-        P.S_base = 10 .^ [-23.4185,  -23.4298,  -23.6990,  -23.4970];
-        P.Pr = 0.9046; 
+        P.S_base = 10 .^ [-23.499999647571524,  -23.499999647571524,  -23.499999647571524,  -23.499999647571524];
+        P.Pr = 0.903000096039124; 
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %

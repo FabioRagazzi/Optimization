@@ -17,24 +17,24 @@ if (length(names) == length(values)) && (length(values) == length(exp_lin_flags)
     for i = 1:dim
         if array_flags(i)
             if exp_lin_flags(i)
-                eval("P." + names(i) + " = [" + num2str(10.^values{i}) + "];")
+                eval("P." + names(i) + " = [" + num2str(10.^values{i},16) + "];")
             else
-                eval("P." + names(i) + " = [" + num2str(values{i}) + "];")
+                eval("P." + names(i) + " = [" + num2str(values{i},16) + "];")
             end
         else
             if exp_lin_flags(i)
-                eval("P." + names(i) + " = " + num2str(10^values{i}) + ";")
+                eval("P." + names(i) + " = " + num2str(10^values{i},16) + ";")
             else
-                eval("P." + names(i) + " = " + num2str(values{i}) + ";")
+                eval("P." + names(i) + " = " + num2str(values{i},16) + ";")
             end
         end
     end
     for i = 1:length(equals)
         index = equals{i}{2};
         if exp_lin_flags(index)
-            eval("P." + equals{i}{1} + " = " + num2str(10^values{index}) + ";")
+            eval("P." + equals{i}{1} + " = " + num2str(10^values{index},16) + ";")
         else
-            eval("P." + equals{i}{1} + " = " + num2str(values{index}) + ";")
+            eval("P." + equals{i}{1} + " = " + num2str(values{index},16) + ";")
         end
     end
 else
