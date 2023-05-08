@@ -8,25 +8,25 @@ load('data\Data_Seri.mat');
 P = Parameters("BEST_FIT_SERI");
 
 % Specyfing the parameters to fit
-[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("CLASSIC");
+[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("FULL_NORDIC_NARROW");
 
 % Specifying the options for PS
 OPT_options = optimoptions('particleswarm');
 OPT_options.Display = 'iter';
-OPT_options.FunctionTolerance = 1e-1; % 1e-6
+OPT_options.FunctionTolerance = 1e-6; % 1e-6
 OPT_options.MaxIterations = 200; % 200*nvars
-OPT_options.MaxStallIterations = 5; % 20
-OPT_options.UseParallel = false;
+OPT_options.MaxStallIterations = 20; % 20
+OPT_options.UseParallel = true;
 
 % Specifying the options for the simulation
-options.flagMu = 0;
-options.flagB = 0;
-options.flagD = 0;
-options.flagS = 0;
-options.flag_n = 0;
+options.flagMu = 1;
+options.flagB = 1;
+options.flagD = 1;
+options.flagS = 1;
 options.flux_scheme = "Upwind";
 options.injection = "Schottky"; % Schottky / Fixed
 options.source = "On";
+options.display = "Off";
 options.ODE_options = odeset('Stats','off', ...
                              'Events',@(t, n_stato)EventFcn(t, n_stato));
 
