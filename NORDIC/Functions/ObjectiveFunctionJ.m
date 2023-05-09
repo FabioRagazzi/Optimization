@@ -24,7 +24,7 @@ if length(out.tout) == length(time_instants)
     error_vector = (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective);
 end
 
-% Computing fitness function based on the optimization algorithm
+% computing fitness function based on the optimization algorithm
 if opt_kind == "PS"
     fitness = norm(error_vector);
 elseif opt_kind == "TRRA"

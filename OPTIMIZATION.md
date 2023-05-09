@@ -775,6 +775,16 @@ Scopro che non è possibile killare prima le ODE
 
 &nbsp;
 
+## 8/5/2023
+Correggo un errore dovuto alla variabile "N_deep" invece di "Ndeep"  
+Riesco ad ottenere un fitting di tutti i parametri dipendenti dal campo elettrico con il particle swarm (range molto limitato e che sapevo che andava bene).
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
 # TODO
 * fare le 78.000 corse ($5^7$) &#x2610;
 * controllare se le mobilità sono state misurate &#x2610;

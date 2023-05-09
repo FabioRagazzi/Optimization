@@ -555,6 +555,50 @@ exportgraphics(fig1, 'data\PaperEEEICfigures\fitting2.eps')
 
 rmpath('Functions\')
 
+%% EEEIC FIT 1 E 2
+clearvars, clc, close all
+addpath('Functions\')
+
+P1 = Parameters("EEEIC_FIT_1");
+P2 = Parameters("EEEIC_POSSIBLE_FIT_2");
+time_instants1 = [0, logspace(0, 5, 99)];
+time_instants2 = [0, logspace(0, 5, 99)] + 4.4694;
+
+options.flagMu = 0;
+options.flagB = 0;
+options.flagD = 0;
+options.flagS = 0;
+options.flux_scheme = "Upwind";
+options.injection = "Schottky"; % Schottky / Fixed
+options.source = "On";
+options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
+
+[out1] = RunODE(P1, time_instants1, options);
+[out2] = RunODE(P2, time_instants2, options);
+
+load("data\Data_Seri_Original.mat")
+
+% Big Figure
+fig1 = figure;
+hold on
+grid on
+index = find(out1.tout>time_instants1(1), 1) - 1;
+loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'DisplayName',"Experimental" + " " + "Measurement")
+loglog(out1.tout(index:end), out1.J_dDdt(index:end), 'LineWidth',2, 'LineStyle',':', 'DisplayName','Fitting #1')
+loglog(out2.tout, out2.J_dDdt, 'LineWidth',2, 'LineStyle','--', 'DisplayName','Fitting #2')
+legend
+xlabel('time (s)')
+ylabel('current density (A/m^-^2)')
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+ylim([2e-7, 5e-5])
+xlim([1, 2e5])
+xticks(10.^[0, 1, 2, 3, 4, 5])
+
+% Saving to .eps format
+exportgraphics(fig1, 'data\PaperEEEICfigures\fitting_1_e_2.eps')
+
+rmpath('Functions\')
+
 %% ARGUMENTS VALIDATION
 clearvars, clc, close all
 addpath('Functions\')

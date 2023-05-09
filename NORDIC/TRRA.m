@@ -1,21 +1,21 @@
 clearvars, clc, close all
 addpath('Functions\')
 
-% Loading data to fit
+% loading data to fit
 load('data\Data_Seri.mat');
 
-% Creating a reference parameter structure for the simulation
-P = Parameters("BEST_FIT_SERI_MOB_&_B_&_D_E");
+% creating a reference parameter structure for the simulation
+P = Parameters("BEST_FIT_SERI");
 
-% Specyfing the parameters to fit
-[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("ONLY_S_E");
+% specyfing the parameters to fit
+[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("FULL_NORDIC_NARROW");
 
 Num_swipes = 10;
 if Num_swipes > 1
     delta_bounds = (ub - lb) / (Num_swipes-1);
 end
 
-% Specifying the options for TRRA
+% specifying the options for TRRA
 OPT_options = optimoptions('lsqnonlin');
 OPT_options.Display = 'iter';
 OPT_options.StepTolerance = 1e-6; % 1e-6
@@ -23,21 +23,17 @@ OPT_options.OptimalityTolerance = 1e-6; % 1e-6
 OPT_options.FunctionTolerance = 1e-6; % 1e-6
 OPT_options.UseParallel = true;
 
-% Specifying the options for the simulation
+% specifying the options for the simulation
+options = DefaultOptions();
 options.flagMu = 1;
 options.flagB = 1;
 options.flagD = 1;
 options.flagS = 1;
-options.flux_scheme = "Upwind";
-options.injection = "Schottky"; % Schottky / Fixed
-options.source = "On";
-options.display = "Off";
-options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
 
-% Defining the objective function
+% defining the objective function
 func = @(x)ObjectiveFunctionJ("TRRA", x, tags, names, exp_lin_flags, equals, P, time_instants, Jobjective, options);
 
-% Starting a loop to try different starting points in the TRRA 
+% starting a loop to try different starting points in the TRRA 
 xv = zeros(Num_swipes, length(lb));
 x0 = zeros(Num_swipes, length(lb));
 for i = 1:Num_swipes
@@ -55,12 +51,12 @@ for i = 1:Num_swipes
     save('data\most_recent_output_TRRA','xv','x0')
 end  
 
-% Play sound to signal simulation ended
+% play sound to signal simulation ended
 beep
 
 % xv(1,:) = [1.4614   -2.8242   -0.9264  -19.4363   19.8986   20.1257   -8.6806    0.5180   -8.8524];
-% After TRRA finished, launch simulations to see the results
-for i = 1:Num_swipes
+% after TRRA finished, launch simulations to see the results
+for i = [8,9,10] %1:Num_swipes
     [out] = RunODEUpdating(xv(i,:), tags, names, exp_lin_flags, equals, P, time_instants, options);
     fitness_value = norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) );
     figure
