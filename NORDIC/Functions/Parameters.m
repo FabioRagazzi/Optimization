@@ -298,7 +298,111 @@ switch name
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-   case "LE_ROY"
+    case "FULL_NORDIC_FIT_WITH_PS"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 3.5e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 333.15;
+        P.eps_r = 2;
+
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = 1.05e4;
+        P.phih = 1.1641;
+        P.phie = 1.1641;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [10^(19.8143), 10^(19.8143), 1e2, 1e2];
+        P.Ndeep = ones(P.num_points,2) .* [10^(24.0893), 10^(24.0893)];
+        
+        % Set all classic parameters to 1
+        P = CompleteNordicParameters(P);
+        
+        % Extra Schottky parameter
+        P.lambda_e = 1; 
+        P.lambda_h = 1; 
+        % Extra parameters needed when the mobility is dependent from the electric
+        % field
+        P.a_int = [1, 1] .* 10^(-7.6251);
+        P.w_hop = [1, 1] .* 0.6710;
+        P.a_sh = [1, 1] .* 10^(-9.9046);
+        % Extra parameters needed when the trapping coefficient is dependent on the
+        % electric field
+        P.w_tr_int = [1, 1] .* 0.9996; 
+        P.N_int = [1, 1] .* 10^(22.1978); 
+        P.Pt = [1, 1];
+        % Extra parameters needed when the detrapping coefficient is dependent on the
+        % electric field
+        P.w_tr_hop = [1, 1] .* 0.9008; 
+        P.w_tr = [1, 1] .* 1.0000; 
+        % Extra parameters needed when the recombination coefficients are dependent on the
+        % electric field
+        P.S_base = 10 .^ [-25.0000,  -25.0000,  -25.0000,  -25.0000];
+        P.Pr = 0.5000; 
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+    case "FULL_NORDIC_FIT_WITH_TRRA"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 3.5e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 333.15;
+        P.eps_r = 2;
+
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = 1.05e4;
+        P.phih = 1.1602;
+        P.phie = 1.1602;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [10^(19.5531), 10^(19.5531), 1e2, 1e2];
+        P.Ndeep = ones(P.num_points,2) .* [10^(24.3093), 10^(24.3093)];
+        
+        % Set all classic parameters to 1
+        P = CompleteNordicParameters(P);
+        
+        % Extra Schottky parameter
+        P.lambda_e = 1; 
+        P.lambda_h = 1; 
+        % Extra parameters needed when the mobility is dependent from the electric
+        % field
+        P.a_int = [1, 1] .* 10^(-7.2965);
+        P.w_hop = [1, 1] .* 0.6955;
+        P.a_sh = [1, 1] .* 10^(-9.2750);
+        % Extra parameters needed when the trapping coefficient is dependent on the
+        % electric field
+        P.w_tr_int = [1, 1] .* 0.7626; 
+        P.N_int = [1, 1] .* 10^(23.3317); 
+        P.Pt = [1, 1];
+        % Extra parameters needed when the detrapping coefficient is dependent on the
+        % electric field
+        P.w_tr_hop = [1, 1] .* 0.8188; 
+        P.w_tr = [1, 1] .* 0.8431; 
+        % Extra parameters needed when the recombination coefficients are dependent on the
+        % electric field
+        P.S_base = 10 .^ [-24.0819,  -24.0819,  -24.0819,  -24.0819];
+        P.Pr = 0.7764; 
+        
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   
+    case "LE_ROY"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;

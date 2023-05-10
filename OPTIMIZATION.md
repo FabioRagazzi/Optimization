@@ -785,13 +785,53 @@ Riesco ad ottenere un fitting di tutti i parametri dipendenti dal campo elettric
 
 &nbsp;
 
+## 9/5/2023
+Riesco a killare le ODE se la durata della simulazione dura più di un certo tempo usando la event function. Lancio una simulazione con il PS del modello dei nordici completo (con anche Pr)
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+## 10/5/2023
+La simulazione termina e ottengo i seguenti valori, corrispondenti ad un valore della funzione obiettivo di **0.118799**. Salvo i risultati in **FULL_NORDIC_FIT_WITH_PS**
+||a_int | w_hop | a_sh | w_tr_int | N_int | Ndeep | w_tr_hop | w_tr | S_base | n_start | phih | Pr |
+|--|--|--|--|--|--|--|--|--|--|--|--|--|
+| lb |-9 | 0.5 | -10 | 0.7 | 22 | 23 | 0.8 | 0.8 | -25 | 18 | 1.1 | 0.5|
+| ub |-7 | 0.7 | -9 | 1 | 24 | 25 | 1 | 1 | -21 | 20 | 1.4 | 1|
+| PS |-7.6251|0.6710|-9.9046|0.9996|22.1978|24.0893|0.9008|1.0000|-25.0000|19.8143|1.1641|0.5000|
+
+![](figs/2023_05_10/PS_Full_Nordic.png)
+Mi accorgo che c'era un errore ancora una volta relativo ad Ndeep. Avevo lasciato scritto Ndeep(1) e Ndeep(2) invece di Ndeep(:,1) e Ndeep(:,2). Questo fit è stato quindi ottenuto senza poter variare Ndeep. Il valore 24.0893 veniva dai parametri caricati inizialmente. Potrebbe quindi essere che considerando nella maniera corretta Ndeep il fit migliori.  
+
+Il TRRA finisce molto prima ma porta a risultati non altrettanto validi. Lanciando 30 volte l'algoritmo con punto di partenza x0 random il risultato migliore ottenuto, salvato in **FULL_NORDIC_FIT_WITH_TRRA**, è 
+||a_int | w_hop | a_sh | w_tr_int | N_int | Ndeep | w_tr_hop | w_tr | S_base | n_start | phih | Pr |
+|--|--|--|--|--|--|--|--|--|--|--|--|--|
+|TRRA|-7.2965 | 0.6955 | -9.2750 | 0.7626 | 23.3317 | 24.3093 | 0.8188 | 0.8431 | -24.0819 | 19.5531 | 1.1602 | 0.7764|
+
+Questo risultato coincide con il punto di partenza x0
+
+![](figs/2023_05_10/TRRA_Full_Nordic.png)
+
+&nbsp;
+
+CONCLUSIONE:
+***IL PS E' MEGLIO DEL TRRA AD ESEGUIRE FITTING DI CORRENTI DI POLARIZZAZIONE***
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
 # TODO
 * fare le 78.000 corse ($5^7$) &#x2610;
 * controllare se le mobilità sono state misurate &#x2610;
 * verificare i valori numerici delle mobilità nel caso Nordici vs. LeRoy &#x2610;
 * aggiungere un termine di sorgente per i portatori liberi &#x2610;
 * fare un semi implicito in MATLAB  &#x2610;
-* cambiare impostazioni ODE per killare prima &#x2612;
+* cambiare impostazioni ODE per killare prima &#x2611;
 * aggiungere $P_{r}$ al fitting &#x2611;
 * $\mu = \mu(E,n)$  &#x2611;
 * mettere la possibilità di spaziatura variabile &#x2611;
@@ -812,7 +852,10 @@ Riesco ad ottenere un fitting di tutti i parametri dipendenti dal campo elettric
 * Ha senso fare una funzione tipo "Compare_mu" per i gli altri coefficienti?
 
 # NOTE
-* Non chiamare mai una funzione "odefun" se no MATLAB impazzisce
+* Non chiamare mai una funzione "odefun" se no MATLAB impazzisce  
+&#x2610;  
+&#x2611;  
+&#x2612;  
 
 
 

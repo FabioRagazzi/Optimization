@@ -56,12 +56,15 @@ beep
 
 % xv(1,:) = [1.4614   -2.8242   -0.9264  -19.4363   19.8986   20.1257   -8.6806    0.5180   -8.8524];
 % after TRRA finished, launch simulations to see the results
-for i = [8,9,10] %1:Num_swipes
-    [out] = RunODEUpdating(xv(i,:), tags, names, exp_lin_flags, equals, P, time_instants, options);
-    fitness_value = norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) );
-    figure
-    CompareSatoJdDdt(out, Jobjective, time_instants)
-    title("Swipe #" + num2str(i) + " in TRRA, fitness = " + num2str(fitness_value))
+for i = 1:Num_swipes
+    try
+        [out] = RunODEUpdating(xv(i,:), tags, names, exp_lin_flags, equals, P, time_instants, options);
+        fitness_value = norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) );
+        figure
+        CompareSatoJdDdt(out, Jobjective, time_instants)
+        title("Swipe #" + num2str(i) + " in TRRA, fitness = " + num2str(fitness_value))
+    catch
+    end
 end
 
 rmpath('Functions\')
