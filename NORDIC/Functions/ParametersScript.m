@@ -1,15 +1,9 @@
-function [P] = Parameters(name)
-% Parameters creates the structure containing the simulation parameters
-% INPUT
-% name -> string ("...") containing the identifier for the parameters
-% OUTPUT
-% P -> structure containing the simulation parameters
-if ~ exist('name','var')
-    name = "DEFAULT";
-end
+% ParameterScript contains all the relevant parameter sets used
 
-switch name
+switch PARAMETER_ID_NAME
+
     case "BEST_FIT_SERI"
+%% BEST_FIT_SERI
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -50,11 +44,8 @@ switch name
         P.w_hop = [0.74, 0.76]; % (eV)
         P.a_sh = [1.25 2.25] * 1e-9; % (m)
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "BEST_FIT_SERI_MOB_E"
+%% BEST_FIT_SERI_MOB_E
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -99,11 +90,8 @@ switch name
         P.w_hop = [1, 1] .* 0.6459;
         P.a_sh = [1, 1] .* 10^(-9.7478);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
         case "BEST_FIT_SERI_MOB_E_PS"
+%% BEST_FIT_SERI_MOB_E_PS
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -145,11 +133,8 @@ switch name
         P.w_hop = [1, 1] .* 0.8633;
         P.a_sh = [1, 1] .* 10^(-9.9921);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "BEST_FIT_SERI_MOB_&_B_E"
+%% BEST_FIT_SERI_MOB_&_B_E
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -192,11 +177,8 @@ switch name
         P.w_tr_int = [1, 1] .* 0.891; 
         P.N_int = [1, 1] .* 10^(23.8);
         
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "BEST_FIT_SERI_MOB_&_B_&_D_E"
+%% BEST_FIT_SERI_MOB_&_B_&_D_E
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -242,11 +224,8 @@ switch name
         P.w_tr_hop = [1, 1] .* 0.9204; 
         P.w_tr = [1, 1] .* 0.9559; 
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "BEST_FIT_SERI_MOB_&_B_&_D_&_S_E"
+%% BEST_FIT_SERI_MOB_&_B_&_D_&_S_E
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -294,11 +273,8 @@ switch name
         P.S_base = 10 .^ [-23.499999647571524,  -23.499999647571524,  -23.499999647571524,  -23.499999647571524];
         P.Pr = 0.903000096039124; 
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "FULL_NORDIC_FIT_WITH_PS"
+%% FULL_NORDIC_FIT_WITH_PS
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -346,11 +322,8 @@ switch name
         P.S_base = 10 .^ [-25.0000,  -25.0000,  -25.0000,  -25.0000];
         P.Pr = 0.5000; 
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "FULL_NORDIC_FIT_WITH_PS2"
+%% FULL_NORDIC_FIT_WITH_PS2
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -398,11 +371,8 @@ switch name
         P.S_base = 10 .^ ([1 1 1 1] * -25.916397108145723);
         P.Pr = 0.500000247423050; 
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "FULL_NORDIC_FIT_WITH_TRRA"
+%% FULL_NORDIC_FIT_WITH_TRRA
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -450,11 +420,8 @@ switch name
         P.S_base = 10 .^ [-24.0819,  -24.0819,  -24.0819,  -24.0819];
         P.Pr = 0.7764; 
         
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-   
     case "LE_ROY"
+%% LE_ROY
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;
@@ -492,11 +459,8 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "EEEIC_FIT_1"
+%% EEEIC_FIT_1
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;
@@ -534,11 +498,8 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "EEEIC_POSSIBLE_FIT_2"
+%% EEEIC_POSSIBLE_FIT_2
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;
@@ -576,11 +537,8 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "EEEIC_FIT_2"
+%% EEEIC_FIT_2
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;
@@ -618,11 +576,8 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "NORDIC_STANDARD"
+%% NORDIC_STANDARD
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -671,21 +626,18 @@ switch name
         P.S_base = [2e-23, 2e-23, 2e-23, 2e-23];
         P.Pr = 1; % ()
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     case "RECTANGLE"
+%% RECTANGLE
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 5e-4;
-        P.num_points = 100;
+        P.num_points = 300;
         P.LW = 0;
         P.LE = 0;
         P.nW = 0;
         P.nE = 0;
         % Material
-        P.T = 293.15;
+        P.T = 333.15;
         P.eps_r = 2;
         
         % PARAMETERS THAT CAN BE USED FOR A FIT
@@ -696,13 +648,13 @@ switch name
         P.phie = 0;
         P.fix_inj = [0, 0; 0, 0];
         n_start_h = ones(P.num_points,1) * 1e5;
-        n_start_h(40:60,1) = 1e18;
-        P.n_start = n_start_h .* [1, 1, 0, 0];
+        n_start_h(round(0.4*P.num_points):round(0.6*P.num_points),1) = 1e10;
+        P.n_start = n_start_h .* [1, 0, 0, 0];
         P.Ndeep = ones(P.num_points,2) .* [1e25, 1e25]; 
         
         % Fixed parameters not depending on the electric field 
-        P.mu_h = 1e-13;
-        P.mu_e = 1e-13;
+        P.mu_h = 2e-13;
+        P.mu_e = 2e-13;
         P.Bh = 2e-2;
         P.Be = 2e-2;
         P.Dh = 1e-3;
@@ -715,11 +667,8 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-    
     case "VERY_LONG"
+%% VERY_LONG
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -756,11 +705,8 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-    
     case "VERY_VERY_LONG"
+%% VERY_VERY_LONG
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 3.5e-4;
@@ -797,11 +743,8 @@ switch name
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
     otherwise
+%% otherwise
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
         P.L = 4e-4;
@@ -840,8 +783,12 @@ switch name
         P = CompleteFixedParameters(P);
 
 end
+
 % Complete P
 P = PhysicsConstants(P);
 P = DerivedParameters(P);
 P = CompleteP(P);
-end
+
+clear PARAMETER_ID_NAME
+
+

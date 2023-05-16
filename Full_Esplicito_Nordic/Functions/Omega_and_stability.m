@@ -41,9 +41,9 @@ omega(:,4) = +Be.*ne.*(1-net/N_deep(2)) - De.*net - S0.*nht.*net - S2.*nh.*net;
 
 % computing the denominators that will be used to find the dt that ensure
 % stability
-den_for_stab(:,1) = Bh.*(1-nht/N_deep(1)) + S2.*nht + S3.*nh;
-den_for_stab(:,2) = Be.*(1-nht/N_deep(2)) + S1.*nht + S3.*nh;
-den_for_stab(:,3) = +Bh.*nh/N_deep(1) + Dh + S0.*nht + S1.*nh;
-den_for_stab(:,4) = +Be.*nh/N_deep(2) + De + S0.*nht + S2.*nh;
+den_for_stab(:,1) = Bh.*(1-nht/N_deep(1)) + S2.*net + S3.*ne;
+den_for_stab(:,2) = Be.*(1-net/N_deep(2)) + S1.*nht + S3.*nh;
+den_for_stab(:,3) = +Bh.*nh/N_deep(1) + Dh + S0.*net + S1.*ne;
+den_for_stab(:,4) = +Be.*ne/N_deep(2) + De + S0.*nht + S2.*nh;
 
 end

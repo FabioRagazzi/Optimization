@@ -2,7 +2,8 @@ clearvars, clc, close all
 addpath('Functions\')
 
 % creating the parameters for the simulation
-P = Parameters("FULL_NORDIC_FIT_WITH_TRRA");
+PARAMETER_ID_NAME = "FULL_NORDIC_FIT_WITH_PS"; ParametersScript;
+% P = Parameters("FULL_NORDIC_FIT_WITH_PS2");
 
 % specifying the time instants that will be outputted
 % time_instants = linspace(0, 100);

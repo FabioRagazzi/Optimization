@@ -1,3 +1,87 @@
+%% SATO VS J + dD/dt
+clearvars, clc, close all
+addpath('Functions\')
+
+PARAMETER_ID_NAME = "FULL_NORDIC_FIT_WITH_PS"; ParametersScript;
+time_instants = [0, logspace(0, 5, 99)];
+[options] = DefaultOptions();
+options.flagMu = 1;
+options.flagB = 1;
+options.flagD = 1;
+options.flagS = 1;
+[out] = RunODE(P, time_instants, options);
+
+CompareSatoJdDdt(out);
+
+%% KOREN VS UPWIND SANITY CHECK
+clearvars, clc, close all
+addpath('Functions\')
+
+PARAMETER_ID_NAME = "RECTANGLE"; ParametersScript;
+time_instants = linspace(0,50,100);
+[options] = DefaultOptions();
+options.max_time = 50;
+options.injection = "Fixed";
+options.source = "Off";
+[out1] = RunODE(P, time_instants, options);
+
+options.flux_scheme = "Koren";
+[out2] = RunODE(P, time_instants, options);
+
+figure
+ID(1) = plot(P.x_int, out1.nh(:,1), 'b', 'LineWidth', 2, 'DisplayName','Upwind');
+hold on
+ID(2) = plot(P.x_int, out2.nh(:,1), 'r', 'LineWidth', 2, 'DisplayName','Koren');
+legend
+XLIM = get(gca,'XLim');
+YLIM = get(gca,'YLim');
+pause(1);
+for i = 2:size(out1.nh,2)
+    delete(ID)
+    ID(1) = plot(P.x_int, out1.nh(:,i), 'b', 'LineWidth', 2, 'DisplayName','Upwind');
+    ID(2) = plot(P.x_int, out2.nh(:,i), 'r', 'LineWidth', 2, 'DisplayName','Koren');
+    legend
+    xlim(XLIM);
+    ylim(YLIM);
+    pause(0.05);
+end
+
+% figure
+% plot(out1.nh(:,end), 'r-', 'DisplayName','Upwind')
+% hold on
+% plot(out2.nh(:,end), 'b*', 'DisplayName','Koren')
+% legend
+% 
+% figure
+% plot(out1.ne(:,end), 'r-', 'DisplayName','Upwind')
+% hold on
+% plot(out2.ne(:,end), 'b*', 'DisplayName','Koren')
+% legend
+
+%% KOREN VS UPWIND POLARIZATION CURRENT
+clearvars, clc, close all
+addpath('Functions\')
+
+PARAMETER_ID_NAME = "FULL_NORDIC_FIT_WITH_PS"; ParametersScript;
+time_instants = [0, logspace(0, 5, 99)];
+[options] = DefaultOptions();
+options.flagMu = 1;
+options.flagB = 1;
+options.flagD = 1;
+options.flagS = 1;
+[out1] = RunODE(P, time_instants, options);
+
+options.flux_scheme = "Koren";
+options.max_time = 20;
+[out2] = RunODE(P, time_instants, options);
+
+fig1 = figure();
+ax1 = axes(fig1);
+p1 = plot(ax1, out1.tout, out1.J_dDdt);
+hold on
+p2 = plot(ax1, out2.tout, out2.J_dDdt);
+PlotSettings("CURRENT", fig1, ax1, [p1, p2]);
+
 %% SPAN PARAMETERS
 clear, clc, close all
 addpath("Functions\")

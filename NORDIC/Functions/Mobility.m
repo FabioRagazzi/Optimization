@@ -10,7 +10,7 @@ function [mu_h, mu_e] = Mobility(E, ext_mult_sinh, arg_sinh, mu, options)
 % OUTPUT
 % mu_h -> matrix with the mobility values for holes (positive), same shape as input E
 % mu_e -> matrix with the mobility values for electrons (positive), same shape as input E
-if ~ exist('options','var') || options.flagMu == false
+if options.flagMu == false
     mu_h = mu(1) * ones(size(E));
     mu_e = mu(2) * ones(size(E));
 elseif options.flagMu == true

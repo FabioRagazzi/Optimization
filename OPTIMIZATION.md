@@ -825,6 +825,33 @@ CONCLUSIONE:
 
 &nbsp;
 
+## 11/5/2023
+Finisce la simulazione in cui anche Ndeep è considerato correttamente, salvo i risultati in **FULL_NORDIC_FIT_WITH_PS2**
+||a_int | w_hop | a_sh | w_tr_int | N_int | Ndeep | w_tr_hop | w_tr | S_base | n_start | phih | Pr |
+|--|--|--|--|--|--|--|--|--|--|--|--|--|
+| lb |-9 | 0.5 | -10 | 0.7 | 22 | 23 | 0.8 | 0.8 | -26 | 18 | 1.1 | 0.5|
+| ub |-7 | 0.7 | -9 | 1 | 24 | 25 | 1 | 1 | -21 | 20 | 1.4 | 1|
+| PS | -7.887981410417408 | 0.671176848019200 | -9.638404552585161 | 0.944239134740298 | 22.061849006499031 | 23.117190176544050 | 0.918118461534631 | 0.999999782136590 | -25.916397108145723 | 19.812922098694948 | 1.162426527347281 | 0.500000247423050 |
+
+Se metto Pr = 0.9 (più simile al valore proposto da Doedens) il fitting peggiora ma è ancora accettabile
+
+Se metto Ndeep = 1e20 (valore più fisico) i risultati si sballano
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
+## 16/5/2023
+Trovato errore, non facevo il valore assoluto di u_center quando calcolavo B nel caso di dipendenza dal campo elettrico. Sembra avere poco effetto sui risultati
+
+&nbsp;  
+
+&nbsp;  
+
+&nbsp;
+
 # TODO
 * fare le 78.000 corse ($5^7$) &#x2610;
 * controllare se le mobilità sono state misurate &#x2610;

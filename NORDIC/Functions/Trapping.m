@@ -12,7 +12,7 @@ function [B] = Trapping(u_center, B0, mult_B, b, options)
 if ~ exist('options', 'var') || options.flagB == false
     B = b .* ones(size(u_center(:,1)));
 elseif options.flagB == true
-    B = B0 + mult_B .* u_center;
+    B = B0 + mult_B .* abs(u_center);
 else
     error("Invalid value for options.flagB")
 end
