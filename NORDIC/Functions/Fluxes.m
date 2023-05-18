@@ -22,8 +22,8 @@ function [Gamma_close, Gamma_interfaces, den_for_stab] = Fluxes(n, u, deltas, Vo
 Gamma_interfaces = zeros(size(u));
 den_for_stab = zeros(size(n));
 
-Upos = u >= 0;
-uneg = u < 0;
+Upos = u > 0;
+uneg = ~Upos;
 Umax = u.*Upos;
 umin = u.*uneg;
 Grad_n = (n(2:end,:) - n(1:end-1,:)) ./ deltas(2:end-1)';
