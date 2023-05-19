@@ -1,4 +1,150 @@
-%% COMPUTE
+%% KOREN VS UPWIND POLARIZATION CURRENT AND NUMBER DENSITY (FIGURE)
+clearvars, clc, close all
+addpath('Functions\')
+
+PARAMETER_ID_NAME = "FULL_NORDIC_FIT_WITH_PS"; ParametersScript;
+time_instants = [0, logspace(0, 5, 99)];
+[options] = DefaultOptions();
+options.flagMu = 1;
+options.flagB = 1;
+options.flagD = 1;
+options.flagS = 1;
+options.max_time = 20;
+f1 = @()RunODE(P, time_instants, options);
+[out1] = RunODE(P, time_instants, options);
+
+options.flux_scheme = "Koren";
+f2 = @()RunODE(P, time_instants, options);
+[out2] = RunODE(P, time_instants, options);
+
+%% SATO
+fig1 = figure();
+ax1 = axes(fig1);
+loglog(ax1, out1.tout, out1.J_dDdt, '.', 'LineWidth',2, 'DisplayName','$J + \frac{\partial D}{\partial t}$', 'MarkerSize',15)
+hold on
+loglog(ax1, out1.tout, out1.J_Sato, '-',  'LineWidth',2, 'DisplayName','Sato')
+grid on
+xticks(10.^[0 1 2 3 4 5])
+xlabel('time (s)', 'Interpreter','latex')
+ylabel('current density ($\frac{A}{m^2}$)', 'Interpreter','latex')
+title('Polarization current')
+legend('Interpreter','latex')
+set(gca,'FontSize',15)
+
+rx1 = 200;
+rx2 = 300;
+ry1 = 1.25e-6;
+ry2 = 1.5e-6;
+
+axx = 0.65;
+axy = 0.45;
+axdx = 0.15;
+axdy = 0.2;
+
+rectangle('Position', [rx1, ry1, rx2-rx1, ry2-ry1])
+
+ax2 = axes('Position',[axx, axy, axdx, axdy]);
+loglog(ax2, out1.tout, out1.J_dDdt, '.', 'LineWidth',2, 'DisplayName','$J + \frac{\partial D}{\partial t}$', 'MarkerSize',15)
+hold on
+loglog(ax2, out1.tout, out1.J_Sato, '-',  'LineWidth',2, 'DisplayName','Sato')
+xlim([rx1,rx2])
+ylim([ry1,ry2])
+box on
+% xticks([rx1,rx2])
+% yticks([ry1,ry2])
+grid on
+set(gca,'FontSize',15)
+
+[x_norm, y_norm] = CoordToNormal(ax1, rx2, ry2);
+annotation('arrow', [axx,x_norm], [axy,y_norm])
+
+%%
+exportgraphics(fig1, 'data\PaperNumericalFigures\Sato.eps')
+
+%% N
+[error_e, ind] = max(sum((out1.ne - out2.ne) ./ out2.ne, 1));
+disp(ind)
+% ind = 60;
+disp(out1.tout(ind))
+fig1 = figure();
+plot(P.x_int - P.x_int(1), out1.ne(:,ind), '--', 'LineWidth',2, 'DisplayName','Upwind I', 'MarkerSize',25)
+hold on
+plot(P.x_int - P.x_int(1), out2.ne(:,ind), '-', 'LineWidth',3, 'DisplayName','Koren', 'MarkerSize',8)
+grid on
+legend('Interpreter','latex')
+set(gca,'FontSize',15)
+xlim([0, 2e-5])
+% xticks([0 1 2 3]*1e-5)
+xlabel('x (m)','Interpreter','latex')
+ylabel('number density ($\frac{1}{m^3}$)','Interpreter','latex')
+title('Electrons','Interpreter','latex')
+
+% [~, ind] = max(sum((out1.nh - out2.nh) ./ out2.nh, 1));
+% disp(ind)
+% nexttile
+% plot(P.x_int, out1.nh(:,ind), '-', 'LineWidth',2, 'DisplayName','Upwind I', 'MarkerSize',20)
+% hold on
+% plot(P.x_int, out2.nh(:,ind), '-', 'LineWidth',3, 'DisplayName','Koren')
+% grid on
+% % legend('Location','west')
+% set(gca,'FontSize',15)
+% xlim([0.9*P.L, P.L])
+% xticks([3.2 3.3 3.4 3.5]*1e-4)
+% xlabel('x (m)','Interpreter','latex')
+% set(gca,'YColor', 'none')
+% % ylabel('number density ($\frac{1}{m^3}$)','Interpreter','latex')
+% title('Holes','Interpreter','latex')
+
+%%
+exportgraphics(fig1, 'data\PaperNumericalFigures\Koren_vs_Upwind_number_density.eps')
+
+%% J
+padx = 2.8e4;
+pady = 1e-7;
+axes2_x0 = 0.5;
+axes2_y0 = 0.5;
+axes2_W = 0.2;
+axes2_H = 0.2;
+
+[~, index_max] = max((out1.J_dDdt-out2.J_dDdt)./out2.J_dDdt);
+disp(index_max)
+x_max = out1.tout(index_max); 
+y_max = out1.J_dDdt(index_max);
+
+fig1 = figure();
+
+ax1 = axes(fig1);
+loglog(ax1, out1.tout, out1.J_dDdt, '.', 'LineWidth',2, 'DisplayName','Upwind I', 'MarkerSize',20)
+hold on
+loglog(ax1, out2.tout, out2.J_dDdt, '-', 'LineWidth',3, 'DisplayName','Koren')
+title('Polarization current', 'Interpreter','latex')
+xlabel('time (s)', 'Interpreter','latex')
+ylabel('current density ($\frac{A}{m^2}$)', 'Interpreter','latex')
+grid on
+xticks(10.^[0 1 2 3 4 5])
+set(gca,'FontSize',15)
+legend('Interpreter','latex')
+
+%% 
+rectangle(ax1,'Position',[x_max-padx/2, y_max-pady/2, padx, pady])
+
+ax2 = axes(fig1,'Position',[axes2_x0, axes2_y0, axes2_W, axes2_W]);
+loglog(ax2, out1.tout, out1.J_dDdt, '.', 'LineWidth',2, 'DisplayName','Upwind I', 'MarkerSize',20)
+hold on
+loglog(ax2, out2.tout, out2.J_dDdt, '-', 'LineWidth',3, 'DisplayName','Koren')
+xlim(ax2, [x_max-padx/2, x_max+padx/2])
+ylim(ax2, [y_max-pady/2, y_max+pady/2])
+grid on
+box on
+set(gca,'FontSize',15)
+
+[xnorm, ynorm] = CoordToNormal(ax1, x_max-padx/2, y_max+pady/2);
+arrow = annotation('arrow',[axes2_x0 + axes2_W, xnorm],[axes2_y0, ynorm]);
+
+%% 
+exportgraphics(fig1, 'data\PaperNumericalFigures\Koren_vs_Upwind.eps')
+
+%% UPWIND VS KOREN
 clearvars, clc, close all
 
 num_points = 500;
@@ -85,7 +231,7 @@ for k = 1:num_points * num_save
     pause(0.01)
 end
 
-%% DOMAIN
+%% DOMAIN (FIGURE)
 L = 0;
 U = 5;
 xp = [1, 2, 3, 4];
@@ -115,7 +261,7 @@ set(gca, 'Visible', 'off')
 
 exportgraphics(ax1, 'data\PaperNumericalFigures\domain.eps')
 
-%% KOREN GRAPH
+%% KOREN GRAPH (FIGURE)
 low_lim = -0.5;
 up_lim = 3;
 lim1 = [-0.5, 0];

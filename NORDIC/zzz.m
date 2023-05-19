@@ -58,30 +58,6 @@ end
 % plot(out2.ne(:,end), 'b*', 'DisplayName','Koren')
 % legend
 
-%% KOREN VS UPWIND POLARIZATION CURRENT
-clearvars, clc, close all
-addpath('Functions\')
-
-PARAMETER_ID_NAME = "FULL_NORDIC_FIT_WITH_PS"; ParametersScript;
-time_instants = [0, logspace(0, 5, 99)];
-[options] = DefaultOptions();
-options.flagMu = 1;
-options.flagB = 1;
-options.flagD = 1;
-options.flagS = 1;
-[out1] = RunODE(P, time_instants, options);
-
-options.flux_scheme = "Koren";
-options.max_time = 20;
-[out2] = RunODE(P, time_instants, options);
-
-fig1 = figure();
-ax1 = axes(fig1);
-p1 = plot(ax1, out1.tout, out1.J_dDdt);
-hold on
-p2 = plot(ax1, out2.tout, out2.J_dDdt);
-PlotSettings("CURRENT", fig1, ax1, [p1, p2]);
-
 %% SPAN PARAMETERS
 clear, clc, close all
 addpath("Functions\")
