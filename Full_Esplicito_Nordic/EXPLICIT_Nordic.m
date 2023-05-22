@@ -1,5 +1,5 @@
 %% SOLVE FULL EXPLICIT
-clear, clc
+% clear, clc
 current_path = pwd();
 cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito_Nordic')
 addpath("Functions\")
@@ -201,14 +201,14 @@ J_dDdt_mean = -integral_func(J_dDdt', P.Delta) / P.L;
 
 % Plot polarization current
 interpreter = 'tex';
-loglog(time_instants, J_dDdt_mean, 'ro', 'LineWidth',2)
+explicit_nordic_plot = loglog(time_instants, J_dDdt_mean, 'ro', 'LineWidth',2);
 % hold on
 % loglog(time_instants, J, 'k--', 'LineWidth',2)
-grid on
-title('Polarization Current', 'Interpreter',interpreter)
-xlabel('Time (s)','Interpreter',interpreter)
-ylabel('Current Density (A/m^2)', 'Interpreter',interpreter)
-set(gca,'FontSize',15)
+% grid on
+% title('Polarization Current', 'Interpreter',interpreter)
+% xlabel('Time (s)','Interpreter',interpreter)
+% ylabel('Current Density (A/m^2)', 'Interpreter',interpreter)
+% set(gca,'FontSize',15)
 
 % ID(1) = plot(x_interni, ne_out(:,1), 'k-', 'LineWidth', 2);
 % hold on

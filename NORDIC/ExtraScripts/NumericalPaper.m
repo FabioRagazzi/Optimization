@@ -1,3 +1,74 @@
+%% FULL EXPLICIT VS ODE (FIGURE)
+clearvars, clc, close all
+addpath('Functions\')
+
+fig1 = figure();
+ax1 = axes(fig1);
+
+% cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito_Nordic')
+% EXPLICIT_Nordic;
+% cd('C:\Users\Faz98\Documents\GitHub\Optimization\NORDIC');
+% load("data\explicit_cfl_1.mat")
+load("data\explicit_cfl_01.mat")
+loglog(ax1, time_instants, J_dDdt_mean, 'LineWidth',2, 'LineStyle',':', 'DisplayName','Explicit')
+
+PARAMETER_ID_NAME = "NORDIC_STANDARD"; ParametersScript;
+time_instants = [0, logspace(0, 5, 99)];
+[options] = DefaultOptions();
+options.flagMu = 1;
+options.flagB = 1;
+options.flagD = 1;
+options.flagS = 1;
+
+ftime = @() RunODE(P, time_instants, options);
+[out] = RunODE(P, time_instants, options);
+
+[err_max, index_max] = max(abs((J_dDdt_mean - out.J_dDdt)./(out.J_dDdt)));
+fprintf("Massimo errore percentuale: %d % \n\n", err_max)
+fprintf("\nTempo corrispondente all'errore percentuale massimo: %d % \n\n", out.tout(index_max))
+
+padx = 20;
+pady = 2e-6;
+x_max = out.tout(index_max); 
+y_max = out.J_dDdt(index_max);
+
+% explicit_nordic_plot.LineStyle = "-";
+% explicit_nordic_plot.Marker = "none";
+% explicit_nordic_plot.LineWidth = 2;
+% explicit_nordic_plot.Color = [0, 0.4470, 0.7410];
+hold on
+plot(ax1, out.tout, out.J_dDdt, 'LineWidth',2, 'DisplayName','ODE MATLAB')
+grid on
+title('Polarization current', 'Interpreter','latex')
+xlabel('time (s)', 'Interpreter','latex')
+ylabel('current density ($\frac{A}{m^2}$)', 'Interpreter','latex')
+legend('Interpreter','latex')
+xticks(10.^[0 1 2 3 4 5])
+set(gca, 'FontSize', 15)
+
+rectangle('Position', [x_max-padx/2, y_max-pady/2, padx, pady])
+
+ax2_x = 0.45;
+ax2_y = 0.45;
+ax2_dx = 0.2; 
+ax2_dy = 0.25;
+ax2 = axes(fig1, 'Position',[ax2_x, ax2_y, ax2_dx, ax2_dy]);
+loglog(ax2, time_instants, J_dDdt_mean, 'LineWidth',2, 'LineStyle',':', 'DisplayName','Explicit')
+hold on
+plot(ax2, out.tout, out.J_dDdt, 'LineWidth',2, 'DisplayName','ODE MATLAB')
+xlim([x_max-padx/2, x_max+padx/2])
+ylim([y_max-pady/2, y_max+pady/2])
+box on
+grid on
+set(gca,'FontSize',15)
+
+[x_norm, y_norm] = CoordToNormal(ax1, x_max+padx/2, y_max+pady/2);
+annotation('arrow', [ax2_x,x_norm], [ax2_y,y_norm])
+
+% timeit(ftime)
+%%
+exportgraphics(fig1, 'data\PaperNumericalFigures\EXP_vs_ODE.eps')
+
 %% KOREN VS UPWIND POLARIZATION CURRENT AND NUMBER DENSITY (FIGURE)
 clearvars, clc, close all
 addpath('Functions\')
@@ -27,7 +98,7 @@ grid on
 xticks(10.^[0 1 2 3 4 5])
 xlabel('time (s)', 'Interpreter','latex')
 ylabel('current density ($\frac{A}{m^2}$)', 'Interpreter','latex')
-title('Polarization current')
+title('Polarization current', 'Interpreter','latex')
 legend('Interpreter','latex')
 set(gca,'FontSize',15)
 

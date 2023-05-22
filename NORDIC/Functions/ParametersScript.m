@@ -588,17 +588,17 @@ switch PARAMETER_ID_NAME
         P.nE = 0;
         % Material
         P.T = 333.15;
-        P.eps_r = 2.3;
+        P.eps_r = 2;
         
         % PARAMETERS THAT CAN BE USED FOR A FIT
         % Essential Parameters
         P.Phi_W = 0;
-        P.Phi_E = P.L * 1e7;
+        P.Phi_E = P.L * 3e7;
         P.phih = 1.148;
         P.phie = 0.905;
         P.fix_inj = [0, 0; 0, 0];
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e21, 1e21, 1e5, 1e5];
+        P.n_start = [1e20, 1e20, 1e1, 1e1];
         P.Ndeep = ones(P.num_points,2) .* [5.9293e20, 2.4966e20]; % (m^-3)
         
         % Set all classic parameters to 1
@@ -623,7 +623,7 @@ switch PARAMETER_ID_NAME
         P.w_tr = [1.03, 1.03]; % (eV)
         % Extra parameters needed when the recombination coefficients are dependent on the
         % electric field
-        P.S_base = [2e-23, 2e-23, 2e-23, 2e-23];
+        P.S_base = [1.6022e-23, 1.6022e-23, 1.6022e-23, 1.6022e-23];
         P.Pr = 1; % ()
 
     case "RECTANGLE"
