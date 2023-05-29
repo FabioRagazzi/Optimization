@@ -1,21 +1,27 @@
 %% SOLVE FULL EXPLICIT
-% clear, clc
+clear, clc, close all
 current_path = pwd();
 cd('C:\Users\Faz98\Documents\GitHub\Optimization\Full_Esplicito_Nordic')
 addpath("Functions\")
 fprintf("-> SOLVE FULL EXPLICIT NORDIC\n")
 
 % loading the parameters for the simulation
-load('Parameters\Nordic_standard.mat')
+% load('Parameters\Nordic_standard.mat') |1|
+load('Parameters\Le_Roy.mat') % |2|
 
 % defining the time instants for the simulation
 time_instants = [0, logspace(0, 5, 99)];
 
 % specifying the flags and CFL
-flag_mu = true;
-flag_B = true;
-flag_D = true;
-flag_S = true;
+% flag_mu = true; %|1|
+% flag_B = true;  %|1|
+% flag_D = true;  %|1|
+% flag_S = true;  %|1|
+
+flag_mu = false;  %|2|
+flag_B = false;   %|2|
+flag_D = false;   %|2|
+flag_S = false;   %|2|
 CFL = 0.1;
 
 % output variables definition
@@ -51,7 +57,8 @@ while true
     % electric potential and electric field relative to the current time
     % instant:
     rho = sum(n.*[1, -1, 1, -1], 2) * P.e;
-    phi = Electrostatic(rho, P.coeff, P.Phi_W, P.Phi_E, P.Kelet); 
+%     phi = Electrostatic(rho, P.coeff, P.Phi_W, P.Phi_E, P.Kelet); % |1|
+    phi = SolveEletStat(P.EletStat, rho, P.Phi_W, P.Phi_E);       % |2|
     E = Electric_Field(phi, P.Delta, P.Phi_W, P.Phi_E);
 
     % Compute mobility based on the relative flag
@@ -68,7 +75,7 @@ while true
     % Compute trapping coefficient based on the relative flag
     if flag_B
         u_center = (u(1:end-1,:) + u(2:end,:)) / 2;
-        B = P.B0 + P.mult_B .* u_center;
+        B = P.B0 + P.mult_B .* abs(u_center);
     else
         B = [P.Bh, P.Be] .* ones(size(E,1)-1, size(E,2));
     end
@@ -121,7 +128,7 @@ while true
 
     % source terms contributions (omega has a column for each kind of
     % species) and also denominator contributions for dt for stability
-    [omega, den_for_stab] = Omega_and_stability(n, P.N_deep, B, D, S);
+    [omega, den_for_stab] = Omega_and_stability(n, P.Ndeep, B, D, S);
 
     % injection from electrodes (g_schottky has two values, one for the left
     % electrode and one for the right electrode)

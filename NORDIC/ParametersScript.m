@@ -1,4 +1,21 @@
-% ParameterScript contains all the relevant parameter sets used
+% ParameterScript contains all the relevant parameter sets used:
+% BEST_FIT_SERI
+% BEST_FIT_SERI_MOB_E
+% BEST_FIT_SERI_MOB_E_PS
+% BEST_FIT_SERI_MOB_&_B_E
+% BEST_FIT_SERI_MOB_&_B_&_D_E
+% BEST_FIT_SERI_MOB_&_B_&_D_&_S_E
+% FULL_NORDIC_FIT_WITH_PS
+% FULL_NORDIC_FIT_WITH_PS2
+% FULL_NORDIC_FIT_WITH_TRRA
+% LE_ROY
+% EEEIC_FIT_1
+% EEEIC_POSSIBLE_FIT_2
+% EEEIC_FIT_2
+% NORDIC_STANDARD
+% RECTANGLE
+% VERY_LONG
+% VERY_VERY_LONG
 
 switch PARAMETER_ID_NAME
 
@@ -40,9 +57,9 @@ switch PARAMETER_ID_NAME
 
         % Set all Nordic parameters to 1
         P = CompleteFixedParameters(P);
-        P.a_int = [100 80] * 1e-9; % (m)
-        P.w_hop = [0.74, 0.76]; % (eV)
-        P.a_sh = [1.25 2.25] * 1e-9; % (m)
+%         P.a_int = [100 80] * 1e-9; % (m)
+%         P.w_hop = [0.74, 0.76]; % (eV)
+%         P.a_sh = [1.25 2.25] * 1e-9; % (m)
 
     case "BEST_FIT_SERI_MOB_E"
 %% BEST_FIT_SERI_MOB_E
@@ -441,7 +458,7 @@ switch PARAMETER_ID_NAME
         P.phih = 1.16;
         P.phie = 1.27;
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e18, 1e18, 0, 0];
+        P.n_start = [1e18, 1e18, 1e2, 1e2];
         P.Ndeep = ones(P.num_points,2) .* [6.2e20, 6.2e20];
         
         % Fixed parameters not depending on the electric field 
@@ -480,7 +497,7 @@ switch PARAMETER_ID_NAME
         P.phih = 1.2;
         P.phie = 1.2;
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [3e19, 3e19, 0, 0];
+        P.n_start = [3e19, 3e19, 1e2, 1e2];
         P.Ndeep = ones(P.num_points,2) .* [1e21, 1e21];
         
         % Fixed parameters not depending on the electric field 
@@ -519,7 +536,7 @@ switch PARAMETER_ID_NAME
         P.phih = 1.2937;
         P.phie = 1.2937;
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [10^(19.7251), 10^(19.7251), 0, 0];
+        P.n_start = [10^(19.7251), 10^(19.7251), 1e2, 1e2];
         P.Ndeep = ones(P.num_points,2) .* [10^(22.5343), 10^(22.5343)];
         
         % Fixed parameters not depending on the electric field 
@@ -558,7 +575,7 @@ switch PARAMETER_ID_NAME
         P.phih = 1.25;
         P.phie = 1.25;
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [5e19, 5e19, 0, 0];
+        P.n_start = [5e19, 5e19, 1e2, 1e2];
         P.Ndeep = ones(P.num_points,2) .* [1e20, 1e20];
         
         % Fixed parameters not depending on the electric field 

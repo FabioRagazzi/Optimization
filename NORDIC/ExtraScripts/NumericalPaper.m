@@ -1,3 +1,36 @@
+%% SEMI IMPLICIT VS EXPLICIT VS ODE
+clearvars, clc%, close all
+addpath('Functions\')
+
+fig1 = figure();
+ax1 = axes(fig1);
+
+% load("data\explicit_cfl_1_Le_Roy") % 8 seconds
+load("data\explicit_cfl_01_Le_Roy") % 80 seconds
+loglog(ax1, time_instants, J_dDdt_mean, 'LineWidth',2, 'LineStyle','-', 'DisplayName','Explicit')
+
+hold on
+
+time_Fortran = readmatrix('C:\Users\Faz98\PycharmProjects\HVDC\data_t.txt'); % 30 seconds
+I_Fortran = readmatrix('C:\Users\Faz98\PycharmProjects\HVDC\data_i.txt');
+loglog(ax1, time_Fortran(2:end), I_Fortran, 'LineWidth',2, 'LineStyle',':', ...
+    'Marker','none', 'MarkerFaceColor','r', 'MarkerSize',15, 'DisplayName','Semi-Implicit')
+
+PARAMETER_ID_NAME = "LE_ROY"; ParametersScript;
+options = DefaultOptions();
+options.max_time = 3;
+[out] = RunODE(P, [0, logspace(0, 5, 20)], options); % 2 seconds
+plot(ax1, out.tout, out.J_dDdt, 'LineStyle','none', 'Marker','o', 'MarkerSize',5, ...
+    'MarkerFaceColor','k', 'MarkerEdgeColor','k', 'DisplayName','ODE MATLAB')
+
+grid on
+title('Polarization current', 'Interpreter','latex')
+xlabel('time (s)', 'Interpreter','latex')
+ylabel('current density ($\frac{A}{m^2}$)', 'Interpreter','latex')
+legend('Interpreter','latex')
+xticks(10.^[0 1 2 3 4 5])
+set(gca, 'FontSize', 15)
+
 %% FULL EXPLICIT VS ODE (FIGURE)
 clearvars, clc, close all
 addpath('Functions\')
@@ -249,12 +282,12 @@ for k = 1:num_points * num_save
     cont = cont + 1;
     delete(ID);
 
-    % UPWIND
-    if v > 0
-        Gamma = [n(end); n] * v; 
-    else
-        Gamma = [n; n(1)] * v; 
-    end
+%     % UPWIND
+%     if v > 0
+%         Gamma = [n(end); n] * v; 
+%     else
+%         Gamma = [n; n(1)] * v; 
+%     end
 
 %     % KOREN 1
 %     n_add = [n(end-1:end); n; n(1:2)];
@@ -280,26 +313,29 @@ for k = 1:num_points * num_save
 %         Gamma = (n_add(3:end-1) - koren_mlim(dn(2:end-1), dn(3:end))) * v;
 %     end
 
-%     % KOREN 3
-%     Upos = v>0;
-%     uneg = ~Upos;
-%     Umax = v .* Upos;
-%     umin = v .* uneg;
-%     n_add = [n(end-1:end); n; n(1:2)];
-%     dn = n_add(2:end) - n_add(1:end-1);
-%     dn_to_koren = Upos.*dn(1:end-2) + uneg.*dn(3:end);
-%     koren_computed = koren_mlim(dn(2:end-1), dn_to_koren);
-%     Gamma = Umax.*(n_add(2:end-2) + koren_computed) +...
-%             umin.*(n_add(3:end-1) - koren_computed);
+    % KOREN 3
+    Upos = v>0;
+    uneg = ~Upos;
+    Umax = v .* Upos;
+    umin = v .* uneg;
+    n_add = [n(end-1:end); n; n(1:2)];
+    dn = n_add(2:end) - n_add(1:end-1);
+    dn_to_koren = Upos.*dn(1:end-2) + uneg.*dn(3:end);
+    koren_computed = koren_mlim(dn(2:end-1), dn_to_koren);
+    Gamma = Umax.*(n_add(2:end-2) + koren_computed) +...
+            umin.*(n_add(3:end-1) - koren_computed);
 
+
+    % ELABORATION AND PLOT
     Gamma_close = Gamma(2:end) - Gamma(1:end-1);  
     n = n - dt * Gamma_close ./ Vol;
     if mod(cont,num_save) == 0
         n_real = shift_circular(n_real, sign(v), num_points);
     end
-    ID(1) = plot(x,n,'b');
-    ID(2) = plot(x,n_real,'k--');
-    pause(0.01)
+    ID(1) = plot(x,n,'b','LineWidth',2);
+    ID(2) = plot(x,n_real,'k','LineWidth',0.5);
+%     exportgraphics(gcf,'Blocked.gif','Append',true);
+%     pause(0.01)
 end
 
 %% DOMAIN (FIGURE)

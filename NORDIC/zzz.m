@@ -1,3 +1,38 @@
+%% BEST FIT DOEDENS PS
+clearvars, clc, close all
+MY_START()
+
+PARAMETER_ID_NAME = "BEST_FIT_SERI"; ParametersScript;
+% PARAMETER_ID_NAME = "FULL_NORDIC_FIT_WITH_PS"; ParametersScript;
+
+load("data\Data_Seri.mat")
+
+[options] = DefaultOptions();
+% options.flagMu = 1;
+% options.flagB = 1;
+% options.flagD = 1;
+% options.flagS = 1;
+                             
+[out] = RunODE(P, time_instants, options);
+
+disp(norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) ));
+
+load("data\Data_Seri_Original.mat")
+
+fig1 = figure;
+hold on
+grid on
+index = find(out.tout>time_instants(1), 1) - 1;
+loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'DisplayName',"Experimental" + " " + "Measurement")
+loglog(out.tout(index:end), out.J_dDdt(index:end), 'LineWidth',2, 'LineStyle',':', 'DisplayName','Fitting using Particle Swarm')
+legend
+xlabel('time (s)')
+ylabel('current density (A m^-^2)')
+set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
+ylim([2e-7, 5e-5])
+xlim([1, 2e5])
+xticks(10.^[0, 1, 2, 3, 4, 5])
+
 %% SATO VS J + dD/dt
 clearvars, clc, close all
 addpath('Functions\')
@@ -358,21 +393,13 @@ CompareSatoJdDdt(out, Jobjective, time_instants)
 rmpath('Functions\')
 
 %% EEEIC PHI
-clearvars, clc, close all
-addpath('Functions\')
+MY_START()
 
-P = Parameters("LE_ROY");
+PARAMETER_ID_NAME = "LE_ROY"; ParametersScript;
 time_instants = [0, logspace(0, 5, 99)];
 
-% Specifying the options for the simulation
-options.flagMu = 0;
-options.flagB = 0;
-options.flagD = 0;
-options.flagS = 0;
-options.flux_scheme = "Upwind";
-options.injection = "Schottky"; % Schottky / Fixed
-options.source = "On";
-options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
+% specifying the options for the simulation
+[options] = DefaultOptions();
 
 phi_values = [1.3, 1.32, 1.34, 1.36];
 linestyles = ["-", "--", ":", "-."];
@@ -409,7 +436,7 @@ legend('Location','southwest')
 xlim([1, x_zoom_interval(2)])
 xticks(10.^[0, 1, 2, 3, 4])
 xlabel('time (s)')
-ylabel('current density (A/m^-^2)')
+ylabel('current density (A m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 
 % Small Figure
@@ -428,26 +455,19 @@ set(gca,'Xscale','log', 'Yscale','log', 'FontSize',10)
 annotation(fig1,'arrow',[0.75 0.88],[0.55 0.325]);
 
 % Saving to .eps format
-exportgraphics(fig1, 'data\PaperEEEICfigures\phi.eps')
+% exportgraphics(fig1, 'data\PaperEEEICfigures\phi.eps')
 
 rmpath('Functions\')
 
 %% EEEIC MU
 clearvars, clc, close all
-addpath('Functions\')
+MY_START()
 
-P = Parameters("LE_ROY");
+PARAMETER_ID_NAME = "LE_ROY"; ParametersScript;
 time_instants = [0, logspace(0, 4, 99)];
 
 % Specifying the options for the simulation
-options.flagMu = 0;
-options.flagB = 0;
-options.flagD = 0;
-options.flagS = 0;
-options.flux_scheme = "Upwind";
-options.injection = "Schottky"; % Schottky / Fixed
-options.source = "On";
-options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
+[options] = DefaultOptions();
 
 mu_values = [1e-12, 1e-13, 1e-14, 1e-15];
 linestyles = ["-", "--", ":", "-."];
@@ -476,7 +496,7 @@ for i = 1:length(mu_values)
 end
 legend
 xlabel('time (s)')
-ylabel('current density (A/m^-^2)')
+ylabel('current density (A m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 
 % Saving to .eps format
@@ -486,20 +506,13 @@ rmpath('Functions\')
 
 %% EEEIC N0
 clearvars, clc, close all
-addpath('Functions\')
+MY_START()
 
-P = Parameters("LE_ROY");
+PARAMETER_ID_NAME = "LE_ROY"; ParametersScript;
 time_instants = [0, logspace(0, 4, 99)];
 
 % Specifying the options for the simulation
-options.flagMu = 0;
-options.flagB = 0;
-options.flagD = 0;
-options.flagS = 0;
-options.flux_scheme = "Upwind";
-options.injection = "Schottky"; % Schottky / Fixed
-options.source = "On";
-options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
+[options] = DefaultOptions();
 
 n0_values = [1e20, 1e19, 1e18, 1e17];
 linestyles = ["-", "--", ":", "-."];
@@ -528,7 +541,7 @@ for i = 1:length(n0_values)
 end
 legend
 xlabel('time (s)')
-ylabel('current density (A/m^-^2)')
+ylabel('current density (A m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 
 % Saving to .eps format
@@ -540,19 +553,16 @@ rmpath('Functions\')
 clearvars, clc, close all
 addpath('Functions\')
 
-P = Parameters("EEEIC_FIT_1");
+PARAMETER_ID_NAME = "EEEIC_FIT_1"; ParametersScript;
+
+load("data\Data_Seri.mat")
 time_instants = [0, logspace(0, 5, 99)];
 
-options.flagMu = 0;
-options.flagB = 0;
-options.flagD = 0;
-options.flagS = 0;
-options.flux_scheme = "Upwind";
-options.injection = "Schottky"; % Schottky / Fixed
-options.source = "On";
-options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
+[options] = DefaultOptions();
 
 [out] = RunODE(P, time_instants, options);
+
+disp(norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) ));
 
 load("data\Data_Seri_Original.mat")
 
@@ -565,14 +575,14 @@ loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'Displa
 loglog(out.tout(index:end), out.J_dDdt(index:end), 'LineWidth',2, 'LineStyle',':', 'DisplayName','Fitting #1')
 legend
 xlabel('time (s)')
-ylabel('current density (A/m^-^2)')
+ylabel('current density (A m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 ylim([2e-7, 5e-5])
 xlim([1, 2e5])
 xticks(10.^[0, 1, 2, 3, 4, 5])
 
 % Saving to .eps format
-exportgraphics(fig1, 'data\PaperEEEICfigures\fitting1.eps')
+% exportgraphics(fig1, 'data\PaperEEEICfigures\fitting1.eps')
 
 rmpath('Functions\')
 
@@ -580,19 +590,16 @@ rmpath('Functions\')
 clearvars, clc, close all
 addpath('Functions\')
 
-P = Parameters("EEEIC_POSSIBLE_FIT_2");
+PARAMETER_ID_NAME = "EEEIC_POSSIBLE_FIT_2"; ParametersScript;
+
+load("data\Data_Seri.mat")
 time_instants = [0, logspace(0, 5, 99)] + 4.4694;
 
-options.flagMu = 0;
-options.flagB = 0;
-options.flagD = 0;
-options.flagS = 0;
-options.flux_scheme = "Upwind";
-options.injection = "Schottky"; % Schottky / Fixed
-options.source = "On";
-options.ODE_options = odeset('Stats','off', 'Events',@(t,y)EventFcn(t,y));
+[options] = DefaultOptions();
 
 [out] = RunODE(P, time_instants, options);
+
+disp(norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) ));
 
 load("data\Data_Seri_Original.mat")
 
@@ -604,14 +611,14 @@ loglog(t_Seri_original, J_Seri_original, 'LineWidth',2, 'LineStyle','-', 'Displa
 loglog(out.tout, out.J_dDdt, 'LineWidth',2, 'LineStyle',':', 'DisplayName','Fitting #2')
 legend
 xlabel('time (s)')
-ylabel('current density (A/m^-^2)')
+ylabel('current density (A m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 ylim([2e-7, 5e-5])
 xlim([1, 2e5])
 xticks(10.^[0, 1, 2, 3, 4, 5])
 
 % Saving to .eps format
-exportgraphics(fig1, 'data\PaperEEEICfigures\fitting2.eps')
+% exportgraphics(fig1, 'data\PaperEEEICfigures\fitting2.eps')
 
 rmpath('Functions\')
 
@@ -648,7 +655,7 @@ loglog(out1.tout(index:end), out1.J_dDdt(index:end), 'LineWidth',2, 'LineStyle',
 loglog(out2.tout, out2.J_dDdt, 'LineWidth',2, 'LineStyle','--', 'DisplayName','Fitting #2')
 legend
 xlabel('time (s)')
-ylabel('current density (A/m^-^2)')
+ylabel('current density (A m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 ylim([2e-7, 5e-5])
 xlim([1, 2e5])
@@ -699,5 +706,9 @@ function mustBeEqualSize(a, b)
         msg = 'Size of first input must equal size of second input.';
         throwAsCaller(MException(eid, msg))
     end
+end
+
+function MY_START()
+    addpath('Functions\')
 end
 

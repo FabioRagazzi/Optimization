@@ -23,7 +23,7 @@ if ~isempty(index_event)
     if index_event == 4*P.num_points + 1
         warning("Maximum execution time allowed (" + num2str(options.max_time) + "s) was reached")
     else
-        warning("Number density became less than 0 at t = " + num2str(time_event))
+        warning("Number density became less than 0 at t = " + num2str(time_event(1)))
     end
 end
 

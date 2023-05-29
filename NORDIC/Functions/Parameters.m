@@ -474,7 +474,7 @@ switch name
         P.phih = 1.16;
         P.phie = 1.27;
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e18, 1e18, 0, 0];
+        P.n_start = [1e18, 1e18, 1e2, 1e2];
         P.Ndeep = ones(P.num_points,2) .* [6.2e20, 6.2e20];
         
         % Fixed parameters not depending on the electric field 
@@ -516,7 +516,7 @@ switch name
         P.phih = 1.2;
         P.phie = 1.2;
         P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [3e19, 3e19, 0, 0];
+        P.n_start = [3e19, 3e19, 1e2, 1e2];
         P.Ndeep = ones(P.num_points,2) .* [1e21, 1e21];
         
         % Fixed parameters not depending on the electric field 

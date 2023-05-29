@@ -5,6 +5,16 @@ function [default_options] = DefaultOptions()
 % OUTPUT
 % default_options -> structure containing the default options for the
 % simulation
+% flagMu = 0; [0 / 1]
+% flagB = 0;  [0 / 1]
+% flagD = 0;  [0 / 1]
+% flagS = 0;  [0 / 1]
+% flux_scheme = "Upwind"; ["Upwind" / "Koren"]
+% injection = "Schottky"; ["Schottky" / "Fixed"]
+% source = "On"; ["On" / "Off"]
+% max_time = 2;
+% display = "Off"; ["On" / "Off"]
+% ODE_options = odeset('Stats','off');
 
 default_options.flagMu = 0;
 default_options.flagB = 0;
