@@ -1,4 +1,4 @@
-%% BEST FIT DOEDENS PS
+%% BEST FIT LE_ROY/DOEDENS PS
 clearvars, clc, close all
 MY_START()
 
@@ -400,6 +400,7 @@ time_instants = [0, logspace(0, 5, 99)];
 
 % specifying the options for the simulation
 [options] = DefaultOptions();
+options.max_time = 3;
 
 phi_values = [1.3, 1.32, 1.34, 1.36];
 linestyles = ["-", "--", ":", "-."];
@@ -413,7 +414,7 @@ end
 
 for i = 1:4
     eval("graph" + num2str(i) + ".LineWidth = 2;")
-    name = "{\it ϕ} = " + num2str(phi_values(i));
+    name = "{\it w} = " + num2str(phi_values(i) + " eV");
     eval("graph" + num2str(i) + ".DisplayName = name;")
     eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
 end
@@ -482,7 +483,7 @@ end
 % Settings for the various graphs
 for i = 1:length(mu_values)
     eval("graph" + num2str(i) + ".LineWidth = 2;")
-    name = "{\it μ} = " + num2str(mu_values(i));
+    name = "{\it \mu} = 1 \cdot 10^{" + num2str(floor(log10(mu_values(i))) + "} m^2V^{-1}s^{-1}");
     eval("graph" + num2str(i) + ".DisplayName = name;")
     eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
 end
@@ -500,7 +501,7 @@ ylabel('current density (A m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 
 % Saving to .eps format
-exportgraphics(fig1, 'data\PaperEEEICfigures\mu.eps')
+% exportgraphics(fig1, 'data\PaperEEEICfigures\mu.eps')
 
 rmpath('Functions\')
 
@@ -527,7 +528,7 @@ end
 % Settings for the various graphs
 for i = 1:length(n0_values)
     eval("graph" + num2str(i) + ".LineWidth = 2;")
-    name = "{\it n^0_\mu} = " + num2str(n0_values(i));
+    name = "{\it n^0_{\mu}} = 1 \cdot 10^{" + num2str(floor(log10(n0_values(i))) + "} m^{-3}");
     eval("graph" + num2str(i) + ".DisplayName = name;")
     eval("graph" + num2str(i) + ".LineStyle = linestyles("+ num2str(i) +");")
 end
@@ -545,7 +546,7 @@ ylabel('current density (A m^-^2)')
 set(gca,'Xscale','log', 'Yscale','log', 'FontSize',15)
 
 % Saving to .eps format
-exportgraphics(fig1, 'data\PaperEEEICfigures\n0.eps')
+% exportgraphics(fig1, 'data\PaperEEEICfigures\n0.eps')
 
 rmpath('Functions\')
 

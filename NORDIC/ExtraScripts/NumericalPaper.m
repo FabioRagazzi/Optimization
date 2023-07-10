@@ -5,8 +5,8 @@ addpath('Functions\')
 fig1 = figure();
 ax1 = axes(fig1);
 
-% load("data\explicit_cfl_1_Le_Roy") % 8 seconds
-load("data\explicit_cfl_01_Le_Roy") % 80 seconds
+load("data\explicit_cfl_1_Le_Roy") % 8 seconds
+% load("data\explicit_cfl_01_Le_Roy") % 80 seconds
 loglog(ax1, time_instants, J_dDdt_mean, 'LineWidth',2, 'LineStyle','-', 'DisplayName','Explicit')
 
 hold on
@@ -30,6 +30,8 @@ ylabel('current density ($\frac{A}{m^2}$)', 'Interpreter','latex')
 legend('Interpreter','latex')
 xticks(10.^[0 1 2 3 4 5])
 set(gca, 'FontSize', 15)
+
+% exportgraphics(fig1, 'data\PaperNumericalFigures\EXP_ODE_SEMI.eps')
 
 %% FULL EXPLICIT VS ODE (FIGURE)
 clearvars, clc, close all

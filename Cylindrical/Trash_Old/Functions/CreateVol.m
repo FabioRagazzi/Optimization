@@ -3,8 +3,10 @@ function [Vol] = CreateVol(deltas)
 % INPUT
 % deltas -> spacing between the domain points
 % OUTPUT
-% V -> volumes of the cells (column vector)
+% Vol -> volumes of the cells (column vector)
+arguments
+    deltas (1,:) {mustBeNumeric}
+end
 Vol = (deltas(2:end-2) + deltas(3:end-1)) / 2;
 Vol = [deltas(1) + deltas(2)/2; Vol'; deltas(end) + deltas(end-1)/2];
 end
-
