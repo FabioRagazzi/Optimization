@@ -27,4 +27,6 @@ P.mult_B = P.Pt .* P.Ndeep .* P.At;
 % P.add_D = P.v * exp(-P.w_tr * P.Boltz_num);
 P.mult_S = P.Pr * P.e / P.eps;
 
+P.Tstruct.matrix = P.Tstruct.matrix + P.abs0;
+
 end

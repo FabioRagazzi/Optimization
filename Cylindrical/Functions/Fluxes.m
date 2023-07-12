@@ -13,8 +13,8 @@ Grad_n = (n(2:end,:) - n(1:end-1,:)) ./ geo.dx(2:end-1);
 Gamma_interfaces(2:end-1,:) = -D(2:end-1,:).*Grad_n + n(1:end-1,:).*Umax(2:end-1,:) + n(2:end,:).*umin(2:end-1,:);
 
 % Assigning the border conditions for charge injection
-Gamma_interfaces(1,2) = Inj_e; % West electrons
-Gamma_interfaces(end,1) = -Inj_h; % Est holes 
+Gamma_interfaces(1,1) = Inj_h; % West holes
+Gamma_interfaces(end,2) = -Inj_e; % Est electrons
 
 Gamma_interfaces = Gamma_interfaces .* geo.S;
 Gamma_close = (Gamma_interfaces(2:end, :) - Gamma_interfaces(1:end-1, :)) ./ geo.V;

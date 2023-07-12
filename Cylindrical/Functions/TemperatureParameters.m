@@ -9,7 +9,7 @@ P.v = P.kBT / P.h;
 P.Boltz_num_int = P.e ./ P.kBT_int;
 P.Boltz_num = P.e ./ P.kBT;
 
-P.aT2exp = P.a * T_int([1,end]).^2 .* [P.lambda_e; P.lambda_h] .* exp(-[P.phie; P.phih] .* P.Boltz_num_int([1,end])); 
+P.aT2exp = P.a * T_int([end,1]).^2 .* [P.lambda_e; P.lambda_h] .* exp(-[P.phie; P.phih] .* P.Boltz_num_int([end,1])); 
 
 P.ext_mult_sinh = 2 * P.v_int * P.a_int .* exp(-P.w_hop .* P.Boltz_num_int);
 P.arg_sinh = P.e * P.a_sh ./ (2 * P.kBT_int);
