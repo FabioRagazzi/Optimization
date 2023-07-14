@@ -4,11 +4,71 @@ function [P] = Parameters(name)
 % name -> string ("...") containing the identifier for the parameters
 % OUTPUT
 % P -> structure containing the simulation parameters
-if ~ exist('name','var')
-    name = "DEFAULT";
+arguments
+    name char {mustBeMember(name,{ ...
+        'TRUE_LE_ROY', ...
+        'BEST_FIT_SERI', ...
+        'BEST_FIT_SERI_MOB_E', ...
+        'BEST_FIT_SERI_MOB_E_PS', ...
+        'BEST_FIT_SERI_MOB_&_B_E', ...
+        'BEST_FIT_SERI_MOB_&_B_&_D_E', ...
+        'BEST_FIT_SERI_MOB_&_B_&_D_&_S_E', ...
+        'FULL_NORDIC_FIT_WITH_PS', ...
+        'FULL_NORDIC_FIT_WITH_PS2', ...
+        'FULL_NORDIC_FIT_WITH_TRRA', ...
+        'LE_ROY', ...
+        'EEEIC_FIT_1', ...
+        'EEEIC_POSSIBLE_FIT_2', ...
+        'EEEIC_FIT_2', ...
+        'NORDIC_STANDARD', ...
+        'RECTANGLE', ...
+        'VERY_LONG', ...
+        'VERY_VERY_LONG'})}
 end
 
 switch name
+    case "TRUE_LE_ROY"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 4e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 293.15;
+        P.eps_r = 2.3;
+
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = P.L * 1e7;
+        P.phih = 1.16;
+        P.phie = 1.27;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [1e18, 1e18, 1e2, 1e2];
+        P.Ndeep = ones(P.num_points,2) .* [6.2e20, 6.2e20];
+        
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 2e-13;
+        P.mu_e = 1e-14;
+        P.Bh = 2e-1;
+        P.Be = 1e-1;
+        P.wh = 0.99;
+        P.we = 0.96;
+        P.S0 = 6.4e-22;
+        P.S1 = 6.4e-22;
+        P.S2 = 6.4e-22;
+        P.S3 = 0;
+
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
     case "BEST_FIT_SERI"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
@@ -801,47 +861,11 @@ switch name
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-    otherwise
-        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
-        % Geometry
-        P.L = 4e-4;
-        P.num_points = 100;
-        P.LW = 0;
-        P.LE = 0;
-        P.nW = 0;
-        P.nE = 0;
-        % Material
-        P.T = 293.15;
-        P.eps_r = 2;
-
-        % PARAMETERS THAT CAN BE USED FOR A FIT
-        % Essential Parameters
-        P.Phi_W = 0;
-        P.Phi_E = 4e3;
-        P.phih = 1.16;
-        P.phie = 1.27;
-        P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e18, 1e18, 0, 0];
-        P.Ndeep = ones(P.num_points,2) .* [6.2e20, 6.2e20];
-        
-        % Fixed parameters not depending on the electric field 
-        P.mu_h = 2e-13;
-        P.mu_e = 1e-14;
-        P.Bh = 2e-1;
-        P.Be = 1e-1;
-        P.Dh = 3e-5;
-        P.De = 3e-5;
-        P.S0 = 6.4e-1;
-        P.S1 = 6.4e-1;
-        P.S2 = 6.4e-1;
-        P.S3 = 6.4e-1;
-
-        % Set all Nordic parameters to 1
-        P = CompleteFixedParameters(P);
-
 end
+
 % Complete P
 P = PhysicsConstants(P);
 P = DerivedParameters(P);
 P = CompleteP(P);
+
 end

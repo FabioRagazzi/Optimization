@@ -846,6 +846,12 @@ Se metto Ndeep = 1e20 (valore più fisico) i risultati si sballano
 ## 16/5/2023
 Trovato errore, non facevo il valore assoluto di u_center quando calcolavo B nel caso di dipendenza dal campo elettrico. Sembra avere poco effetto sui risultati
 
+## 14/7/2023
+![](figs/2023_07_14/Non_Symmetric_Le_Roy.png)
+| phih | phie | Bh | Be | Dh | De | S0 | S1 | S2 | S3 | n_start(1) | n_start(2) | Ndeep(:,1) | Ndeep(:,2) | mu_h | mu_e |
+|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
+|1.2808 | 1.4399 |  -0.5254  | -0.2785  | -2.4599  | -2.7720 | -23.3086 | -23.6261 | -21.4426 | -20.1760  | 18.8446  | 19.4178 |  22.2478  | 22.1477 | -12.0583 | -13.2801|
+
 &nbsp;  
 
 &nbsp;  

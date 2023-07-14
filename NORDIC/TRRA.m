@@ -8,9 +8,9 @@ load('data\Data_Seri.mat');
 P = Parameters("BEST_FIT_SERI");
 
 % specyfing the parameters to fit
-[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("FULL_NORDIC_NARROW");
+[names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP("FULL_CLASSIC");
 
-Num_swipes = 10;
+Num_swipes = 1;
 if Num_swipes > 1
     delta_bounds = (ub - lb) / (Num_swipes-1);
 end
@@ -25,10 +25,10 @@ OPT_options.UseParallel = true;
 
 % specifying the options for the simulation
 options = DefaultOptions();
-options.flagMu = 1;
-options.flagB = 1;
-options.flagD = 1;
-options.flagS = 1;
+% options.flagMu = 1;
+% options.flagB = 1;
+% options.flagD = 1;
+% options.flagS = 1;
 
 % defining the objective function
 func = @(x)ObjectiveFunctionJ("TRRA", x, tags, names, exp_lin_flags, equals, P, time_instants, Jobjective, options);

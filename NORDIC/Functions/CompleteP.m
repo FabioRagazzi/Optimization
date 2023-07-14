@@ -15,6 +15,8 @@ P.mult_D = 2 * P.v * exp(-P.w_tr_hop * P.Boltz_num);
 P.add_D = P.v * exp(-P.w_tr * P.Boltz_num);
 P.mult_S = P.Pr * P.e / P.eps;
 % This part is needed only for fixed parameters (not depending on E)
+P.Dh = P.v * exp(-P.wh * P.Boltz_num);
+P.De = P.v * exp(-P.we * P.Boltz_num);
 P.D_h = P.mu_h * P.kBT / P.e;
 P.D_e = P.mu_e * P.kBT / P.e;
 end

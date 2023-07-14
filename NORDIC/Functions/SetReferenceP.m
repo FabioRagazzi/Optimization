@@ -9,11 +9,88 @@ function [names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP(switch_var
 % equals -> cell array to set parameters that needs to be equal
 % lb -> lower bounds
 % ub -> upper bounds
-if ~ exist('switch_var','var')
-    switch_var = "DEFAULT";
+arguments
+    switch_var char {mustBeMember(switch_var,{ ...
+        'FULL_CLASSIC_NARROW_1%', ...
+        'FULL_CLASSIC_NARROW_10%', ...
+        'FULL_CLASSIC', ...
+        'CLASSIC', ...
+        'CLASSIC_NARROW_RANGE', ...
+        'MOB_E', ...
+        'ONLY_MOB_E', ...
+        'ONLY_MOB_E_FULL', ...
+        'ONLY_B_E', ...
+        'ONLY_D_E', ...
+        'ONLY_S_E', ...
+        'FULL_NORDIC', ...
+        'FULL_NORDIC_NARROW', ...
+        'FULL_NORDIC_REALLY_NARROW'})}
 end
 
 switch switch_var
+    case "FULL_CLASSIC_NARROW_1%"
+        names = ["phih", "phie", "Bh", "Be", "Dh", "De", "S0", "S1", "S2", "S3",...
+                "n_start(1)", "n_start(2)", "Ndeep(:,1)", "Ndeep(:,2)", "mu_h", "mu_e"]; 
+        tags = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+        exp_lin_flags = logical([0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+        equals = {};
+        good_parameters = [1.3090, -0.4318, -1.4241, -21.6542, -21.6542, 19.4116, 24.0893, -12.9162];
+        lb = zeros(1, size(good_parameters,2)*2);
+        ub = zeros(1, size(good_parameters,2)*2);
+        delta_good_parameters = 0.01 * abs(good_parameters);
+        lb(1:2:end) = good_parameters - delta_good_parameters;
+        lb(2:2:end) = good_parameters - delta_good_parameters;
+        ub(1:2:end) = good_parameters + delta_good_parameters;
+        ub(2:2:end) = good_parameters + delta_good_parameters;
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+    case "FULL_CLASSIC_NARROW_10%"
+        names = ["phih", "phie", "Bh", "Be", "Dh", "De", "S0", "S1", "S2", "S3",...
+                "n_start(1)", "n_start(2)", "Ndeep(:,1)", "Ndeep(:,2)", "mu_h", "mu_e"]; 
+        tags = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+        exp_lin_flags = logical([0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+        equals = {};
+        good_parameters = [1.3090, -0.4318, -1.4241, -21.6542, -21.6542, 19.4116, 24.0893, -12.9162];
+        lb = zeros(1, size(good_parameters,2)*2);
+        ub = zeros(1, size(good_parameters,2)*2);
+        delta_good_parameters = 0.1 * abs(good_parameters);
+        lb(1:2:end) = good_parameters - delta_good_parameters;
+        lb(2:2:end) = good_parameters - delta_good_parameters;
+        ub(1:2:end) = good_parameters + delta_good_parameters;
+        ub(2:2:end) = good_parameters + delta_good_parameters;
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+    case "FULL_CLASSIC"
+        names = ["phih", "phie", "Bh", "Be", "Dh", "De", "S0", "S1", "S2", "S3",...
+                "n_start(1)", "n_start(2)", "Ndeep(:,1)", "Ndeep(:,2)", "mu_h", "mu_e"]; 
+        tags = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+        exp_lin_flags = logical([0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+        equals = {};
+        good_parameters = [1.3090, -0.4318, -1.4241, -21.6542, -21.6542, 19.4116, 24.0893, -12.9162];
+        lb = zeros(1, size(good_parameters,2)*2);
+        ub = zeros(1, size(good_parameters,2)*2);
+        delta_good_parameters = ones(1, size(good_parameters,2)) * 2;
+        delta_good_parameters(1) = 0.1 * abs(good_parameters(1));
+        lb(1:2:end) = good_parameters - delta_good_parameters;
+        lb(2:2:end) = good_parameters - delta_good_parameters;
+        ub(1:2:end) = good_parameters + delta_good_parameters;
+        ub(2:2:end) = good_parameters + delta_good_parameters;
+
+%         xv = [1.2808    1.4399   -0.5254   -0.2785   -2.4599   -2.7720  -23.3086  -23.6261  -21.4426  -20.1760   18.8446   19.4178   22.2478   22.1477  -12.0583  -13.2801];
+
+%         lb = [1.0,  1.0, -5, -5, -5, -5, -24, -24, -24, -24, 18, 18, 19, 19, -15, -15];
+%         ub = [1.5,  1.5,  0,  0,  0,  0, -18, -18, -18, -18, 24, 24, 21, 21, -12, -12];
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
     case "CLASSIC"
         names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "Ndeep(:,1)", "mu_h"]; 
         tags = [1, 2, 3, 4, 5, 6, 7];
@@ -179,15 +256,7 @@ switch switch_var
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-    otherwise
-        names = ["phih", "Bh", "Dh", "S0", "n_start(1)", "Ndeep(:,1)", "mu_h"]; 
-        tags = [1, 2, 3, 4, 5, 6, 7];
-        exp_lin_flags = logical([0, 1, 1, 1, 1, 1, 1]);
-        equals = {{"phie",1}, {"Be",2}, {"De",3}, ...
-                  {"S1",4}, {"S2",4}, {"S3",4}....
-                  {"n_start(2)",5}, {"Ndeep(:,2)",6}, {"mu_e",7}};
-        lb = [1.0,  -5,  -5,  -24,  18,  19, -15];
-        ub = [1.5,   3,   3,  -18,  24,  26, -12];
-end
+
 end
 
+end
