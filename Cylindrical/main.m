@@ -8,7 +8,7 @@ time_instants = [0, logspace(0,5,59)];
 addpath("Functions\")
 clearvars, clc, close all
 % time_instants = [0, logspace(-5,log10(3660*24), 200)];
-time_instants = linspace(0, 3600*24, (3600*24)/(60*5)+1);
+time_instants = linspace(0, 3600*24, (3600*24)/(1)+1);
 [out] = Run("CONFRONTO_BASSEL", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
 
 %% PLOT N
@@ -34,15 +34,29 @@ ylabel('E (V/m)')
 set(gca, 'FontSize', 15)
 
 %% PLOT ALL N
-semilogy(out.P.geo.x, out.ne(:,13), 'DisplayName','ne', 'LineWidth',2)
+index_plot = 61;
+semilogy(out.P.geo.x, out.ne(:,index_plot), 'DisplayName','ne', 'LineWidth',2)
 hold on
-semilogy(out.P.geo.x, out.nh(:,13), 'DisplayName','nh', 'LineWidth',2)
-semilogy(out.P.geo.x, out.net(:,13), 'DisplayName','net', 'LineWidth',2)
-semilogy(out.P.geo.x, out.nht(:,13), 'DisplayName','nht', 'LineWidth',2)
+semilogy(out.P.geo.x, out.nh(:,index_plot), 'DisplayName','nh', 'LineWidth',2)
+semilogy(out.P.geo.x, out.net(:,index_plot), 'DisplayName','net', 'LineWidth',2)
+semilogy(out.P.geo.x, out.nht(:,index_plot), 'DisplayName','nht', 'LineWidth',2)
 legend('Location','south','NumColumns',2)
 xlabel('r (m)')
 ylabel('n (m^-^3)')
 title('Number density at t = 1h')
+set(gca, 'FontSize', 15)
+
+%% PLOT ALL RHO
+index_plot = 601;
+semilogy(out.P.geo.x, out.P.e * out.ne(:,index_plot), 'DisplayName','ne', 'LineWidth',2)
+hold on
+semilogy(out.P.geo.x, out.P.e * out.nh(:,index_plot), 'DisplayName','nh', 'LineWidth',2)
+semilogy(out.P.geo.x, out.P.e * out.net(:,index_plot), 'DisplayName','net', 'LineWidth',2)
+semilogy(out.P.geo.x, out.P.e * out.nht(:,index_plot), 'DisplayName','nht', 'LineWidth',2)
+legend('Location','south','NumColumns',2)
+xlabel('r (m)')
+ylabel('n (m^-^3)')
+title('Charge density at t = 10m')
 set(gca, 'FontSize', 15)
 
 %% PLOT T

@@ -50,14 +50,14 @@ switch parameters
         P.Pr = 1;
 
     case "CONFRONTO_BASSEL"
-        P.geo = CreateGeometry1D(24e-3, CreateDeltas(0, 0, 0, 0, 100, 18e-3), options);
-        P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 70, 55);
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 25, 17.9e-3), options);
+        P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 68.0877, 55.7619);
         P.eps_r = 2.3;
         P.Phi_W = 320e3;
         P.Phi_E = 0;
         P.phih = 1.27;
         P.phie = 1.3;
-        P.n_start = [1, 1, 1, 1] * 1e2;
+        P.n_start = [1, 1, 1, 1] * 0;
         P.Ndeep = ones(P.geo.np, 2) .* [6.2415e+20, 6.2415e+20]; 
         P.lambda_e = 1;
         P.lambda_h = 1; 
