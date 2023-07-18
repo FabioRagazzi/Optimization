@@ -63,3 +63,87 @@ set(gca, 'FontSize', 15)
 [x,t] = meshgrid(out.P.Tstruct.time/3600, out.P.geo.x_int); 
 surf(x, t, out.P.Tstruct.matrix-out.P.abs0)
 
+%% PLOT E HOUR
+plot(out.P.geo.x_int, out.E(:,1), 'LineWidth',2, 'DisplayName','t = 0h')
+hold on
+for i = 1:6
+    plot(out.P.geo.x_int, out.E(:,3600*i+1), 'LineWidth',2, 'DisplayName',"t = "+ num2str(i) +"h") 
+end
+% plot(out.P.geo.x_int, out.E(:,end), 'k.', 'MarkerSize',20, 'LineWidth',2, 'DisplayName','t = 24h')
+legend('Location','south','NumColumns',2)
+grid on
+xlabel('r (m)')
+ylabel('E (V/m)')
+set(gca, 'FontSize', 15)
+
+
+
+
+
+
+%% BASSEL 20
+addpath("Functions\")
+clearvars, clc, close all
+time_instants = linspace(0, 3600*24, 3600*24+1);
+[out] = Run("BASSEL_20", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+
+%% BASSEL 70
+addpath("Functions\")
+clearvars, clc, close all
+time_instants = linspace(0, 3600*24, 3600*24+1);
+[out] = Run("BASSEL_70", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+
+%% BASSEL 70 55
+addpath("Functions\")
+clearvars, clc, close all
+time_instants = linspace(0, 3600*24, 3600*24+1);
+[out] = Run("BASSEL_70_55", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+
+%% PLOT ELECTRIC FIELD AT CONVENTIONAL INSTANTS
+conventional_times = [1, [1,5,10,20,30]*60, (1:24)*3600];
+fig1 = figure();
+ax1 = axes(fig1);
+hold on
+for i = 1:length(conventional_times)
+    plot(ax1, out.P.geo.x_int, out.E(:,conventional_times(i)+1), 'LineWidth',1,...
+        'DisplayName',"t = "+ SecondsToString(conventional_times(i))) 
+end
+legend('Location','south','NumColumns',2)
+grid on
+xlabel('r (m)')
+ylabel('E (V/m)')
+set(gca, 'FontSize', 15)
+
+%% CREATE CONVENTIONAL ELECTRIC FIELD STRUCT
+conventional_times = [1, [1,5,10,20,30]*60, (1:24)*3600];
+struct.x = out.P.geo.x_int;
+struct.E = zeros(length(conventional_times), out.P.geo.np+1);
+struct.labels = string(zeros(1, length(conventional_times)));
+for i = 1:length(conventional_times)
+    struct.E(i,:) = out.E(:,conventional_times(i)+1)';
+    struct.labels(i) = SecondsToString(conventional_times(i));
+end
+
+%% CREATE CONVENTIONAL CHARGE DENSITY STRUCT
+conventional_times = [1, [1,5,10,20,30]*60, (1:24)*3600];
+struct.x = out.P.geo.x;
+struct.rho_e = zeros(length(conventional_times), out.P.geo.np);
+struct.rho_h = zeros(length(conventional_times), out.P.geo.np);
+struct.rho_et = zeros(length(conventional_times), out.P.geo.np);
+struct.rho_ht = zeros(length(conventional_times), out.P.geo.np);
+struct.labels = string(zeros(1, length(conventional_times)));
+for i = 1:length(conventional_times)
+    struct.rho_e(i,:) = out.ne(:,conventional_times(i)+1)';
+    struct.rho_h(i,:) = out.nh(:,conventional_times(i)+1)';
+    struct.rho_et(i,:) = out.net(:,conventional_times(i)+1)';
+    struct.rho_ht(i,:) = out.nht(:,conventional_times(i)+1)';
+    struct.labels(i) = SecondsToString(conventional_times(i));
+end
+
+struct.rho_e = struct.rho_e * out.P.e;
+struct.rho_h = struct.rho_h * out.P.e;
+struct.rho_et = struct.rho_et * out.P.e;
+struct.rho_ht = struct.rho_ht * out.P.e;
+
+% semilogy(struct.x, struct.rho_e)
+% i = 2; semilogy(struct.x, [struct.rho_e(i,:); struct.rho_h(i,:); struct.rho_et(i,:); struct.rho_ht(i,:)]')
