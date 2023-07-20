@@ -9,6 +9,11 @@ DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", xv)
 
 
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
 %% LE ROY SYMMETRIC PS
 [xv, output] = MY_PS("TRUE_LE_ROY", "TRUE_CLASSIC");
 % 9370 s
@@ -17,6 +22,11 @@ DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", xv)
 xv = [0.985584840519110,-3.51829804276860,1.22735925525313,-20.0834363570646,...	
       20.0050440290858,21.8356502131041,-12.9837477717737];
 DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", xv)
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 
 
@@ -33,6 +43,11 @@ DispFitResults("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", xv)
 
 
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
 %% LE ROY NON SYMMETRIC PS
 [xv, output] = MY_PS("TRUE_LE_ROY", "FULL_TRUE_CLASSIC");
 % 22103
@@ -43,6 +58,11 @@ xv = [1.02527804627667,1.11383993536304,-1.83893085373972,-2.64948915797569,1.38
   	  18.8147853517462,18.2456474781861,22.5228209183392,22.2628264362716,-12.5308547365440,...
       -11.0000000057027];
 DispFitResults("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", xv)
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 
 
@@ -58,8 +78,26 @@ DispFitResults("NORDIC_START_FIT", "FULL_NORDIC", xv, "Doedens")
 
 
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
 %% DOEDENS SYMMETRIC PS
 [xv, output] = MY_PS("NORDIC_START_FIT", "FULL_NORDIC", "Doedens");
+% 2721
+
+%% DOEDENS SYMMETRIC PS RESULT
+xv = [-8.99979933650981,0.500056989437757,-9.07872469235397,0.538349179975172,25.9739700157571,...
+      21.9976139812332,0.801975306264041,0.847956795556850,-24.9983837578946,19.3275963521225,...
+  	  1.10000000000000,0.500001275595050];
+DispFitResults("NORDIC_START_FIT", "FULL_NORDIC", xv, "Doedens")
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
 
 
 %% DOEDENS NON SYMMETRIC TRRA
@@ -70,8 +108,27 @@ DispFitResults("NORDIC_START_FIT", "FULL_NORDIC", xv, "Doedens")
 
 
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
 %% DOEDENS NON SYMMETRIC PS
 [xv, output] = MY_PS("NORDIC_START_FIT", "FULL_NORDIC_NON_SYMMETRIC", "Doedens");
+% 30737
+
+%% DOEDENS NON SYMMETRIC PS RESULT
+xv = [-6.31644936554235,-5.00027975810908,0.676823289934431,0.675910728186360,-9.59768333050806,...
+      -9.44471059028319,0.690529581299641,0.685030512407795,25.8416619094333,23.5553326472779,...	
+      21.8521206326506,21.9337672066199,1.16306094816778,1.20000000000000,1.19899603917177,...
+      0.834802345055576,-25,-24.9249505394296,-24.9997395580170,-25,19.2210983828365,19.0000004248512,...
+  	  1.10000000198334,1.10000006742579,0.500000000157463];
+DispFitResults("NORDIC_START_FIT", "FULL_NORDIC_NON_SYMMETRIC", xv, "Doedens")
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 
 
@@ -125,6 +182,9 @@ function [] = DispFitResults(param_string, reference_string, xv, type)
     [out] = RunODEUpdating(xv, tags, names, exp_lin_flags, equals, P, time_instants, options);
     fitness_value = norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) );
     PlotFitResult(out, Jobjective, time_instants);
+    format long
+    disp(fitness_value)
+    format short
     title(num2str(fitness_value))
 end
 
