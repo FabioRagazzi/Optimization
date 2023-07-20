@@ -1,11 +1,45 @@
+%% FITTING PP SERI
+% [xv, output] = MY_TRRA("START_PP_SERI", "TRUE_CLASSIC", "Data_PP", 10);
+[xv, output] = MY_PS("START_PP_SERI", "TRUE_CLASSIC", "Data_PP");
+
+%% FITTING PP SERI RESULT
+xv = [1.26918057560840,-1.36941496730563,1.33647119469998,-18.7068570711036,18.3037404982900,...
+      21.2505579354235,-11];
+DispFitResults("START_PP_SERI", "TRUE_CLASSIC", "Data_PP", xv)
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
+%% FITTING XLPE SERI
+[xv, output] = MY_PS("START_XLPE_SERI", "FULL_NORDIC_NON_SYMMETRIC", "Data_XLPE", "Doedens");
+
+%% FITTING XLPE SERI RESULT
+xv = [-6.21924476161837,-6.45362642202462,0.793005259372378,0.878473385454713,-8.34201379366606,...
+      -8.13875222009366,0.535026075456034,0.632437777592963,22.7082806634559,22.8944035055223,...
+      18.7767002481071,20.5756271490805,1.06054030298891,1.10689574343425,0.951555269494678,...	
+      0.928049113481009,-22.0130681703340,-20.7137106683941,-23.9915325709671,-18.4923739338282,...	
+      19.4790458463077,19.2088790577598,1.26693178239417,1.19079262543002,0.921724358603225];
+DispFitResults("START_XLPE_SERI", "FULL_NORDIC_NON_SYMMETRIC", "Data_XLPE", xv, "Doedens")
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
 %% LE ROY SYMMETRIC TRRA
-[xv, output] = MY_TRRA("TRUE_LE_ROY", "TRUE_CLASSIC", 10);
+[xv, output] = MY_TRRA("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", 10);
 % 420 s
 
 %% LE ROY SYMMETRIC TRRA RESULT
 xv = [1.14466152869048,-0.205394026303417,0.852727895646774,-22.9032974939108,...
     19.5520981621147,19.6625441200987,-12.5504216616092];
-DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", xv)
+DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", xv)
 
 
 
@@ -161,15 +195,16 @@ function [fig] = PlotFitResult(out, fit_objective, time_objective)
     set(gca,'TickLabelInterpreter','latex', 'Xscale','log', 'Yscale','log', 'FontSize',15)
 end
 
-function [] = DispFitResults(param_string, reference_string, xv, type)
+function [] = DispFitResults(param_string, reference_string, data_string, xv, type)
     arguments
         param_string
         reference_string
+        data_string
         xv
         type char {mustBeMember(type,{'Doedens','LeRoy'})} = 'LeRoy'
     end
     MY_START()
-    load('data\Data_Seri.mat');
+    load("data\" + data_string + ".mat");
     P = Parameters(param_string);
     [names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP(reference_string);
     options = DefaultOptions();
@@ -188,15 +223,16 @@ function [] = DispFitResults(param_string, reference_string, xv, type)
     title(num2str(fitness_value))
 end
 
-function [xv, output] = MY_TRRA(param_string, reference_string, Num_swipes, type)
+function [xv, output] = MY_TRRA(param_string, reference_string, data_string, Num_swipes, type)
     arguments
         param_string
         reference_string
+        data_string
         Num_swipes
         type char {mustBeMember(type,{'Doedens','LeRoy'})} = 'LeRoy'
     end
     MY_START()
-    load('data\Data_Seri.mat');
+    load("data\" + data_string + ".mat");
     P = Parameters(param_string);
     [names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP(reference_string);
     options = DefaultOptions();
@@ -247,14 +283,15 @@ function [xv, output] = MY_TRRA(param_string, reference_string, Num_swipes, type
     end
 end
 
-function [xv, output] = MY_PS(param_string, reference_string, type)
+function [xv, output] = MY_PS(param_string, reference_string, data_string, type)
     arguments
         param_string
         reference_string
+        data_string
         type char {mustBeMember(type,{'Doedens','LeRoy'})} = 'LeRoy'
     end
     MY_START()
-    load('data\Data_Seri.mat');
+    load("data\" + data_string + ".mat");
     P = Parameters(param_string);
     [names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP(reference_string);
     options = DefaultOptions();
@@ -273,7 +310,7 @@ function [xv, output] = MY_PS(param_string, reference_string, type)
     OPT_options.MaxStallIterations = 20; % 20
     OPT_options.UseParallel = true;
     
-    rng default
+%     rng default
     func = @(x) ObjectiveFunctionJ("PS", x, tags, names, exp_lin_flags, ...
                                    equals, P, time_instants, Jobjective, options);
     
