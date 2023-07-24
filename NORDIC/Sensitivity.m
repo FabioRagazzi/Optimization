@@ -7,6 +7,8 @@ fig1 = SensitivityAnalysis(mult_values, ["phih", "phie"], 10.^[0, 3]);
 exportgraphics(fig1, export_path_png() + "phi.png");
 exportgraphics(fig1, export_path_eps() + "phi.eps");
 
+
+
 %% MU
 MY_START()
 mult_values = [0.25, 0.5, 1, 2, 4];
@@ -15,6 +17,8 @@ fig1 = SensitivityAnalysis(mult_values, ["mu_h", "mu_e"], 10.^[0, 5]);
 %% EXPORT MU
 exportgraphics(fig1, export_path_png() + "mu.png");
 exportgraphics(fig1, export_path_eps() + "mu.eps");
+
+
 
 %% N0
 MY_START()
@@ -25,6 +29,19 @@ fig1 = SensitivityAnalysis(mult_values, ["n_start(1)", "n_start(2)"], 10.^[0, 5]
 exportgraphics(fig1, export_path_png() + "n0.png");
 exportgraphics(fig1, export_path_eps() + "n0.eps");
 
+
+
+%% BIG N
+MY_START()
+mult_values = [1e-2, 3e-2, 1, 1e-1, 100];
+fig1 = SensitivityAnalysis(mult_values, ["Ndeep(:,1)", "Ndeep(:,1)"], 10.^[0, 5], "order",[1,2,4,3,5]);
+
+%% EXPORT BIG N
+exportgraphics(fig1, export_path_png() + "N.png");
+exportgraphics(fig1, export_path_eps() + "N.eps");
+
+    
+
 %% B
 MY_START()
 mult_values = [0.25, 0.5, 1, 2, 4];
@@ -33,6 +50,8 @@ fig1 = SensitivityAnalysis(mult_values, ["Bh", "Be"], 10.^[0, 5]);
 %% EXPORT B
 exportgraphics(fig1, export_path_png() + "B.png");
 exportgraphics(fig1, export_path_eps() + "B.eps");
+
+
 
 %% D
 MY_START()
@@ -43,6 +62,8 @@ fig1 = SensitivityAnalysis(mult_values, ["wh", "we"], 10.^[0, 5]);
 exportgraphics(fig1, export_path_png() + "D.png");
 exportgraphics(fig1, export_path_eps() + "D.eps");
 
+
+
 %% S
 MY_START()
 mult_values = [0.001, 0.01, 1, 100, 200];
@@ -52,13 +73,18 @@ fig1 = SensitivityAnalysis(mult_values, ["S0", "S1", "S2", "S3"], 10.^[0, 5]);
 exportgraphics(fig1, export_path_png() + "S.png");
 exportgraphics(fig1, export_path_eps() + "S.eps");
 
+
+
 %%
-function [fig] = SensitivityAnalysis(mult_values, strings, x_lim, y_lim)
+function [fig] = SensitivityAnalysis(mult_values, strings, x_lim, optional)
     arguments
         mult_values
         strings
         x_lim
-        y_lim {mustBeNumeric} = 1
+        optional.y_lim {mustBeNumeric} = 1
+        optional.linestyles = ["-", "--", "none", ":", "-."]
+        optional.markerstyles = ["none", "none", ".", "none", "none"]
+        optional.order = [1,2,3,4,5]
     end
     
     Ref = ReferenceParameters();
@@ -66,8 +92,11 @@ function [fig] = SensitivityAnalysis(mult_values, strings, x_lim, y_lim)
 
     time_instants = [0, logspace(0,5,59)];
     [options] = DefaultOptions(); options.max_time = 10;
-    linestyles = ["-", "--", "none", ":", "-."];
-    markerstyles = ["none", "none", ".", "none", "none"];
+    linestyles = optional.linestyles;
+    markerstyles = optional.markerstyles;
+    order = optional.order;
+
+    y_lim = optional.y_lim;
     
     for i = 1:length(mult_values)
         for s = 1:length(strings)
@@ -84,13 +113,14 @@ function [fig] = SensitivityAnalysis(mult_values, strings, x_lim, y_lim)
         eval("graph" + num2str(i) + ".Marker = markerstyles("+ num2str(i) +");")
         eval("graph" + num2str(i) + ".MarkerSize = 15;")
     end
-    
+
     fig = figure;
+    GOBJ = gobjects(length(mult_values), 1);
     hold on
     for i = 1:length(mult_values)
-        eval("loglog(out" + num2str(i) + ".tout, out" + num2str(i) + ".J_dDdt, graph" + num2str(i) + ")")
+        eval("GOBJ(" + num2str(i) +") = loglog(out" + num2str(i) + ".tout, out" + num2str(i) + ".J_dDdt, graph" + num2str(i) + ");")
     end
-    legend('Location','northeast', 'Interpreter','latex')
+    legend(GOBJ(order), 'Location','northeast', 'Interpreter','latex')
     grid on
     xticks(10.^(0:1:10))
     yticks(10.^(-10:1:10))

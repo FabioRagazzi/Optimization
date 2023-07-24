@@ -12,10 +12,13 @@ function [values, isterminal, direction] = EventFcn(t, n_state, start_time, max_
 % values = 1;
 
 % comment this to disable event function
-values = [n_state; toc(start_time)<max_time];
+dim = size(n_state,1) + 1;
+values = zeros(dim,1);
+values(1:dim-1) = n_state; 
+values(dim) = toc(start_time)<max_time;
 
 % set all the events to terminal and with zero crossing from both sides
-isterminal = ones(size(values));
-direction = zeros(size(values));
+isterminal = ones(dim,1);
+direction = zeros(dim,1);
 end
 

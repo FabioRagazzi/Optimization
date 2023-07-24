@@ -11,7 +11,8 @@ P = TemperatureParameters(P, T_int, T);
 
 arg_sinh_E = P.arg_sinh .* E;
 mu = P.ext_mult_sinh .* sinh(arg_sinh_E) ./ E;
-mu([1,end],:) = 0; % charge blocking electrodes
+% mu([1,end],:) = 0; % charge blocking electrodes
+% mu(1,:) = 0; % roba strana bassel??
 u = E .* mu .* [1 -1];
 K = P.kBT_int .* mu / P.e;
 % u_center = (u(1:end-1,:) + u(2:end,:)) / 2;

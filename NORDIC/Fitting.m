@@ -15,15 +15,24 @@ DispFitResults("START_PP_SERI", "TRUE_CLASSIC", "Data_PP", xv)
 
 
 %% FITTING XLPE SERI
-[xv, output] = MY_PS("START_XLPE_SERI", "FULL_NORDIC_NON_SYMMETRIC", "Data_XLPE", "Doedens");
+% [xv, output] = MY_PS("START_XLPE_SERI", "FULL_NORDIC_NON_SYMMETRIC_LARGE", "Data_XLPE", "Doedens");
+[xv, output] = MY_PS("START_XLPE_SERI", "FULL_TRUE_CLASSIC", "Data_XLPE", "Doedens");
 
-%% FITTING XLPE SERI RESULT
+%% FITTING XLPE SERI RESULT 1
 xv = [-6.21924476161837,-6.45362642202462,0.793005259372378,0.878473385454713,-8.34201379366606,...
       -8.13875222009366,0.535026075456034,0.632437777592963,22.7082806634559,22.8944035055223,...
       18.7767002481071,20.5756271490805,1.06054030298891,1.10689574343425,0.951555269494678,...	
       0.928049113481009,-22.0130681703340,-20.7137106683941,-23.9915325709671,-18.4923739338282,...	
       19.4790458463077,19.2088790577598,1.26693178239417,1.19079262543002,0.921724358603225];
 DispFitResults("START_XLPE_SERI", "FULL_NORDIC_NON_SYMMETRIC", "Data_XLPE", xv, "Doedens")
+
+%% FITTING XLPE SERI RESULT 2
+xv = [-9.35097270785221,-11.9467680246605,1.48337975881124,0.302415510917004,-12.5517806496643,...
+      -13.5268122284071,1.31075828129823,1.21174398938576,18.1708367329943,18.8681828289692,...
+      18.8994577479176,21.5062094295260,0.439016070591408,0.434742260379139,0.581291586600989,...
+      0.226379265996608,-22.1949253574677,-33.9806888542678,-32.1566313438777,-34.6171587851871,...
+      13.5935114777230,20.2416314376150,1.54265547308282,1.99909118274077,0.100000000000000];
+DispFitResults("START_XLPE_SERI", "FULL_NORDIC_NON_SYMMETRIC_LARGE", "Data_XLPE", xv, "Doedens")
 
 
 
@@ -33,12 +42,33 @@ DispFitResults("START_XLPE_SERI", "FULL_NORDIC_NON_SYMMETRIC", "Data_XLPE", xv, 
 
 
 %% LE ROY SYMMETRIC TRRA
-[xv, output] = MY_TRRA("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", 10);
-% 420 s
+[xv, output] = MY_TRRA("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", 20);
+% 10 -> 420 s 20°C
+% 20 -> 400 s 60°C rng default
 
-%% LE ROY SYMMETRIC TRRA RESULT
+%% LE ROY SYMMETRIC TRRA 20°C
 xv = [1.14466152869048,-0.205394026303417,0.852727895646774,-22.9032974939108,...
     19.5520981621147,19.6625441200987,-12.5504216616092];
+DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", xv)
+
+%% LE ROY SYMMETRIC TRRA 60°C
+xv = [1.17186544044036,-2.21253557417779,1.15927067238965,-19.8054600313473,19.2947389761163,...
+      21.0013275821345,-12.5183887836011];
+DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", xv)
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
+%% LE ROY SYMMETRIC PS
+[xv, output] = MY_PS("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri");
+% 9370 s
+
+%% LE ROY SYMMETRIC PS RESULT
+xv = [0.985584840519110,-3.51829804276860,1.22735925525313,-20.0834363570646,...	
+      20.0050440290858,21.8356502131041,-12.9837477717737];
 DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", xv)
 
 
@@ -48,24 +78,8 @@ DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", xv)
 
 
 
-%% LE ROY SYMMETRIC PS
-[xv, output] = MY_PS("TRUE_LE_ROY", "TRUE_CLASSIC");
-% 9370 s
-
-%% LE ROY SYMMETRIC PS RESULT
-xv = [0.985584840519110,-3.51829804276860,1.22735925525313,-20.0834363570646,...	
-      20.0050440290858,21.8356502131041,-12.9837477717737];
-DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", xv)
-
-
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
-
-
 %% LE ROY NON SYMMETRIC TRRA
-[xv, output] = MY_TRRA("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", 100);
+[xv, output] = MY_TRRA("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", "Data_Seri", 100);
 % 920 s
 
 %% LE ROY NON SYMMETRIC TRRA RESULT
@@ -73,7 +87,7 @@ xv = [1.11986196979152,1.12151928259801,-1.20480069136874,-1.81440855231278,1.28
       0.867652918437877,-22.7638328429688,-23.4800007156268,-19.3683964974054,-22.7659528712114,...
       17.9413581552390,18.7588926597861,19.1447662601155,21.2097031019959,-13.0620785104073,...
       -14.3926178995349];
-DispFitResults("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", xv)
+DispFitResults("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", "Data_Seri", xv)
 
 
 
@@ -83,7 +97,7 @@ DispFitResults("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", xv)
 
 
 %% LE ROY NON SYMMETRIC PS
-[xv, output] = MY_PS("TRUE_LE_ROY", "FULL_TRUE_CLASSIC");
+[xv, output] = MY_PS("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", "Data_Seri");
 % 22103
 
 %% LE ROY NON SYMMETRIC PS RESULT
@@ -91,7 +105,7 @@ xv = [1.02527804627667,1.11383993536304,-1.83893085373972,-2.64948915797569,1.38
       1.22660921404251,-23.8508696848515,-20.1130718517903,-21.7738389270539,-22.1041896265616,...
   	  18.8147853517462,18.2456474781861,22.5228209183392,22.2628264362716,-12.5308547365440,...
       -11.0000000057027];
-DispFitResults("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", xv)
+DispFitResults("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", "Data_Seri", xv)
 
 
 
@@ -101,14 +115,14 @@ DispFitResults("TRUE_LE_ROY", "FULL_TRUE_CLASSIC", xv)
 
 
 %% DOEDENS SYMMETRIC TRRA
-[xv, output] = MY_TRRA("NORDIC_START_FIT", "FULL_NORDIC", 10, "Doedens");
+[xv, output] = MY_TRRA("NORDIC_START_FIT", "FULL_NORDIC", "Data_Seri", 10, "Doedens");
 % 440 s
 
 %% DOEDENS SYMMETRIC TRRA RESULT
 xv = [-5.96421299945314,0.709193084021555,-8.50577386892104,0.625825812877258,24.1816363024905,...
       21.4958715527729,1.08811192998616,0.819224468304739,-24.0459564218075,...
   	  19.2978728533116,1.10413382781455,0.522850307947828];
-DispFitResults("NORDIC_START_FIT", "FULL_NORDIC", xv, "Doedens")
+DispFitResults("NORDIC_START_FIT", "FULL_NORDIC", "Data_Seri", xv, "Doedens")
 
 
 
@@ -118,14 +132,14 @@ DispFitResults("NORDIC_START_FIT", "FULL_NORDIC", xv, "Doedens")
 
 
 %% DOEDENS SYMMETRIC PS
-[xv, output] = MY_PS("NORDIC_START_FIT", "FULL_NORDIC", "Doedens");
+[xv, output] = MY_PS("NORDIC_START_FIT", "FULL_NORDIC", "Data_Seri", "Doedens");
 % 2721
 
 %% DOEDENS SYMMETRIC PS RESULT
 xv = [-8.99979933650981,0.500056989437757,-9.07872469235397,0.538349179975172,25.9739700157571,...
       21.9976139812332,0.801975306264041,0.847956795556850,-24.9983837578946,19.3275963521225,...
   	  1.10000000000000,0.500001275595050];
-DispFitResults("NORDIC_START_FIT", "FULL_NORDIC", xv, "Doedens")
+DispFitResults("NORDIC_START_FIT", "FULL_NORDIC", "Data_Seri", xv, "Doedens")
 
 
 
@@ -220,7 +234,7 @@ function [] = DispFitResults(param_string, reference_string, data_string, xv, ty
     format long
     disp(fitness_value)
     format short
-    title(num2str(fitness_value))
+    %title(num2str(fitness_value))
 end
 
 function [xv, output] = MY_TRRA(param_string, reference_string, data_string, Num_swipes, type)
@@ -242,6 +256,7 @@ function [xv, output] = MY_TRRA(param_string, reference_string, data_string, Num
         options.flagMu = 1;
         options.flagS = 1;
     end
+%     options.display = "On";
     
     % Specifying the options for TRRA
     OPT_options = optimoptions('lsqnonlin');
@@ -251,7 +266,7 @@ function [xv, output] = MY_TRRA(param_string, reference_string, data_string, Num
     OPT_options.FunctionTolerance = 1e-6; % 1e-6
     OPT_options.UseParallel = true;
     
-%     rng default
+    rng default
     func = @(x)ObjectiveFunctionJ("TRRA", x, tags, names, exp_lin_flags, ...
                               equals, P, time_instants, Jobjective, options);
     
@@ -301,12 +316,13 @@ function [xv, output] = MY_PS(param_string, reference_string, data_string, type)
         options.flagMu = 1;
         options.flagS = 1;
     end
+    options.display = "On";
     
     % specifying the options for PS
     OPT_options = optimoptions('particleswarm');
     OPT_options.Display = 'final';
     OPT_options.FunctionTolerance = 1e-6; % 1e-6
-    OPT_options.MaxIterations = 200*7; % 200*nvars
+%     OPT_options.MaxIterations = 200*7; % 200*nvars
     OPT_options.MaxStallIterations = 20; % 20
     OPT_options.UseParallel = true;
     
