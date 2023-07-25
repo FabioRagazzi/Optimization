@@ -28,9 +28,9 @@ Umax = u.*Upos;
 umin = u.*uneg;
 Grad_n = (n(2:end,:) - n(1:end-1,:)) ./ deltas(2:end-1)';
 if options.flux_scheme == "Upwind" 
-    Gamma_interfaces(2:end-1,:) = -Diff(2:end-1,:).*Grad_n +... 
-                                  n(1:end-1,:).*Umax(2:end-1,:) +... 
-                                  n(2:end,:).*umin(2:end-1,:);
+    Gamma_interfaces(2:end,:) = Gamma_interfaces(2:end,:) + n.*Umax(2:end,:);
+    Gamma_interfaces(1:end-1,:) = Gamma_interfaces(1:end-1,:) + n.*umin(1:end-1,:);
+    Gamma_interfaces(2:end-1,:) = Gamma_interfaces(2:end-1,:) -Diff(2:end-1,:).*Grad_n;
     den_for_stab = Diff(1:end-1,:)./ deltas(1:end-1)' + Diff(2:end,:)./ deltas(2:end)' +...
                    Umax(2:end,:) - umin(1:end-1,:);
     den_for_stab = den_for_stab ./ Vol;
@@ -43,6 +43,8 @@ elseif options.flux_scheme == "Koren"
     Gamma_interfaces(2:end-1,:) = -Diff(2:end-1,:).*Grad_n +...
                                    Umax(2:end-1,:).*(n_modified(2:end-2,:) + koren_computed) +...
                                    umin(2:end-1,:).*(n_modified(3:end-1,:) - koren_computed);
+    Gamma_interfaces(1,:) = n(1,:) .* umin(1,:);
+    Gamma_interfaces(end,:) = n(end,:) .* Umax(end,:);
 else
     error("Invalid value for options.flux_scheme")
 end

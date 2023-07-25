@@ -7,9 +7,10 @@ function [P] = Parameters(name)
 arguments
     name char {mustBeMember(name,{ ...
         'NORDIC_START_FIT',...
-        'TEST_ARTURO'...
-        'START_PP_SERI'...
-        'START_XLPE_SERI'...
+        'TEST_ARTURO',...
+        'START_PP_SERI',...
+        'START_XLPE_SERI',...
+        'START_SGI_SERI',...
         'TRUE_LE_ROY', ...
         'BEST_FIT_SERI', ...
         'BEST_FIT_SERI_MOB_E', ...
@@ -167,6 +168,47 @@ switch name
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
+    case "START_SGI_SERI"
+        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
+        % Geometry
+        P.L = 5e-4;
+        P.num_points = 100;
+        P.LW = 0;
+        P.LE = 0;
+        P.nW = 0;
+        P.nE = 0;
+        % Material
+        P.T = 273.15 + 30;
+        P.eps_r = 2.3;
+
+        % PARAMETERS THAT CAN BE USED FOR A FIT
+        % Essential Parameters
+        P.Phi_W = 0;
+        P.Phi_E = 10.7e3;
+        P.phih = 1.2;
+        P.phie = 1.2;
+        P.fix_inj = [0, 0; 0, 0];
+        P.n_start = [1e18, 1e18, 1e2, 1e2];
+        P.Ndeep = ones(P.num_points,2) .* [1e20, 1e20];
+
+        % Fixed parameters not depending on the electric field 
+        P.mu_h = 10^(-14.0000);
+        P.mu_e = 10^(-14.0000);
+        P.Bh = 10^(-5.3216);
+        P.Be = 10^(-5.3216);
+        P.wh = 0.6857;
+        P.we = 0.6857;
+        P.S0 = 10^(-22.8431);
+        P.S1 = 10^(-22.8431);
+        P.S2 = 10^(-22.8431);
+        P.S3 = 10^(-22.8431);
+        % Set all Nordic parameters to 1
+        P = CompleteFixedParameters(P);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
     case "TEST_ARTURO"
         % PARAMETERS THAT CAN NOT BE USED FOR A FIT
         % Geometry
@@ -219,7 +261,7 @@ switch name
         P.nW = 0;
         P.nE = 0;
         % Material
-        P.T = 333.15;
+        P.T = 293.15;
         P.eps_r = 2.3;
 
         % PARAMETERS THAT CAN BE USED FOR A FIT

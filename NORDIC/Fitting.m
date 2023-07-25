@@ -42,7 +42,7 @@ DispFitResults("START_XLPE_SERI", "FULL_NORDIC_NON_SYMMETRIC_LARGE", "Data_XLPE"
 
 
 %% LE ROY SYMMETRIC TRRA
-[xv, output] = MY_TRRA("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", 20);
+[xv, output] = MY_TRRA("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_BLEND", 20);
 % 10 -> 420 s 20°C
 % 20 -> 400 s 60°C rng default
 
@@ -55,6 +55,7 @@ DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", xv)
 xv = [1.17186544044036,-2.21253557417779,1.15927067238965,-19.8054600313473,19.2947389761163,...
       21.0013275821345,-12.5183887836011];
 DispFitResults("TRUE_LE_ROY", "TRUE_CLASSIC", "Data_Seri", xv)
+
 
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -171,12 +172,36 @@ xv = [-6.31644936554235,-5.00027975810908,0.676823289934431,0.675910728186360,-9
       21.8521206326506,21.9337672066199,1.16306094816778,1.20000000000000,1.19899603917177,...
       0.834802345055576,-25,-24.9249505394296,-24.9997395580170,-25,19.2210983828365,19.0000004248512,...
   	  1.10000000198334,1.10000006742579,0.500000000157463];
-DispFitResults("NORDIC_START_FIT", "FULL_NORDIC_NON_SYMMETRIC", xv, "Doedens")
+DispFitResults("NORDIC_START_FIT", "FULL_NORDIC_NON_SYMMETRIC", "Data_Seri", xv, "Doedens")
 
 
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % NEW MEASURE FOUND!! % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%% SGI SYMMETRIC LE ROY TRRA
+[xv, output] = MY_TRRA("START_SGI_SERI", "TRUE_CLASSIC", "Data_SGI", 20);
+
+%% SGI SYMMETRIC LE ROY PS
+[xv, output] = MY_PS("START_SGI_SERI", "TRUE_CLASSIC", "Data_SGI");
+% xv = [1.1139   -5.3216    0.6857  -22.8431   17.7419   21.5226  -15.0000];
+
+%% SGI NON-SYMMETRIC LE ROY TRRA
+[xv, output] = MY_TRRA("START_SGI_SERI", "FULL_TRUE_CLASSIC", "Data_SGI", 100);
+
+%% SGI NON-SYMMETRIC LE ROY PS
+[xv, output] = MY_PS("START_SGI_SERI", "FULL_TRUE_CLASSIC", "Data_SGI");
+% xv = [1.2391    1.1362   -3.0564   -1.4791    0.5818    0.7068  -18.4519  -23.8309  -24.0000  -22.1278   17.2010   18.5385   19.1888   22.9133  -14.9189  -14.6785];
 
 
 
@@ -222,6 +247,7 @@ function [] = DispFitResults(param_string, reference_string, data_string, xv, ty
     P = Parameters(param_string);
     [names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP(reference_string);
     options = DefaultOptions();
+    options.blocking_electrodes = "On";
     if type == "Doedens"
         options.flagB = 1;
         options.flagD = 1;
@@ -326,7 +352,7 @@ function [xv, output] = MY_PS(param_string, reference_string, data_string, type)
     OPT_options.MaxStallIterations = 20; % 20
     OPT_options.UseParallel = true;
     
-%     rng default
+    rng default
     func = @(x) ObjectiveFunctionJ("PS", x, tags, names, exp_lin_flags, ...
                                    equals, P, time_instants, Jobjective, options);
     

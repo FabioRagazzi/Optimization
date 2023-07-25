@@ -20,8 +20,13 @@ E = ComputeE(phi, P.Phi_W, P.Phi_E, P.deltas);
 [mu_h, mu_e] = Mobility(E, P.ext_mult_sinh, P.arg_sinh, [P.mu_h, P.mu_e], options);
 mu = [mu_h, mu_e];
 
-% the electrodes block the charge
-mu([1,end],:) = 0;
+if options.blocking_electrodes == "On"
+    % the electrodes block the charge
+    mu([1,end],:) = 0;
+elseif options.blocking_electrodes == "Off"
+else
+    error("Invalid value for options.blocking_electrodes")
+end
 
 % Compute drift velocity 
 u = E .* mu .* [1 -1];

@@ -180,7 +180,7 @@ struct.rho_ht = struct.rho_ht * out.P.e;
 
 %% COMPARISON
 clearvars, clc, close all
-id = "70";
+id = "70_55";
 Bassel = load("Bassel\Temperature" + id + ".mat");
 Me = load("MyResults\Temperature" + id + ".mat");
 F = Me.("T" + id);
@@ -196,7 +196,7 @@ B_interp.E = interp1(B.x, B.E', F.x_int)';
 B_interp.x = F.x;
 B_interp.x_int = F.x_int;
 
-Graph(F, B_interp, 30);
+Graph(F, B_interp, 20);
 
 %%
 function [fig] = Graph(F, B, i)

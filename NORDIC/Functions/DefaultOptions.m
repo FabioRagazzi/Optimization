@@ -26,5 +26,6 @@ default_options.source = "On";
 default_options.max_time = 2;
 default_options.display = "Off"; % display fitness value during optimization
 default_options.ODE_options = odeset('Stats','off');
+default_options.blocking_electrodes = "Off";
 
 end
