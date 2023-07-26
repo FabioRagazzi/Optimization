@@ -308,7 +308,7 @@ function [xv, output] = MY_TRRA(param_string, reference_string, data_string, Num
         Total_time = Total_time + TRRA_elapsed_time;
         disp(xv(i,:))
         fprintf("Elapsed time is: %f\n\n\n\n", TRRA_elapsed_time)
-        save('data\most_recent_output_TRRA','xv','x0')
+        save('data\most_recent_output\most_recent_output_TRRA','xv','x0')
     end  
     fprintf("The total elapsed time for %d swipes is: %f\n\n\n\n", Num_swipes, Total_time)
     beep
@@ -361,7 +361,7 @@ function [xv, output] = MY_PS(param_string, reference_string, data_string, type)
     PS_elapsed_time = toc(PS_start_time);
     disp(xv)
     fprintf("Elpsed time is: %f\n\n\n\n", PS_elapsed_time)
-    save('data\most_recent_output_PS','xv')
+    save('data\most_recent_output\most_recent_output_PS','xv')
     beep
     
     [out] = RunODEUpdating(xv, tags, names, exp_lin_flags, equals, P, time_instants, options);
