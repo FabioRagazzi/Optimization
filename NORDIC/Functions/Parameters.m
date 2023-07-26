@@ -6,11 +6,10 @@ function [P] = Parameters(name)
 % P -> structure containing the simulation parameters
 arguments
     name char {mustBeMember(name,{ ...
-        'NORDIC_START_FIT',...
-        'TEST_ARTURO',...
         'START_PP_SERI',...
         'START_XLPE_SERI',...
         'START_SGI_SERI',...
+        'START_BLEND_SERI',...
         'TRUE_LE_ROY', ...
         'BEST_FIT_SERI', ...
         'BEST_FIT_SERI_MOB_E', ...
@@ -32,220 +31,50 @@ arguments
 end
 
 switch name
-    case "NORDIC_START_FIT"
-        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
-        % Geometry
-        P.L = 4e-4;
-        P.num_points = 100;
-        P.LW = 0;
-        P.LE = 0;
-        P.nW = 0;
-        P.nE = 0;
-        % Material
-        P.T = 293.15;
-        P.eps_r = 2.3;
-        
-        % PARAMETERS THAT CAN BE USED FOR A FIT
-        % Essential Parameters
-        P.Phi_W = 0;
-        P.Phi_E = P.L * 1e7;
-        P.phih = 1.148;
-        P.phie = 0.905;
-        P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e21, 1e21, 1e2, 1e2];
-        P.Ndeep = ones(P.num_points,2) .* [5.9293e20, 2.4966e20]; % (m^-3)
-        
-        % Set all classic parameters to 1
-        P = CompleteNordicParameters(P);
-        
-        % Extra Schottky parameter
-        P.lambda_e = 1; % ()
-        P.lambda_h = 1; % ()
-        % Extra parameters needed when the mobility is dependent from the electric
-        % field
-        P.a_int = [100 80] * 1e-9; % (m)
-        P.w_hop = [0.74, 0.76]; % (eV)
-        P.a_sh = [1.25 2.25] * 1e-9; % (m)
-        % Extra parameters needed when the trapping coefficient is dependent on the
-        % electric field
-        P.w_tr_int = [0.79, 0.81]; % (eV)
-        P.N_int = [1e23, 1e23]; % (m^-3)
-        P.Pt = [1, 1]; % ()
-        % Extra parameters needed when the detrapping coefficient is dependent on the
-        % electric field
-        P.w_tr_hop = [1, 1]; % (eV)
-        P.w_tr = [1.03, 1.03]; % (eV)
-        % Extra parameters needed when the recombination coefficients are dependent on the
-        % electric field
-        P.S_base = [2e-23, 2e-23, 2e-23, 2e-23];
-        P.Pr = 1; % ()
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
     case "START_PP_SERI"
-        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
-        % Geometry
         P.L = 6.25e-4;
-        P.num_points = 100;
-        P.LW = 0;
-        P.LE = 0;
-        P.nW = 0;
-        P.nE = 0;
-        % Material
         P.T = 273.15 + 90;
         P.eps_r = 2.2;
-
-        % PARAMETERS THAT CAN BE USED FOR A FIT
-        % Essential Parameters
-        P.Phi_W = 0;
-        P.Phi_E = P.L * 3e7;
-        P.phih = 1.16;
-        P.phie = 1.27;
-        P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e18, 1e18, 1e2, 1e2];
-        P.Ndeep = ones(P.num_points,2) .* [6.2e20, 6.2e20];
-        
-        % Fixed parameters not depending on the electric field 
-        P.mu_h = 2e-13;
-        P.mu_e = 1e-14;
-        P.Bh = 2e-1;
-        P.Be = 1e-1;
-        P.wh = 0.99;
-        P.we = 0.96;
-        P.S0 = 6.4e-22;
-        P.S1 = 6.4e-22;
-        P.S2 = 6.4e-22;
-        P.S3 = 0;
-
-        % Set all Nordic parameters to 1
-        P = CompleteFixedParameters(P);
+        P.Phi_W = 0; P.Phi_E = P.L * 3e7;
+        P = DefaultOptParameter(P, 1e2);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
     case "START_XLPE_SERI"
-        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
-        % Geometry
         P.L = 5.8e-4;
-        P.num_points = 100;
-        P.LW = 0;
-        P.LE = 0;
-        P.nW = 0;
-        P.nE = 0;
-        % Material
         P.T = 273.15 + 90;
         P.eps_r = 2.3;
-
-        % PARAMETERS THAT CAN BE USED FOR A FIT
-        % Essential Parameters
-        P.Phi_W = 0;
-        P.Phi_E = P.L * 3e7;
-        P.phih = 1.16;
-        P.phie = 1.27;
-        P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e18, 1e18, 1e2, 1e2];
-        P.Ndeep = ones(P.num_points,2) .* [6.2e20, 6.2e20];
-        
-        % Fixed parameters not depending on the electric field 
-        P.mu_h = 2e-13;
-        P.mu_e = 1e-14;
-        P.Bh = 2e-1;
-        P.Be = 1e-1;
-        P.wh = 0.99;
-        P.we = 0.96;
-        P.S0 = 6.4e-22;
-        P.S1 = 6.4e-22;
-        P.S2 = 6.4e-22;
-        P.S3 = 0;
-
-        % Set all Nordic parameters to 1
-        P = CompleteFixedParameters(P);
+        P.Phi_W = 0; P.Phi_E = P.L * 3e7;
+        P = DefaultOptParameter(P, 1e2);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
     case "START_SGI_SERI"
-        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
-        % Geometry
         P.L = 5e-4;
-        P.num_points = 100;
-        P.LW = 0;
-        P.LE = 0;
-        P.nW = 0;
-        P.nE = 0;
-        % Material
         P.T = 273.15 + 30;
         P.eps_r = 2.3;
-
-        % PARAMETERS THAT CAN BE USED FOR A FIT
-        % Essential Parameters
-        P.Phi_W = 0;
-        P.Phi_E = 10.7e3;
-        P.phih = 1.2;
-        P.phie = 1.2;
-        P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e18, 1e18, 1e2, 1e2];
-        P.Ndeep = ones(P.num_points,2) .* [1e20, 1e20];
-
-        % Fixed parameters not depending on the electric field 
-        P.mu_h = 10^(-14.0000);
-        P.mu_e = 10^(-14.0000);
-        P.Bh = 10^(-5.3216);
-        P.Be = 10^(-5.3216);
-        P.wh = 0.6857;
-        P.we = 0.6857;
-        P.S0 = 10^(-22.8431);
-        P.S1 = 10^(-22.8431);
-        P.S2 = 10^(-22.8431);
-        P.S3 = 10^(-22.8431);
-        % Set all Nordic parameters to 1
-        P = CompleteFixedParameters(P);
+        P.Phi_W = 0; P.Phi_E = 10.7e3;
+        P = DefaultOptParameter(P, 1e2);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-    case "TEST_ARTURO"
-        % PARAMETERS THAT CAN NOT BE USED FOR A FIT
-        % Geometry
-        P.L = 4e-4;
-        P.num_points = 100;
-        P.LW = 0;
-        P.LE = 0;
-        P.nW = 0;
-        P.nE = 0;
-        % Material
-        P.T = 363.15;
-        P.eps_r = 2.3;
-
-        % PARAMETERS THAT CAN BE USED FOR A FIT
-        % Essential Parameters
-        P.Phi_W = 0;
-        P.Phi_E = P.L * 1e7;
-        P.phih = 1.16;
-        P.phie = 1.27;
-        P.fix_inj = [0, 0; 0, 0];
-        P.n_start = [1e18, 1e18, 1e2, 1e2];
-        P.Ndeep = ones(P.num_points,2) .* [6.2e20, 6.2e20];
-        
-        % Fixed parameters not depending on the electric field 
-        P.mu_h = 2e-13 * 5;
-        P.mu_e = 1e-14 * 5;
-        P.Bh = 2e-1;
-        P.Be = 1e-1;
-        P.wh = 0.99;
-        P.we = 0.96;
-        P.S0 = 6.4e-22;
-        P.S1 = 6.4e-22;
-        P.S2 = 6.4e-22;
-        P.S3 = 0;
-
-        % Set all Nordic parameters to 1
-        P = CompleteFixedParameters(P);
+    case "START_BLEND_SERI"
+        P.L = 5e-4; 
+        P.T = 273.15 + 60; 
+        P.eps_r = 2; 
+        P.Phi_W = 0; P.Phi_E = P.L * 3e7; 
+        P = DefaultOptParameter(P, 1e2);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %

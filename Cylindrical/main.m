@@ -180,7 +180,7 @@ struct.rho_ht = struct.rho_ht * out.P.e;
 
 %% COMPARISON
 clearvars, clc, close all
-id = "70_55";
+id = "20";
 Bassel = load("Bassel\Temperature" + id + ".mat");
 Me = load("MyResults\Temperature" + id + ".mat");
 F = Me.("T" + id);
@@ -196,7 +196,7 @@ B_interp.E = interp1(B.x, B.E', F.x_int)';
 B_interp.x = F.x;
 B_interp.x_int = F.x_int;
 
-Graph(F, B_interp, 20);
+Graph(F, B_interp, 30);
 
 %%
 function [fig] = Graph(F, B, i)
@@ -209,9 +209,9 @@ function [fig] = Graph(F, B, i)
 
     for s = ["e", "h", "et", "ht"]
         nexttile
-        eval("semilogy(F.x, F.rho_" + s + "(i,:), poptF)")
+        eval("plot(F.x, F.rho_" + s + "(i,:), poptF)")
         hold on
-        eval("semilogy(B.x, B.rho_" + s + "(i,:), poptB)")
+        eval("plot(B.x, B.rho_" + s + "(i,:), poptB)")
         grid on
         xlim([ri, ro])
         xlabel("$r (\mathrm{m})$", "Interpreter","latex")
