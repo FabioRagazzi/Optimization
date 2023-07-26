@@ -1,6 +1,6 @@
 %% BLEND
 clearvars, clc, close all
-blend = load('..\keep_data\BLEND\G1B166C-T60_30_kV-mm.mat');
+blend = load('..\keep_data\BLEND\keep_G1B166C-T60_30_kV-mm.mat');
 blend = blend.savemat;
 I = blend.curr(6:end);
 t = blend.time(7:end);
@@ -29,7 +29,7 @@ save('data\Data_BLEND', ...
 
 %% SGI
 clearvars, clc, close all
-sgi = load('..\keep_data\BLEND\166_testSGI_full_T30_20V-mm_5.9715e-16_S-m.mat');
+sgi = load('..\keep_data\BLEND\keep_166_testSGI_full_T30_20V-mm_5.9715e-16_S-m.mat');
 sgi = sgi.savemat;
 I = sgi.Current(5:end);
 t = sgi.Time(5:end);
@@ -61,7 +61,7 @@ save('data\Data_SGI', ...
 
 %% XLPE
 clearvars, clc, close all
-xlpe = load('..\keep_data\XLPE-PP\XLPE_T90_30kV-mm_4.9413e-14_S-m.mat');
+xlpe = load('..\keep_data\XLPE-PP\keep_XLPE_T90_30kV-mm_4.9413e-14_S-m.mat');
 xlpe = xlpe.savemat;
 I = xlpe.Current(5:end);
 t = xlpe.Time(5:end);
@@ -92,7 +92,7 @@ save('data\Data_XLPE', ...
 
 %% PP
 clearvars, clc, close all
-pp = load("..\keep_data\XLPE-PP\PP_T90_30kV-mm_3.1744e-13_S-m.mat");
+pp = load("..\keep_data\XLPE-PP\keep_PP_T90_30kV-mm_3.1744e-13_S-m.mat");
 pp = pp.savemat;
 I = pp.Current(5:end);
 t = pp.Time(5:end);
