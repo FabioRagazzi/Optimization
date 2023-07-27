@@ -17,10 +17,10 @@ function [fitness] = ObjectiveFunctionJ(opt_kind, x, tags, names, exp_lin_flags,
 % OUTPUT
 % fitness -> value returned to the optimization algorithm
 
-persistent min_fitness
-if isempty(min_fitness)
-    min_fitness = Inf;
-end
+% persistent min_fitness
+% if isempty(min_fitness)
+%     min_fitness = Inf;
+% end
 
 [out] = RunODEUpdating(x, tags, names, exp_lin_flags, equals, P, time_instants, options);
 
@@ -37,10 +37,11 @@ elseif opt_kind == "TRRA"
 end
 
 if options.display == "On"
-    if fitness < min_fitness
-        disp(fitness)
-        min_fitness = fitness;
-    end
+    disp(fitness)
+%     if fitness < min_fitness
+%         disp(fitness)
+%         min_fitness = fitness;
+%     end
 elseif options.display ~= "Off"
     error("Invalid value for options.display")
 end

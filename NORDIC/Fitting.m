@@ -1,3 +1,31 @@
+%% GeneralOptimization
+clearvars, clc, close all
+rng default
+for m = ["BLEND", "PP", "XLPE", "SGI"]
+    for t = ["LeRoy", "Doedens"]
+        for a = ["TRRA", "PS"]
+            for s = ["Yes", "No"]
+                [xv, wct, fitness] = GeneralOptimization(m, a, t, s);
+            end
+        end
+    end
+end
+
+%% GeneralDispResults
+clearvars, clc, close all
+for m = ["BLEND", "PP", "XLPE", "SGI"]
+    for t = ["LeRoy", "Doedens"]
+        for a = ["TRRA", "PS"]
+            for s = ["Yes", "No"]
+                [result] = GeneralDispResults(m, a, t, s);
+            end
+        end
+    end
+end
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
 %% BLEND SYMMETRIC LE ROY TRRA
 [xv, output] = MY_TRRA("START_BLEND_SERI", "TRUE_CLASSIC", "Data_BLEND", 20);
 
@@ -44,7 +72,7 @@ DispFitResults("START_PP_SERI", "TRUE_CLASSIC", "Data_PP", xv)
 
 
 %% PP NON SYMMETRIC LE ROY PS
-[xv, output] = MY_TRRA("START_PP_SERI", "FULL_TRUE_CLASSIC", "Data_PP", 20);
+[xv, output] = MY_PS("START_PP_SERI", "FULL_TRUE_CLASSIC", "Data_PP");
 
 %% PP NON SYMMETRIC LE ROY PS RESULT
 xv = [1.27873813416751,1.27572023033734,-5.44500482937879,-5.60927060316597,1.34804780720091,...
@@ -72,6 +100,24 @@ DispFitResults("START_XLPE_SERI", "TRUE_CLASSIC", "Data_XLPE", xv)
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
+%% XLPE NON SYMMETRIC LE ROY PS
+[xv, output] = MY_PS("START_XLPE_SERI", "FULL_TRUE_CLASSIC", "Data_XLPE");
+
+%% XLPE NON SYMMETRIC LE ROY PS RESULT
+xv = [1.50000000000000,1.43354746543884,-5.91830373201479,0.764179073342868,0.500270117503534,...
+      0.507941290678355,-20.4877330016408,-18.4322460033018,-23.2712439796579,-23.9781020818320,...
+  	  20.8763442483004,20.8040662217656,22.4086111519853,19.2471427774611,-13.8448296755648,...
+  	 -14.9999922181205];
+DispFitResults("START_XLPE_SERI", "FULL_TRUE_CLASSIC", "Data_XLPE", xv)
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
 
 
 
@@ -282,21 +328,6 @@ function [path] = export_path_png()
     path = "C:\Users\Faz98\Documents\LAVORO\2023_OPTIMIZATION\Figures\png\";
 end
 
-function [fig] = PlotFitResult(out, fit_objective, time_objective)
-    fig = figure();
-    ax = axes(fig);
-    loglog(ax, out.tout, out.J_Sato, 'r.', 'MarkerSize', 15, 'DisplayName','Optimization result')
-    hold on
-    loglog(ax, time_objective, fit_objective, 'k-', 'LineWidth', 2, 'DisplayName','Objective')
-    grid on
-    legend('Interpreter','latex')
-    xticks(10.^(0:1:10))
-    yticks(10.^(-10:1:10))
-    xlabel('$t (\mathrm{s})$', 'Interpreter','latex')
-    ylabel('$J (\mathrm{\frac{A}{m^2}})$', 'Interpreter','latex')
-    set(gca,'TickLabelInterpreter','latex', 'Xscale','log', 'Yscale','log', 'FontSize',15)
-end
-
 function [] = DispFitResults(param_string, reference_string, data_string, xv, type)
     arguments
         param_string
@@ -310,6 +341,7 @@ function [] = DispFitResults(param_string, reference_string, data_string, xv, ty
     P = Parameters(param_string);
     [names, tags, exp_lin_flags, equals, lb, ub] = SetReferenceP(reference_string);
     options = DefaultOptions();
+    options.max_time = 5;
 %     disp("Changig options")
 %     options.max_time = 1e-10;
     if type == "Doedens"
