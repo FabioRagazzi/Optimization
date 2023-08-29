@@ -3,117 +3,60 @@ function [P] = ParametersFunction(parameters, time_instants, options)
 %   Detailed explanation goes here
 
 switch parameters
-    case "DOEDENS"
-        P.geo = CreateGeometry1D(0.1, CreateDeltas(0, 0, 0, 0, 100, 3.5e-4), options);
-        P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 70, 55);
-        P.eps_r = 2;
-        P.Phi_W = 0;
-        P.Phi_E = P.geo.L * 3e7;
-        P.phih = 1.148;
-        P.phie = 0.905;
-        P.n_start = [1e20, 1e20, 1e1, 1e1];
-        P.Ndeep = ones(P.geo.np, 2) .* [5.9293e20, 2.4966e20]; 
-        P.lambda_e = 4.1e-5;
-        P.lambda_h = 1e-1; 
-        P.a_int = [100 80] * 1e-9; 
-        P.w_hop = [0.74, 0.76]; 
-        P.a_sh = [1.25 2.25] * 1e-9; 
-        P.w_tr_int = [0.79, 0.81]; 
-        P.N_int = [1e23, 1e23]; 
-        P.Pt = [1, 1];
-        P.w_tr_hop = [1, 1];
-        P.w_tr = [1.03, 1.03];
-        P.S_base = [1.6022e-23, 1.6022e-23, 1.6022e-23, 1.6022e-23];
-        P.Pr = 1;
+    case "T_20_200p_refined"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(1e-3, 1e-3, 50, 50, 500, 17.9e-3), options);
+        P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 20, 20);
+        P = BasselParameters(P);
 
-    case "TEST_CYLINDRICAL"
-        P.geo = CreateGeometry1D(0.1, CreateDeltas(0, 0, 0, 0, 100, 3.5e-4), options);
-        P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 70, 55);
-        P.eps_r = 2;
-        P.Phi_W = 0;
-        P.Phi_E = P.geo.L * 3e7;
-        P.phih = 1e100;
-        P.phie = 1e100;
-        P.n_start = [1e0, 1e0, 10, 10];
-        P.Ndeep = ones(P.geo.np, 2) .* [5.9293e20, 2.4966e20]; 
-        P.lambda_e = 4.1e-5;
-        P.lambda_h = 1e-1; 
-        P.a_int = [100 80] * 1e-9; 
-        P.w_hop = [0.74, 0.76]; 
-        P.a_sh = [1.25 2.25] * 1e-9; 
-        P.w_tr_int = [0.79, 0.81]; 
-        P.N_int = [1e23, 1e23]; 
-        P.Pt = [1, 1];
-        P.w_tr_hop = [1, 1];
-        P.w_tr = [1.03, 1.03];
-        P.S_base = [1.6022e-23, 1.6022e-23, 1.6022e-23, 1.6022e-23];
-        P.Pr = 1;
+    case "T_20_500p"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 500, 17.9e-3), options);
+        P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 20, 20);
+        P = BasselParameters(P);
 
-    case "BASSEL_20"
+    case "T_70_500p"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 500, 17.9e-3), options);
+        P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 70, 70);
+        P = BasselParameters(P);
+       
+    case "T_70_55_500p"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 500, 17.9e-3), options);
+        P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 68.0877, 55.7619);
+        P = BasselParameters(P);
+
+    case "T_20_100p"
         P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
         P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 20, 20);
-        P.eps_r = 2.3;
-        P.Phi_W = 320e3;
-        P.Phi_E = 0;
-        P.phih = 1.27;
-        P.phie = 1.3;
-        P.n_start = [1, 1, 1, 1] * 1e-300;
-        P.Ndeep = ones(P.geo.np, 2) .* [6.2415e+20, 6.2415e+20]; 
-        P.lambda_e = 1;
-        P.lambda_h = 1; 
-        P.a_int = [3 3] * 1e-9;
-        P.w_hop = [0.65, 0.71]; 
-        P.a_sh = [3 3] * 1e-9; 
-        P.w_tr = [0.99, 0.96];
-        P.S_base = [0, 1.6022e-23, 1.6022e-23, 1.6022e-23];
-        P.Pr = 1;
+        P = BasselParameters(P);
 
-        % Unused parameters
-        P.w_tr_int = [1, 1]; P.N_int = [1, 1]; P.Pt = [1, 1]; P.w_tr_hop = [1, 1];
-
-    case "BASSEL_70"
+    case "T_70_100p"
         P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
         P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 70, 70);
-        P.eps_r = 2.3;
-        P.Phi_W = 320e3;
-        P.Phi_E = 0;
-        P.phih = 1.27;
-        P.phie = 1.3;
-        P.n_start = [1, 1, 1, 1] * 1e-300;
-        P.Ndeep = ones(P.geo.np, 2) .* [6.2415e+20, 6.2415e+20]; 
-        P.lambda_e = 1;
-        P.lambda_h = 1; 
-        P.a_int = [3 3] * 1e-9;
-        P.w_hop = [0.65, 0.71]; 
-        P.a_sh = [3 3] * 1e-9; 
-        P.w_tr = [0.99, 0.96];
-        P.S_base = [0, 1.6022e-23, 1.6022e-23, 1.6022e-23];
-        P.Pr = 1;
-
-        % Unused parameters
-        P.w_tr_int = [1, 1]; P.N_int = [1, 1]; P.Pt = [1, 1]; P.w_tr_hop = [1, 1];
-
-    case "BASSEL_70_55"
+        P = BasselParameters(P);
+       
+    case "T_70_55_100p"
         P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
         P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 68.0877, 55.7619);
-        P.eps_r = 2.3;
-        P.Phi_W = 320e3;
-        P.Phi_E = 0;
-        P.phih = 1.27;
-        P.phie = 1.3;
-        P.n_start = [1, 1, 1, 1] * 1e-300;
-        P.Ndeep = ones(P.geo.np, 2) .* [6.2415e+20, 6.2415e+20]; 
-        P.lambda_e = 1;
-        P.lambda_h = 1; 
-        P.a_int = [3 3] * 1e-9;
-        P.w_hop = [0.65, 0.71]; 
-        P.a_sh = [3 3] * 1e-9; 
-        P.w_tr = [0.99, 0.96];
-        P.S_base = [0, 1.6022e-23, 1.6022e-23, 1.6022e-23];
-        P.Pr = 1;
+        P = BasselParameters(P);
 
-        % Unused parameters
-        P.w_tr_int = [1, 1]; P.N_int = [1, 1]; P.Pt = [1, 1]; P.w_tr_hop = [1, 1];
+    case "T20_new"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
+        P.Tstruct = GetTstructList("T20", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P = BasselParameters(P);
+
+    case "T70_new"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
+        P.Tstruct = GetTstructList("T70", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P = BasselParameters(P);
+       
+    case "T70_55_new"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
+        P.Tstruct = GetTstructList("T70_55", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P = BasselParameters(P);
+
+    case "Transitorio1"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
+        P.Tstruct = GetTstructList("Transitorio1", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P = BasselParameters(P);
 end
 
 P = DerivedParameters(P, options);
@@ -142,3 +85,49 @@ end
 % %%%%%%%%%%%%%%%%%%%%%%%%%% trapping coefficients
 % B_e=0.1;
 % B_h=0.2;
+
+% case "DOEDENS"
+%         P.geo = CreateGeometry1D(0.1, CreateDeltas(0, 0, 0, 0, 100, 3.5e-4), options);
+%         P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 70, 55);
+%         P.eps_r = 2;
+%         P.Phi_W = 0;
+%         P.Phi_E = P.geo.L * 3e7;
+%         P.phih = 1.148;
+%         P.phie = 0.905;
+%         P.n_start = [1e20, 1e20, 1e1, 1e1];
+%         P.Ndeep = ones(P.geo.np, 2) .* [5.9293e20, 2.4966e20]; 
+%         P.lambda_e = 4.1e-5;
+%         P.lambda_h = 1e-1; 
+%         P.a_int = [100 80] * 1e-9; 
+%         P.w_hop = [0.74, 0.76]; 
+%         P.a_sh = [1.25 2.25] * 1e-9; 
+%         P.w_tr_int = [0.79, 0.81]; 
+%         P.N_int = [1e23, 1e23]; 
+%         P.Pt = [1, 1];
+%         P.w_tr_hop = [1, 1];
+%         P.w_tr = [1.03, 1.03];
+%         P.S_base = [1.6022e-23, 1.6022e-23, 1.6022e-23, 1.6022e-23];
+%         P.Pr = 1;
+% 
+%     case "TEST_CYLINDRICAL"
+%         P.geo = CreateGeometry1D(0.1, CreateDeltas(0, 0, 0, 0, 100, 3.5e-4), options);
+%         P.Tstruct = GetTstruct(time_instants, P.geo.x_int, P.geo.x0, P.geo.x_int(end), 70, 55);
+%         P.eps_r = 2;
+%         P.Phi_W = 0;
+%         P.Phi_E = P.geo.L * 3e7;
+%         P.phih = 1e100;
+%         P.phie = 1e100;
+%         P.n_start = [1e0, 1e0, 10, 10];
+%         P.Ndeep = ones(P.geo.np, 2) .* [5.9293e20, 2.4966e20]; 
+%         P.lambda_e = 4.1e-5;
+%         P.lambda_h = 1e-1; 
+%         P.a_int = [100 80] * 1e-9; 
+%         P.w_hop = [0.74, 0.76]; 
+%         P.a_sh = [1.25 2.25] * 1e-9; 
+%         P.w_tr_int = [0.79, 0.81]; 
+%         P.N_int = [1e23, 1e23]; 
+%         P.Pt = [1, 1];
+%         P.w_tr_hop = [1, 1];
+%         P.w_tr = [1.03, 1.03];
+%         P.S_base = [1.6022e-23, 1.6022e-23, 1.6022e-23, 1.6022e-23];
+%         P.Pr = 1;

@@ -27,8 +27,13 @@ phi(1,:) = P.Phi_W;
 phi(end,:) = P.Phi_E;
 E = ComputeE(P.geo, phi(2:end-1,:), P.Phi_W, P.Phi_E);
 
+T_struct_matrix = zeros(P.geo.np+1,num_iter);
+for i = 1:num_iter
+    T_struct_matrix(:,i) = GetTemperature(tout(i), P.Tstruct, P.geo);
+end
 
-kBT_matrix = P.kB * P.Tstruct.matrix;
+%kBT_matrix = P.kB * P.Tstruct.matrix;
+kBT_matrix = P.kB * T_struct_matrix;
 v_matrix = kBT_matrix / P.h;
 Boltz_num_matrix = P.e ./ kBT_matrix;
 
@@ -46,8 +51,11 @@ u_e = -E .* mu_e;
 K_h = kBT_matrix .* mu_h / P.e;
 K_e = kBT_matrix .* mu_e / P.e;
 
-aT2exp_e = P.lambda_e * P.a * P.Tstruct.matrix(1,:).^2 .* exp(-P.phie .* Boltz_num_matrix(1,:));
-aT2exp_h = P.lambda_h * P.a * P.Tstruct.matrix(end,:).^2 .* exp(-P.phih .* Boltz_num_matrix(end,:));
+% aT2exp_e = P.lambda_e * P.a * P.Tstruct.matrix(1,:).^2 .* exp(-P.phie .* Boltz_num_matrix(1,:));
+% aT2exp_h = P.lambda_h * P.a * P.Tstruct.matrix(end,:).^2 .* exp(-P.phih .* Boltz_num_matrix(end,:));
+
+aT2exp_e = P.lambda_e * P.a * T_struct_matrix(1,:).^2 .* exp(-P.phie .* Boltz_num_matrix(1,:));
+aT2exp_h = P.lambda_h * P.a * T_struct_matrix(end,:).^2 .* exp(-P.phih .* Boltz_num_matrix(end,:));
 
 Inj_e = aT2exp_e .* ( exp( P.beta*sqrt( abs(E(1,:)) )./kBT_matrix(1,:) ) - 1 );
 Inj_h = aT2exp_h .* ( exp( P.beta*sqrt( abs(E(end,:)) )./kBT_matrix(end,:) ) - 1 );

@@ -1,3 +1,29 @@
+%% TRANSITORIO
+addpath("Functions\")
+clearvars, clc, close all
+[out] = Run("Transitorio1", ...
+            [0, 1, 2, 4:1:20, 22, 23, 24]*3600, ...
+            "coordinates","cylindrical", ...
+            "source","on", ...
+            "type","sparse");
+
+% [0, 1, [1,5,10,20,30]*60, 3600, (4:4:24)*3600]
+
+%% PLOT E
+fig1 = figure(); ax1 = axes(fig1);
+hold on
+ID = [];
+for i = 1:length(out.tout)
+    ID(i) = plot(ax1, out.P.geo.x_int, out.E(:,i), 'Color',rand(1,3), 'LineWidth',1,...
+        'DisplayName',"t = "+ SecondsToString(out.tout(i))); 
+end
+legend('Location','south','NumColumns',4)
+grid on, xlabel('r (m)'), ylabel('E (V/m)'), set(gca, 'FontSize',15, 'colororder',parula(32))
+% xlim([0.02456,0.0247])
+% ylim([1.8, 2.4]*10^7)
+
+
+
 %%
 addpath("Functions\")
 clearvars, clc, close all
@@ -81,29 +107,41 @@ set(gca, 'FontSize', 15)
 
 
 
-%% BASSEL 20
+%% TEMPERATURE 20, 100 POINTS
 addpath("Functions\")
 clearvars, clc, close all
 time_instants = linspace(0, 3600*24, 3600*24+1);
-[out] = Run("BASSEL_20", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+[out] = Run("T_20_100p", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+
+%% TEMPERATURE 20, 200 POINTS, REFINED MESH
+addpath("Functions\")
+clearvars, clc, close all
+time_instants = linspace(0, 3600*24, 3600*24+1);
+[out] = Run("T_20_200p_refined", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+
+%% TEMPERATURE 20, 500 POINTS
+addpath("Functions\")
+clearvars, clc, close all
+time_instants = linspace(0, 3600*24, 3600*24+1);
+[out] = Run("T_20_500p", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
 
 %% BASSEL 70
 addpath("Functions\")
 clearvars, clc, close all
 time_instants = linspace(0, 3600*24, 3600*24+1);
-[out] = Run("BASSEL_70", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+[out] = Run("T_70_100p", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
 
 %% BASSEL 70 55
 addpath("Functions\")
 clearvars, clc, close all
 time_instants = linspace(0, 3600*24, 3600*24+1);
-[out] = Run("BASSEL_70_55", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+[out] = Run("T_70_55_100p", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
 
 %% BASSEL 70 55 EXPLICIT
 addpath("Functions\")
 clearvars, clc, close all
 time_instants = linspace(0, 3600*24, 3600*24+1);
-[out] = RunExplicit("BASSEL_70_55", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
+[out] = RunExplicit("T_70_55_100p", time_instants, "coordinates","cylindrical", "source","on", "type","sparse");
 
 %% PLOT ELECTRIC FIELD AT CONVENTIONAL INSTANTS
 conventional_times = [1, [1,5,10,20,30]*60, (1:24)*3600];
@@ -114,11 +152,13 @@ for i = 1:length(conventional_times)
     plot(ax1, out.P.geo.x_int, out.E(:,conventional_times(i)+1), 'LineWidth',1,...
         'DisplayName',"t = "+ SecondsToString(conventional_times(i))) 
 end
-legend('Location','south','NumColumns',2)
+% legend('Location','south','NumColumns',2)
 grid on
 xlabel('r (m)')
 ylabel('E (V/m)')
 set(gca, 'FontSize', 15)
+% xlim([0.02456,0.0247])
+% ylim([1.8, 2.4]*10^7)
 
 %% CREATE CONVENTIONAL ELECTRIC FIELD STRUCT
 conventional_times = [1, [1,5,10,20,30]*60, (1:24)*3600];
@@ -158,6 +198,8 @@ struct.rho_ht = struct.rho_ht * out.P.e;
 conventional_times = [1, [1,5,10,20,30]*60, (1:24)*3600];
 struct.x_int = out.P.geo.x_int;
 struct.x = out.P.geo.x;
+struct.x_phi = [out.P.geo.x_int(1); out.P.geo.x; out.P.geo.x_int(end)];
+struct.phi = zeros(length(conventional_times), out.P.geo.np+2);
 struct.E = zeros(length(conventional_times), out.P.geo.np+1);
 struct.rho_e = zeros(length(conventional_times), out.P.geo.np);
 struct.rho_h = zeros(length(conventional_times), out.P.geo.np);
@@ -165,6 +207,7 @@ struct.rho_et = zeros(length(conventional_times), out.P.geo.np);
 struct.rho_ht = zeros(length(conventional_times), out.P.geo.np);
 struct.labels = string(zeros(1, length(conventional_times)));
 for i = 1:length(conventional_times)
+    struct.phi(i,:) = out.phi(:,conventional_times(i)+1)';
     struct.E(i,:) = out.E(:,conventional_times(i)+1)';
     struct.rho_e(i,:) = out.ne(:,conventional_times(i)+1)';
     struct.rho_h(i,:) = out.nh(:,conventional_times(i)+1)';
@@ -177,6 +220,9 @@ struct.rho_e = struct.rho_e * out.P.e;
 struct.rho_h = struct.rho_h * out.P.e;
 struct.rho_et = struct.rho_et * out.P.e;
 struct.rho_ht = struct.rho_ht * out.P.e;
+
+% F = struct;
+% plot(F.x_phi, F.phi(30,:))
 
 %% COMPARISON
 clearvars, clc, close all
@@ -196,7 +242,58 @@ B_interp.E = interp1(B.x, B.E', F.x_int)';
 B_interp.x = F.x;
 B_interp.x_int = F.x_int;
 
+%% UPDATED COMPARISON
+clearvars, clc, close all
+id = "20";
+Bassel = load("Bassel\Ghost\Temperature" + id + ".mat");
+Me = load("Results_with_phi\Temperature" + id + ".mat");
+F = Me.("T" + id);
+B = Bassel.("T" + id);
+clear id Bassel Me
+
+B_interp = B;
+B_interp.rho_e = interp1(B.x, B.rho_e', F.x)';
+B_interp.rho_h = interp1(B.x, B.rho_h', F.x)';
+B_interp.rho_et = interp1(B.x, B.rho_et', F.x)';
+B_interp.rho_ht = interp1(B.x, B.rho_ht', F.x)';
+B_interp.E = interp1(B.x, B.E', F.x_int)';
+B_interp.x = F.x;
+B_interp.x_int = F.x_int;
+
+%% rho
 Graph(F, B_interp, 30);
+
+%% E
+fig = tiledlayout(1,2);
+nexttile
+plot(B.x, B.E)
+nexttile
+plot(F.x_int, F.E)
+
+%% E_interp
+fig = tiledlayout(1,2);
+nexttile
+plot(B_interp.x_int, B_interp.E)
+nexttile
+plot(F.x_int, F.E)
+
+%% Err E
+i = 30;
+diff = abs(B_interp.E(i,:) - F.E(i,:)/1e6);
+err_perc = 100 * abs(B_interp.E(i,:) - F.E(i,:)/1e6) ./ (F.E(i,:)/1e6);
+fig = tiledlayout(1,2);
+nexttile
+plot(F.x_int, err_perc)
+title("% Error")
+nexttile
+plot(F.x_int, diff)
+title("Abs difference")
+
+%% Err%
+GraphErr(F, B_interp, 30, '%');
+
+%% Diff
+GraphErr(F, B_interp, 30);
 
 %%
 function [fig] = Graph(F, B, i)
@@ -215,8 +312,45 @@ function [fig] = Graph(F, B, i)
         grid on
         xlim([ri, ro])
         xlabel("$r (\mathrm{m})$", "Interpreter","latex")
-        eval("ylabel('$\rho_" + s + " (\mathrm{Cm^{-3}})$','Interpreter','latex')")
+        eval("ylabel('$\rho_{" + s + "} (\mathrm{Cm^{-3}})$','Interpreter','latex')")
         legend("Interpreter","latex")
         set(gca, "FontSize",15)
     end
+end
+
+function [fig] = GraphErr(F, B, i, kind)
+
+    arguments
+        F
+        B
+        i
+        kind char {mustBeMember(kind,{'%','Diff'})} = "Diff"
+    end
+
+    fig = tiledlayout(2,2);
+    ri = 24.5676e-3;
+    ro = 24.5676e-3 + 17.9e-3;
+    plotoptions.LineStyle = "none";
+    plotoptions.Marker = ".";
+    plotoptions.MarkerSize = 15;
+
+    for s = ["e", "h", "et", "ht"]
+        nexttile
+        if kind == "%"
+            eval("err_" + s + " = 100 * (F.rho_" + s + "(i,:) - B.rho_" + s + "(i,:))./(F.rho_" + s + "(i,:));")
+        elseif kind == "Diff"
+            eval("err_" + s + " = F.rho_" + s + "(i,:) - B.rho_" + s + "(i,:);")
+        end
+        eval("plot(F.x, err_" + s + ", plotoptions)")
+        grid on
+        xlim([ri, ro])
+        xlabel("$r (\mathrm{m})$", "Interpreter","latex")
+        if kind == "%"
+            eval("ylabel('$\% Difference \; \rho_{" + s + "}$','Interpreter','latex')")
+        elseif kind == "Diff"
+            eval("ylabel('$Difference \; \rho_{" + s + "}$','Interpreter','latex')")
+        end
+        set(gca, "FontSize",15)
+    end
+
 end

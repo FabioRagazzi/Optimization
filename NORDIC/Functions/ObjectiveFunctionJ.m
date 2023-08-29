@@ -26,7 +26,11 @@ function [fitness] = ObjectiveFunctionJ(opt_kind, x, tags, names, exp_lin_flags,
 
 error_vector = ones(size(Jobjective)) * 1e10;
 if length(out.tout) == length(time_instants)
-    error_vector = (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective);
+    if imag(out.J_dDdt) == 0
+        if ~ isnan(out.J_dDdt)
+            error_vector = (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective);
+        end
+    end
 end
 
 % computing fitness function based on the optimization algorithm

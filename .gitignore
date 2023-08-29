@@ -8,3 +8,4 @@ data/
 res/
 extra/
 !keep_*
+*.zip

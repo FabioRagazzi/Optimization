@@ -68,9 +68,13 @@ elseif opt_kind == "PS"
     nvars = length(lb);
     PS_start_time = tic;
     [xv, ~, ~, ~] = particleswarm(func, nvars, lb, ub, OPT_options);
-    wct = toc(PS_start_time);    
-    [out] = RunODEUpdating(xv, tags, names, exp_lin_flags, equals, P, Measure.time_instants, options);
-    fitness = norm( (log10(Measure.Jobjective) - log10(out.J_dDdt))./log10(Measure.Jobjective) );
+    wct = toc(PS_start_time); 
+    fitness = Inf;
+    try
+        [out] = RunODEUpdating(xv, tags, names, exp_lin_flags, equals, P, Measure.time_instants, options);
+        fitness = norm( (log10(Measure.Jobjective) - log10(out.J_dDdt))./log10(Measure.Jobjective) );
+    catch
+    end
 end
 
 result.xv = xv;
