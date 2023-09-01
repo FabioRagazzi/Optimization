@@ -129,7 +129,7 @@ function [fig] = SensitivityAnalysis(mult_values, strings, x_lim, optional)
         ylim(y_lim)
     end
     xlabel('$t (\mathrm{s})$', 'Interpreter','latex')
-    ylabel('$J (\mathrm{\frac{A}{m^2}})$', 'Interpreter','latex')
+    ylabel('$J (\mathrm{Am^{-2}})$', 'Interpreter','latex')
     set(gca,'TickLabelInterpreter','latex', 'Xscale','log', 'Yscale','log', 'FontSize',15)
 end
 

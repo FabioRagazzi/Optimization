@@ -23,6 +23,29 @@ for m = ["BLEND", "PP", "XLPE", "SGI"]
     end
 end
 
+%% TableResults
+clearvars, clc, close all
+for t = ["LeRoy", "Doedens"]
+    for s = ["Yes", "No"]
+            tab = mytable(t,s);
+            i = 0;
+            for m = ["BLEND", "PP", "XLPE", "SGI"]
+                for a = ["TRRA", "PS"]
+                    i = i + 1;
+                    current_result = load("res/" + m + "_" + a + "_" + t + "_" + s + ".mat");
+                    current_result = current_result.result;
+                    cell_array = cell(1,length(current_result.xv)+3);
+                    cell_array(1) = {m + " " + a};
+                    cell_array(2:end-2) = num2cell(current_result.xv);
+                    cell_array(end-1) = num2cell(current_result.fitness);
+                    cell_array(end) = num2cell(current_result.wct);
+                    tab(i,1:end) = cell_array;
+                end
+            end
+            disp(tab)
+    end
+end
+
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -467,5 +490,34 @@ function [xv, output] = MY_PS(param_string, reference_string, data_string, type)
     fitness_value = norm( (log10(Jobjective) - log10(out.J_dDdt))./log10(Jobjective) );
     PlotFitResult(out, Jobjective, time_instants);
     title("Fit with PS, fitness = " + num2str(fitness_value))
+
+end
+
+function [t] = mytable(a,b)
+
+switch_var = a + "_" + b;
+switch switch_var
+    case "LeRoy_Yes"
+        names = ["phi", "B", "w_tr", "S", "n0", "N", "mu"];
+    case "LeRoy_No"
+        names = ["phi_h", "phi_e", "B_h", "B_e", "w_tr_h", "w_tr_e", "S0", "S1", "S2", "S3", ...
+                "n0_h", "n0_e", "N_h", "N_e", "mu_h", "mu_e"];
+    case "Doedens_Yes"
+        names = ["a_int", "w_hop", "a_sh",...
+                 "w_tr_int", "N_int", "N",...
+                 "w_tr_hop", "w_tr", "S_base",...
+                 "n0", "phi", "Pr"];
+    case "Doedens_No"
+        names = ["a_int_h", "a_int_e", "w_hop_h", "w_hop_e", "a_sh_h", "a_sh_e", ...
+                 "w_tr_int_h", "w_tr_int_e", "N_int_h", "N_int_e", "N_h", "N_e", ...
+                 "w_tr_hop_h", "w_tr_hop_e", "w_tr_h", "w_tr_e", "S_base1", "S_base2", ...
+                 "S_base3", "S_base4", "n0_h", "n0_e", "phi_h", "phi_e", "Pr"];
+
+end
+names = ["ID", names, "C(P)", "Wall Clock Time"];
+nc = length(names);
+sz = [8 nc];
+types = ["string", repmat("double",1,nc-1)];
+t = table('Size',sz,'VariableTypes',types,'VariableNames',names);
 
 end

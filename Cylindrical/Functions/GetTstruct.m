@@ -10,5 +10,6 @@ Tstruct.matrix = TemperatureDistribution(r, ri, ro, Tri, Tro);
 % i = find(time_instants/3600 >= 6, 1);
 % Tstruct.matrix(:,i:end) = 20; 
 Tstruct.time = time_instants';
+Tstruct.temporal_interpolation = "linear";
 
 end

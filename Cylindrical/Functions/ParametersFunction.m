@@ -53,10 +53,30 @@ switch parameters
         P.Tstruct = GetTstructList("T70_55", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
         P = BasselParameters(P);
 
-    case "Transitorio1"
+    case "Trans_1d_lin"
         P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
-        P.Tstruct = GetTstructList("Transitorio1", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P.Tstruct = GetTstructList("Trans_1d_lin", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
         P = BasselParameters(P);
+
+    case "Trans_5d_lin"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
+        P.Tstruct = GetTstructList("Trans_5d_lin", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P = BasselParameters(P);
+
+    case "Trans_1d_exp"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
+        P.Tstruct = GetTstructList("Trans_1d_exp", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P = BasselParameters(P);
+
+    case "Trans_5d_exp"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
+        P.Tstruct = GetTstructList("Trans_5d_exp", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P = BasselParameters(P);
+
+    case "Trans_5d_TB852"
+        P.geo = CreateGeometry1D(24.5676e-3, CreateDeltas(0, 0, 0, 0, 100, 17.9e-3), options);
+        P.Tstruct = GetTstructList("Trans_5d_TB852", time_instants(1), time_instants(end), P.geo.x_int, P.geo.x0, P.geo.x_int(end));
+        P = BasselParameters(P);        
 end
 
 P = DerivedParameters(P, options);

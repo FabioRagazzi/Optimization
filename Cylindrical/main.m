@@ -1,26 +1,49 @@
 %% TRANSITORIO
 addpath("Functions\")
 clearvars, clc, close all
-[out] = Run("Transitorio1", ...
-            [0, 1, 2, 4:1:20, 22, 23, 24]*3600, ...
+[out] = Run("Trans_5d_TB852", ...
+            [0, 4, 12, 24, 48, 72, 96, 120]*3600, ...
             "coordinates","cylindrical", ...
             "source","on", ...
             "type","sparse");
 
 % [0, 1, [1,5,10,20,30]*60, 3600, (4:4:24)*3600]
+% 3600*GenerateTimeArrayMultipleDays([0, 4, 12, 20, 24], 5),...
 
 %% PLOT E
 fig1 = figure(); ax1 = axes(fig1);
 hold on
-ID = [];
+ID = gobjects(1,length(out.tout));
 for i = 1:length(out.tout)
-    ID(i) = plot(ax1, out.P.geo.x_int, out.E(:,i), 'Color',rand(1,3), 'LineWidth',1,...
+    ID(i) = plot(ax1, out.P.geo.x_int, out.E(:,i), 'Color',[0.6 0.6 0.6], 'LineWidth',1,...
         'DisplayName',"t = "+ SecondsToString(out.tout(i))); 
 end
 legend('Location','south','NumColumns',4)
-grid on, xlabel('r (m)'), ylabel('E (V/m)'), set(gca, 'FontSize',15, 'colororder',parula(32))
+grid on, xlabel('r (m)'), ylabel('E (V/m)'), set(gca, 'FontSize',15)
+
+i = 1; ID(i).Color = [1, 0, 0]; ID(i).LineWidth = 2;
 % xlim([0.02456,0.0247])
 % ylim([1.8, 2.4]*10^7)
+
+% i=i+1; ID(i).Color = [1, 0, 0]; ID(i).LineWidth = 2; ID(i-1).Color = [0.6, 0.6, 0.6]; ID(i-1).LineWidth = 1;
+% i=i-1; ID(i).Color = [1, 0, 0]; ID(i).LineWidth = 2; ID(i+1).Color = [0.6, 0.6, 0.6]; ID(i+1).LineWidth = 1;
+
+% ID(2).Color = [0, 1, 0]; ID(2).LineWidth = 2;
+% ID(3).Color = [0, 0, 1]; ID(3).LineWidth = 2;
+% ID(5).Color = [0, 0, 0]; ID(5).LineWidth = 3;
+% ID(9).Color = [1, 1, 0]; ID(9).LineWidth = 3;
+% ID(13).Color = [0, 1, 1]; ID(13).LineWidth = 3;
+% ID(17).Color = [1, 0, 1]; ID(17).LineWidth = 3;
+% ID(21).Color = [0, 0, 0]; ID(21).LineWidth = 3;
+
+ID(1).Color = [0, 0, 0]; ID(1).LineWidth = 2;
+ID(2).Color = [1, 0, 0]; ID(2).LineWidth = 2;
+ID(3).Color = [0, 1, 0]; ID(3).LineWidth = 2;
+ID(4).Color = [0, 0, 1]; ID(4).LineWidth = 2;
+ID(5).Color = [0, 1, 1]; ID(5).LineWidth = 2;
+ID(6).Color = [1, 0, 1]; ID(6).LineStyle="none"; ID(6).Marker="o"; ID(6).MarkerSize=8;
+ID(7).Color = [255, 128, 0]/255; ID(7).LineStyle="none"; ID(7).Marker="square"; ID(7).MarkerSize=10;
+ID(8).Color = [0, 103, 0]/255; ID(8).LineStyle="none"; ID(8).Marker="."; ID(8).MarkerSize=20;
 
 
 
