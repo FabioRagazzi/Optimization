@@ -1,4 +1,4 @@
-function [result] = GeneralDispResults(ID_measure, opt_kind, model, simmetric)
+function [result, out] = GeneralDispResults(ID_measure, opt_kind, model, simmetric)
 % GeneralDispResults Summary of this function goes here
 %   Detailed explanation goes here
 arguments

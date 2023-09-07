@@ -25,24 +25,28 @@ end
 
 %% TableResults
 clearvars, clc, close all
+T = cell(1,4);
+k = 0;
 for t = ["LeRoy", "Doedens"]
     for s = ["Yes", "No"]
-            tab = mytable(t,s);
-            i = 0;
-            for m = ["BLEND", "PP", "XLPE", "SGI"]
-                for a = ["TRRA", "PS"]
-                    i = i + 1;
-                    current_result = load("res/" + m + "_" + a + "_" + t + "_" + s + ".mat");
-                    current_result = current_result.result;
-                    cell_array = cell(1,length(current_result.xv)+3);
-                    cell_array(1) = {m + " " + a};
-                    cell_array(2:end-2) = num2cell(current_result.xv);
-                    cell_array(end-1) = num2cell(current_result.fitness);
-                    cell_array(end) = num2cell(current_result.wct);
-                    tab(i,1:end) = cell_array;
-                end
+        k = k + 1;
+        tab = mytable(t,s);
+        i = 0;
+        for m = ["BLEND", "PP", "XLPE", "SGI"]
+            for a = ["TRRA", "PS"]
+                i = i + 1;
+                current_result = load("res/" + m + "_" + a + "_" + t + "_" + s + ".mat");
+                current_result = current_result.result;
+                cell_array = cell(1,length(current_result.xv)+3);
+                cell_array(1) = {m + " " + a};
+                cell_array(2:end-2) = num2cell(current_result.xv);
+                cell_array(end-1) = num2cell(current_result.fitness);
+                cell_array(end) = num2cell(current_result.wct);
+                tab(i,1:end) = cell_array;
             end
-            disp(tab)
+        end
+        disp(tab)
+        T{k} = tab;
     end
 end
 

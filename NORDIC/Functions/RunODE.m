@@ -31,7 +31,7 @@ end
 % post processing
 start_time_Post_Processing = tic;
 if length(out.tout) == length(time_instants)
-    [out.nh, out.ne, out.nht, out.net, out.rho, out.phi, out.E, out.J_Sato, out.J_dDdt] = PostProcessing(out.nout, out.tout, P, options);
+    [out.nh, out.ne, out.nht, out.net, out.rho, out.phi, out.E, out.J_Sato, out.J_dDdt, out.mu_h, out.mu_e] = PostProcessing(out.nout, out.tout, P, options);
 end
 out.ppt = toc(start_time_Post_Processing);
 

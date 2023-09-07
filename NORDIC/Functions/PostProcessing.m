@@ -1,4 +1,4 @@
-function [nh, ne, nht, net, rho, phi, E, J_Sato, J_dDdt] = PostProcessing(nout, tout, P, options)
+function [nh, ne, nht, net, rho, phi, E, J_Sato, J_dDdt, mu_h, mu_e] = PostProcessing(nout, tout, P, options)
 % PostProcessing extracts all the useful informations from a simulation
 % INPUT
 % nout -> matrix with each line containing the number density at a time instant
